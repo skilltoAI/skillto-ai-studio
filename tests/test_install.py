@@ -82,6 +82,16 @@ class InstallationTests(unittest.TestCase):
             self.run_install('../outside')
         self.assertFalse(self.destination.exists())
 
+    def test_old_suite_name_blocks_installation_without_deleting_old_skill(self):
+        legacy = self.destination / 'skillto-int-rewrite'
+        legacy.mkdir(parents=True)
+        original = legacy / 'SKILL.md'
+        original.write_text('Existing customized skill', encoding='utf-8')
+        with self.assertRaisesRegex(FileExistsError, 'Legacy skill exists'):
+            install.install(self.destination)
+        self.assertEqual(original.read_text(encoding='utf-8'), 'Existing customized skill')
+        self.assertEqual(list(self.destination.iterdir()), [legacy])
+
     def test_destination_inside_source_is_rejected(self):
         with self.assertRaises(ValueError):
             install.install(self.repo / 'skills/alpha/nested', repo_root=self.repo)
@@ -115,10 +125,10 @@ class InstallationTests(unittest.TestCase):
 
     def test_cli_explicit_destination_overrides_legacy_default(self):
         result = subprocess.run([sys.executable, str(install.REPO_ROOT / 'scripts/install.py'),
-                                 '--codex-legacy', '--skill', 'skillto-int-character-card',
+                                 '--codex-legacy', '--skill', 'skillto-ai-studio-character-card',
                                  '--destination', str(self.destination)], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertTrue((self.destination / 'skillto-int-character-card/SKILL.md').is_file())
+        self.assertTrue((self.destination / 'skillto-ai-studio-character-card/SKILL.md').is_file())
 
     def test_cli_rejects_claude_legacy_flag_without_writes(self):
         result = subprocess.run([sys.executable, str(install.REPO_ROOT / 'scripts/install.py'),
@@ -131,8 +141,8 @@ class InstallationTests(unittest.TestCase):
         available = install.discover_skills()
         installed = install.install(self.destination)
         self.assertEqual(set(installed), set(available))
-        self.assertIn('skillto-int-rewrite', installed)
-        self.assertTrue((self.destination / 'skillto-int/references/compatibility.md').is_file())
+        self.assertIn('skillto-ai-studio-rewrite', installed)
+        self.assertTrue((self.destination / 'skillto-ai-studio/references/compatibility.md').is_file())
         for name, source in available.items():
             for relative in install.package_files(source):
                 self.assertEqual((source / relative).read_bytes(),

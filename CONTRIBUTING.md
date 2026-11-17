@@ -57,7 +57,7 @@ claude plugin validate .
 ```
 
 本地查看插件：`claude --plugin-dir .`，在会话中检查技能列表并调用
-`/skillto-int:skillto-int`。这是人工交互验收，不需要为验证自动运行外部工作流。
+`/skillto-ai-studio:skillto-ai-studio`。这是人工交互验收，不需要为验证自动运行外部工作流。
 
 ## 发布到 Codeup
 

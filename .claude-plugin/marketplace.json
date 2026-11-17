@@ -1,12 +1,12 @@
 {
-  "name": "skillto-int-marketplace",
-  "description": "SkillTo INT skills for content research, media and visual workflows.",
+  "name": "skillto-ai-studio-marketplace",
+  "description": "Skillto-AI-Studio skills for content research, media and visual workflows.",
   "owner": { "name": "skilltoAI" },
   "plugins": [
     {
-      "name": "skillto-int",
+      "name": "skillto-ai-studio",
       "source": "./",
-      "description": "SkillTo INT Agent Skills for content and visual workflows."
+      "description": "Skillto-AI-Studio Agent Skills for content and visual workflows."
     }
   ]
 }

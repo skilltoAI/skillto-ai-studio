@@ -1,6 +1,6 @@
 # Repository instructions
 
-`skills/` is the source of truth. Keep the parent `skills/skillto-int/SKILL.md`
+`skills/` is the source of truth. Keep the parent `skills/skillto-ai-studio/SKILL.md`
 in sync with the child capabilities. Preserve each child's authorization and
 production boundaries. Do not silently replace required external tools.
 

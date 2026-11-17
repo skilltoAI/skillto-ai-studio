@@ -1,4 +1,33 @@
-# 0.2.0 分发记录 · 2026-11-17
+# Skillto-AI-Studio 分发记录
+
+## 0.3.0 统一改名 · 2026-11-17
+
+基于 Codeup `7bb8902` 的已发布分发快照，项目显示名统一为 **Skillto-AI-Studio**，
+父技能改为 `skillto-ai-studio`，18 个子技能保留能力后缀并统一新前缀。
+技能目录、YAML name、19 个选择器显示名、父子路由、相对引用、Claude 插件/marketplace、
+安装命令及项目/扩展/启动器可见标题同步更新。插件版本为 0.3.0，猫抓扩展包为
+`2.7.4-skillto.4`。旧名升级步骤见 [迁移指引](../skills/skillto-ai-studio/references/rename-migration.md)。
+
+新服务输出新健康标识，新客户端仍识别旧服务；MCP 业务工具名、运行数据、配置变量、
+浏览器存储、Windows 进程同步名称和兼容 EXE 文件名保留。表格 HTTP 集成从实际加载的
+技能目录解析存储模块。未批量改动本机已安装副本，未迁移数据或凭据。
+
+本次验收：
+
+- 19 个技能结构、名称、路由、资源链接、选择器品牌与 Codex quick_validate 检查通过。
+- 14 项安装测试通过，包含发现旧名副本时拒绝写入并保留其内容。
+- 表格 4 项测试、工作台 11 项测试与新/旧健康标识发现测试通过。
+- stdio MCP 初始化返回新名称，原业务工具仍可发现；H3 与封面入口在所需环境中可加载。
+- 使用项目已有虚拟环境，在隔离 Chromium 中通过实验扩展和猫抓扩展的两项端到端测试，
+  覆盖自动连接、下载、选段、同步、播放及新品牌标题。
+- Windows Go 启动器 vet 和构建通过；产出的测试 EXE 留在忽略的工作目录，未运行或上传。
+- Claude 插件和 marketplace 清单通过验证；在隔离客户端配置中实际安装
+  `skillto-ai-studio@skillto-ai-studio-marketplace`，客户端显示 0.3.0 已启用。
+
+上述浏览器验证使用本地合成媒体和隔离配置，不代表已更新用户正在使用的 Chrome 扩展
+或已在真实平台采集。外部部署限制继续见下方历史分发记录及各子技能安装指引。
+
+## 0.2.0 初次分发记录 · 2026-11-17（改名前）
 
 本次整理 1 个父技能与 18 个子技能，发布目标为
 [Codeup skillto-ai-studio](https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio)。
@@ -11,12 +40,12 @@
 这是向空 Codeup 仓库导入的分发快照，不重写原维护仓库历史，不提交原工作区的其他任务产物。
 
 已安装的父入口在盘点时列出 17 个子技能，仓库新增的
-`skillto-int-explainer-storyboard` 已包含在本次 18 项清单中。未批量同步本机安装副本。
+`skillto-ai-studio-explainer-storyboard` 已包含在本次 18 项清单中。未批量同步本机安装副本。
 
 主要变更：
 
-- 提供 [统一安装指引](../skills/skillto-int/references/installation.md) 与
-  [全部子技能配置/验收表](../skills/skillto-int/references/child-setup.md)。
+- 提供 [统一安装指引](../skills/skillto-ai-studio/references/installation.md) 与
+  [全部子技能配置/验收表](../skills/skillto-ai-studio/references/child-setup.md)。
 - Codex 默认使用 `.agents/skills`；保留 `--codex-legacy` 显式旧目录模式。
 - 增加 `--list`，继续支持单技能、自定义目录、预检和拒绝覆盖。
 - 排除备份、缓存、本机配置与运行状态；使用 Codeup URL 与 Claude 插件版本 0.2.0。

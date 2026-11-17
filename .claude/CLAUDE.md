@@ -1,4 +1,4 @@
-# SkillTo INT development
+# Skillto-AI-Studio development
 
 Read [AGENTS.md](../AGENTS.md) for the shared repository instructions and
 [CONTRIBUTING.md](../CONTRIBUTING.md) for checks and Git conventions.

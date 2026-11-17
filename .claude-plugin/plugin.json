@@ -1,7 +1,9 @@
 {
-  "name": "skillto-int",
-  "version": "0.2.0",
-  "description": "SkillTo INT workflows, collection, media analysis, editing, covers, tables and reports.",
-  "author": { "name": "skilltoAI" },
+  "name": "skillto-ai-studio",
+  "version": "0.3.0",
+  "description": "Skillto-AI-Studio workflows, collection, media analysis, editing, covers, tables and reports.",
+  "author": {
+    "name": "skilltoAI"
+  },
   "repository": "https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio"
 }

@@ -89,6 +89,13 @@ def install(destination: Path, skill: str = 'all', *, repo_root: Path = REPO_ROO
         target = destination / name
         if os.path.lexists(target):
             raise FileExistsError(f'Destination already exists: {target}. Back it up before upgrading.')
+        prefix = 'skillto-ai-studio'
+        if name == prefix or name.startswith(prefix + '-'):
+            legacy = destination / ('skillto-int' + name[len(prefix):])
+            if os.path.lexists(legacy):
+                raise FileExistsError(
+                    f'Legacy skill exists: {legacy}. Move it outside the skill root before installing '
+                    f'{name}; see references/rename-migration.md in the parent skill.')
         plans.append((name, source, list(package_files(source))))
     if dry_run:
         for name, _, files in plans:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skillto-AI-Studio · 讲解类短视频分镜"
+  short_description: "为知识、科普、新闻类短视频做证据清单、节拍图、视觉系统、分镜与审片"
+  default_prompt: "使用 $skillto-ai-studio-explainer-storyboard 为我的讲解类短视频稿件建立证据清单、节拍图和视觉系统，输出分镜表和关键帧，并按审片清单检查。"

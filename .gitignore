@@ -9,9 +9,9 @@ runtime/
 .test-tmp/
 .install-test/
 .venv/
-/skills/skillto-int-table/SkillToTable.exe
-/skills/skillto-int-table/launcher.local.json
-/skills/skillto-int-table/scripts/windows/*.syso
+/skills/skillto-ai-studio-table/SkillToTable.exe
+/skills/skillto-ai-studio-table/launcher.local.json
+/skills/skillto-ai-studio-table/scripts/windows/*.syso
 
 # Local task artifacts; reusable examples belong in a skill's references/assets.
 /work/
