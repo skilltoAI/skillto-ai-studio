@@ -6,6 +6,7 @@ from pathlib import Path
 import secrets
 import sys
 import uuid
+from client_auth import authenticate
 from typing import Any
 
 from mcp.server import MCPServer
@@ -82,7 +83,7 @@ for name, (description, callback, schema) in TOOLS.items():
 
 
 async def health(request):
-    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'version':'0.4.0-dev','capabilities':list(TOOLS),
+    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'pid':os.getpid(),'launchId':os.environ.get('STASS_LAUNCH_ID'),'version':'0.4.0-dev','capabilities':list(TOOLS),
                          'status':'development; UI and cutover pending'})
 
 
@@ -117,8 +118,15 @@ class Guard:
             origin=headers.get(b'origin',b'').decode()
             if origin and origin != scope.get('scheme','http')+'://'+host:
                 return await JSONResponse({'error':'Invalid origin'},status_code=403)(scope,receive,send)
-            if path!='/STASS/health' and not secrets.compare_digest(headers.get(b'authorization',b'').decode(),'Bearer '+TOKEN):
-                return await JSONResponse({'error':'Authentication required'},status_code=401)(scope,receive,send)
+            if path!='/STASS/health':
+                authorization = headers.get(b'authorization',b'').decode()
+                is_admin = secrets.compare_digest(authorization,'Bearer '+TOKEN)
+                client_id = 'admin' if is_admin else authenticate(os.environ.get('STASS_CLIENT_REGISTRY'), authorization[7:] if authorization.startswith('Bearer ') else '')
+                if not client_id:
+                    return await JSONResponse({'error':'Authentication required'},status_code=401)(scope,receive,send)
+                if client_id != 'admin' and path != '/STASS/mcp':
+                    return await JSONResponse({'error':'Host credentials only permit MCP access'},status_code=403)(scope,receive,send)
+                scope.setdefault('state', {})['stass_client'] = client_id
         return await self.application(scope,receive,send)
 
 

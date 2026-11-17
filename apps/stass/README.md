@@ -21,3 +21,13 @@ Windows 环境依赖锁在 requirements-windows.lock.txt。服务需要 STASS_DA
 `python -m unittest discover -s . -p test_migration_routing.py -v` 验证快照、WAL、短ID和URL；`python -m unittest discover -s . -p test_service.py -v` 验证MCP与API共享数据和访问边界。
 
 `migration.py --source <旧数据根> --destination <空目标>` 仅生成演练副本；其 manifest 明确列出尚未迁移的浏览器档案、外部资源及数据库。它不是正式切换命令。
+
+## 共享实例开发验证
+
+新增用户级共享状态、Windows命名互斥锁、服务监督器和按宿主独立凭据。
+`runtime_control.register_development` 仅用于显式隔离开发目录，不是正式安装命令。
+服务的启动/复用/停止通过共享根配置管理，三个stdio桥接客户端访问同一HTTP MCP。
+根目录可运行 `npx --yes --package=. stass status` 或 `doctor`；已经注册开发程序时支持 `start`、`stop`。
+尚未提供 install/update/rollback/uninstall，未实现命令明确失败；不能把npx帮助或诊断通过当作一行完整安装通过。
+
+新增测试：`test_runtime_state.py`、`test_runtime_control.py`、`test_multi_client.py`，分别验证跨进程状态、真实服务生命周期及三个独立凭据的stdio/HTTP读写与撤销。

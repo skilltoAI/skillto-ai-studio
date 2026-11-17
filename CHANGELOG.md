@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### 2026-11-18 · STASS-006 · 共享实例生命周期与多客户端协议
+
+- 增加 Windows 用户级共享状态、跨进程互斥锁、开发服务监督进程和身份核验；修复 venv 包装器与实际服务 PID 不同造成的误判。
+- 增加三个宿主独立凭据、实时撤销和 stdio→HTTP MCP 桥接；宿主令牌禁止业务 REST。
+- 新增私有 Node CLI 及本地 npx 入口，目前支持 status/doctor/start/stop，未实现命令返回失败，不能宣称完整安装器已交付。
+- 验证：3项状态测试、2项真实生命周期测试、1项三客户端真实 stdio/HTTP MCP 测试（创建、改名、读回、撤销）；Node测试及本地npx帮助入口通过。不是实际Codex/Claude/OpenClaw会话测试。
+- 规范：根索引、启动器与部署及MCP与API规范和分发副本同步。无生产数据迁移、无旧服务替换；安装升级、完整UI和发布仍待实现。
+
 ### 2026-11-18 · STASS-005 · Windows 完整安装规范与审计
 
 - 根技术规范要求通过 README 完成其他 Windows 机器的程序及 Codex/Claude 技能安装；补全安装路由、部署验收门槛和 README 状态。
