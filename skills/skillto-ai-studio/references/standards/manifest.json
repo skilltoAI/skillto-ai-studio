@@ -2,11 +2,11 @@
   "format": 1,
   "packageVersion": "0.3.0",
   "sha256": {
-    "技术规范.md": "3f673a205e782c309cb4ac1b9767fa03213e75878a1e5bd95e94a048ecb36b32",
+    "技术规范.md": "8efb059d20eedfbb84fcf50b2fff8113e6f0eef9e0009b2d75b12d981479bfaa",
     "docs/规范/MCP与API规范.md": "d71f04d8522b5ff9eebd72407a80863459b5498bc48102da2c74195b7310a38e",
     "docs/规范/Motion模块规范.md": "3055561372919ed0fde2412d619ff11e07429a2c677d9f0f66dcaec84149fc7b",
     "docs/规范/URL与连接规范.md": "438e4e552a85393802158b3a315591767c441555c4d851c2a07444d7c7517127",
-    "docs/规范/启动器与部署规范.md": "2145b6526a039c89ad3b05cc237fe513377b87b051d5b4c4684029c362579dae",
+    "docs/规范/启动器与部署规范.md": "4141c20e14061749424934e1801b20e092e8d68f9491b3e91f080adbb4ffff34",
     "docs/规范/工具模块规范.md": "e54c6624e3ebc6bbd99dafc8508804ad07250ac90514c3eb5042b385cdfd19f8",
     "docs/规范/报表模块规范.md": "d98aa9789f835cc5fd51b78db9fcf7d0c5d89fd32f0775e46612309c9be6fb67",
     "docs/规范/拉片模块规范.md": "e734f342a9b906dcd758b8ff256ca789e3e4c6368a20c7a3332e3cae11460d9f",

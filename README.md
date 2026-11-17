@@ -12,6 +12,27 @@
 - [宿主兼容性与外部依赖](skills/skillto-ai-studio/references/compatibility.md)
 - [0.3.0：从旧技能名迁移](skills/skillto-ai-studio/references/rename-migration.md)
 
+## Windows 完整安装状态
+
+**当前未达到“在另一台 Windows 上完整安装 STASS 程序与全部技能”的交付门槛。**
+技能复制安装器已存在；它不安装独立程序或自动注册新 STASS MCP。
+本次 STASS 开发位于 `codex/stass-migration` 分支，普通 clone 的默认分支不包含该分支全部变更。
+要检查此开发版本，请显式获取该分支（需使用你自己的仓库读取权限）：
+
+```powershell
+git clone --branch codex/stass-migration --single-branch https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+cd skillto-ai-studio
+python scripts/install.py --list
+```
+
+随后按下面“快速安装”中的 Codex 或 Claude 命令安装技能，已有副本须先比较备份。
+程序目前仅提供[开发运行说明](apps/stass/README.md)和构建入口
+`powershell -NoProfile -File apps/stass/build_launcher.ps1`，产出 `runtime/Skillto.ai Studio.exe`。
+该 EXE 仍是迁移基线启动器，不能视作新 STASS 完整安装包，不应部署替代生产工作台。
+
+[Windows 安装审计及待补项目](docs/WINDOWS-INSTALL-AUDIT.md)列出了证据、已验证范围和阻塞项；
+完整安装要求由[技术规范](技术规范.md)及[启动器与部署规范](docs/规范/启动器与部署规范.md)约束。
+
 ## 技能清单
 
 | 技能 | 用途 | 安装与验收 |
@@ -81,7 +102,8 @@ claude plugin list
 表格 stdio MCP 只需 Python 标准库，另外注册到客户端。采集需要授权会话与浏览器；
 SaaS 工作流需要 Creator MCP、自己的 Key 和对应权限。
 
-目前完整 Studio HTTP 网页仍依赖未打包的 `douyin_tracker.review_web` 与研究页资源；
+旧技能分发中的完整 Studio HTTP 网页仍依赖未打包的 `douyin_tracker.review_web` 与研究页资源；
+STASS 开发目录已迁入基础网页源码，但尚未完成独立页面与服务集成；
 Qwen 客户端固定维护者局域网部署；小与配音依赖外部 Windows 部署；封面与角色库指定的
 `image_gen` 不由本仓库提供，普通 Claude Code 无法仅靠此插件获得它。
 各项准备、支持边界和验收条件均列在[子技能安装表](skills/skillto-ai-studio/references/child-setup.md)。
@@ -109,7 +131,7 @@ claude plugin validate .
 ```
 
 维护约定见 [CONTRIBUTING.md](CONTRIBUTING.md)。运行数据、Cookie、API Key、浏览器档案、
-数据库与 EXE 不进入分发。安装不授予采集、远端写入、付费运行或发布权限。
+数据库与维护者本机 EXE 不进入 Git 或技能分发；程序安装包应单独构建、验收后发布。安装不授予采集、远端写入、付费运行或发布权限。
 当前未声明整个仓库的开源许可证，不推定 MIT 等授权；品牌资源和 Cat Catch 等外部项目
 保留各自权利与许可约束。
 

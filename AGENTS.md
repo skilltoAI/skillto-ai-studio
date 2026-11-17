@@ -52,3 +52,12 @@ an installed copy, compare it with the repository and copy only the intended fil
   `probe` 只检查远端读取，不能证明写权限；`fetch` 不等于已合并或成功同步。
 - 保留原 `origin`，不把 Codeup 凭据用于 GitHub。不自动推送、合并主分支、打标签或发布。
   详细操作和两天同步规则见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## Windows 安装与 SSH 身份
+
+- 每次涉及安装、构建、依赖或宿主集成，检查根 README 能否让另一台 Windows 机器的 Codex/Claude 完整安装程序和全部技能；按技术规范读取启动器与部署规范，更新安装步骤、限制及验收记录。
+- 本仓库正式指令文件名为 `AGENTS.md`，不另建不同步的 `AGENT.md`。
+- 本项目推送使用用户 SSH 公私钥：`CODEUP_PUSH_AUTH_MODE=ssh`、`CODEUP_PUSH_USERNAME=git`，`CODEUP_PUSH_SSH_KEY_FILE` 指向本机具有仓库写权限的用户私钥。`CODEUP_PUSH_PASSWORD` 可为空，不作为 SSH 认证的回退。
+- 公钥登记在 Codeup 对应用户账号；私钥只保留在本人机器。部署公钥即使可读取仓库，也不代表用户有推送权限；不得误用只读部署身份。注释不参与授权，公钥文本不能代替私钥文件。
+- 当前拉取独立使用 `CODEUP_FETCH_AUTH_MODE=https-password` 及对应 `BASE_URL`、`USERNAME`、`PASSWORD`；该模式不读取 FETCH 的私钥字段。配置值只在本机保存，每位安装者配置自己的认证，不分发维护者账号。
+- 推送成功必须回读指定远端分支提交并与本地比较；读取探测不等于写权限验证。私钥文件名含其他项目名称不决定用途，以环境变量显式选择和 Codeup 授权为准。
