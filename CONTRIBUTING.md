@@ -61,6 +61,39 @@ claude plugin validate .
 
 ## 发布到 Codeup
 
+### 独立认证与拉新
+
+拉取与推送必须使用 [AGENTS.md](AGENTS.md) 列出的两组 `CODEUP_FETCH_*` / `CODEUP_PUSH_*`
+本机环境变量。同一仓库的两组凭据也不能共用或自动回退。密码通过隐藏输入设置到本机
+用户环境，不能写进 PowerShell 命令历史、Git URL、源码或日志。私钥文件留在受保护本机目录。
+
+```sh
+python scripts/codeup_git.py probe --scope fetch
+python scripts/codeup_git.py probe --scope push
+python scripts/codeup_git.py fetch
+python scripts/codeup_git.py clone --destination <新的目录>
+```
+
+`probe --scope push` 只读取远端，不执行推送。`fetch` 更新 `codeup/*` 远端跟踪引用，
+保留其他远端，不自动合并。`clone` 只使用拉取凭据；克隆后所有 Codeup 网络操作仍经本脚本，
+不能依赖普通 `git push` 自动选对凭据。
+
+每次开发开始检查最近成功同步时间；无记录或超过48小时必须拉新，长任务也最多间隔48小时。
+在干净任务分支 merge Codeup 的默认分支（任务明确指定其他基线时使用该基线）；
+工作区有其他未提交内容时使用隔离工作树。以已核验的最新远端提交新建任务工作树也视为采用新基线。
+仅 fetch、认证失败、合并冲突都不算成功同步。只有完成集成后才在 Git 本地状态记录
+成功时间与远端提交；不将状态文件提交，不自动 stash/reset 或覆盖用户改动。
+
+每个完成的逻辑变更在根 `CHANGELOG.md` 的 `Unreleased` 中记录日期、编号、范围、摘要、
+验证结果、规范更新及兼容性影响，通过检查后按具体路径本地提交。
+只有用户明确授权推送后才能执行：
+
+```sh
+python scripts/codeup_git.py push --branch codex/<任务>
+```
+
+该入口只推送指定任务分支，不推送主分支、标签、删除或 force 更新。下列发布规则继续适用。
+
 1. 确定代码许可和品牌素材的再分发范围；当前仓库未声明开源许可证，不推定 MIT 等许可。
 2. 审查变更、暂存清单和敏感信息；确认所需新技能/参考资源均已纳入提交。
 3. 运行上述检查，并从干净提交导出/克隆到临时目录验证安装。
