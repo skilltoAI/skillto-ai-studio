@@ -120,7 +120,7 @@ func controlWindow(c config, path string, r *receipt, resultFile string) error {
 	width, height := uintptr(rect.Right-rect.Left), uintptr(rect.Bottom-rect.Top)
 	screenW, _, _ := user32.NewProc("GetSystemMetrics").Call(0)
 	screenH, _, _ := user32.NewProc("GetSystemMetrics").Call(1)
-	hwnd, _, windowErr := createWindow.Call(0x40000, uintptr(unsafe.Pointer(wide(className))), uintptr(unsafe.Pointer(wide("Skillto-AI-Studio · 本地报表"))), style, (screenW-width)/2, (screenH-height)/2, width, height, 0, 0, instance, 0)
+	hwnd, _, windowErr := createWindow.Call(0x40000, uintptr(unsafe.Pointer(wide(className))), uintptr(unsafe.Pointer(wide("SKillto.ai 个人工作台"))), style, (screenW-width)/2, (screenH-height)/2, width, height, 0, 0, instance, 0)
 	if hwnd == 0 {
 		return fmt.Errorf("创建任务栏窗口失败: %v", windowErr)
 	}
@@ -136,14 +136,14 @@ func controlWindow(c config, path string, r *receipt, resultFile string) error {
 	}
 	logo := child("STATIC", "", 25, 24, 48, 48, 0, 3)
 	sendMessage.Call(logo, 0x0170, largeIcon, 0)
-	title := child("STATIC", "本地多媒体报表", 91, 26, 450, 34, 0, 0)
+	title := child("STATIC", "SKillto.ai 个人工作台", 91, 26, 450, 34, 0, 0)
 	sendMessage.Call(title, 0x0030, app.titleFont, 1)
 	child("STATIC", c.URL, 92, 62, 450, 25, 0, 0)
 	app.status = child("STATIC", "正在启动服务…", 27, 105, 532, 28, 0, 0)
 	app.detail = child("STATIC", "服务就绪后将打开浏览器", 27, 139, 532, 28, 0, 0)
 	app.startButton = child("BUTTON", "启动服务", 27, 185, 162, 40, idStart, 0x10000)
 	app.stopButton = child("BUTTON", "关闭服务", 210, 185, 162, 40, idStop, 0x10000)
-	app.openButton = child("BUTTON", "打开报表", 393, 185, 162, 40, idOpen, 0x10001)
+	app.openButton = child("BUTTON", "打开工作台", 393, 185, 162, 40, idOpen, 0x10001)
 	child("BUTTON", "浏览器用户 · 创建 / 改名 / 删除 / 打开", 27, 238, 528, 40, idBrowsers, 0x10000)
 	child("STATIC", "最小化后继续运行；关闭窗口会保存并关闭受管浏览器。", 27, 300, 535, 25, 0, 0)
 	sendMessage.Call(hwnd, 0x0080, 0, smallIcon)
