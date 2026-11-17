@@ -15,3 +15,5 @@
 *.ico binary
 *.mp4 binary
 *.wav binary
+
+apps/stass/** text=auto eol=lf

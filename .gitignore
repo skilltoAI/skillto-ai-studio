@@ -42,3 +42,6 @@ node_modules/
 *.tmp
 *.local.json
 *.env
+
+# STASS regression artifacts
+/apps/stass/work/

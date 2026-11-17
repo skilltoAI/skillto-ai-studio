@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI 光影短视频</title>
+  <link rel="stylesheet" href="/short-videos.css">
+  <script src="/short-videos.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div><p class="eyebrow">SKILLTO-TABLE · 视频资料库</p><h1 id="title">AI 光影短视频</h1><p id="summary">正在读取本地表格…</p></div>
+      <a class="export" id="export" href="#">导出 JSON</a>
+    </header>
+    <section class="controls" aria-label="筛选视频">
+      <input id="search" type="search" placeholder="搜索标题、作者或关键词" aria-label="搜索短视频">
+      <select id="platform" aria-label="筛选平台"><option value="">全部平台</option><option>抖音</option><option>小红书</option></select>
+      <label>发布自 <input id="from" type="date"></label>
+      <label>至 <input id="to" type="date"></label>
+      <button id="reset" type="button">清除筛选</button>
+    </section>
+    <p id="count" class="count"></p>
+    <div class="table-wrap"><table><thead><tr><th>#</th><th>短视频</th><th>作者 / 平台</th><th>发布时间</th><th><button id="sortLikes" type="button">点赞数 ↓</button></th><th>原视频</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="footnote">点赞数为采集时快照。原视频在平台打开；小红书部分链接依赖搜索签名，过期后可用标题或视频 ID 搜索。</p>
+  </main>
+</body>
+</html>
