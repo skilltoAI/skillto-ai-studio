@@ -1,5 +1,12 @@
 # Repository instructions
 
+每次 vibe coding（规划、开发、修复、重构、验证）必须先读取并遵循本项目
+[技术规范.md](技术规范.md)，再按唤醒词、修改路径和影响累加读取专项规范。
+范围扩大必须补读；必要时同一变更更新相关规范和总索引。
+所有完成的逻辑变更必须更新统一 CHANGELOG.md、执行检查并本地提交；
+每48小时成功同步 Codeup，失败不得记为已同步。
+工作台迁移必须保留全部模块功能、业务数据和多媒体数据，逐项验收。
+
 `skills/` is the source of truth. Keep the parent `skills/skillto-ai-studio/SKILL.md`
 in sync with the child capabilities. Preserve each child's authorization and
 production boundaries. Do not silently replace required external tools.

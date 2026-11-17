@@ -14,6 +14,11 @@ from install import REPO_ROOT, discover_skills, excluded, package_files
 
 def main() -> int:
     errors = []
+    from sync_specs import expected, DEST
+    for relative, content in expected().items():
+        path = DEST / relative
+        if not path.is_file() or path.read_bytes() != content:
+            errors.append(f'Stale portable standard: {relative}; run scripts/sync_specs.py')
     skills = discover_skills()
     parent = (skills['skillto-ai-studio'] / 'SKILL.md').read_text(encoding='utf-8')
     readme = (REPO_ROOT / 'README.md').read_text(encoding='utf-8')
@@ -50,6 +55,8 @@ def main() -> int:
 
     files = [REPO_ROOT / name for name in ('README.md', 'AGENTS.md', '.claude/CLAUDE.md', 'CONTRIBUTING.md')]
     files.append(REPO_ROOT / 'docs/DISTRIBUTION.md')
+    files.append(REPO_ROOT / '技术规范.md')
+    files.extend((REPO_ROOT / 'docs/规范').glob('*.md'))
     for directory in skills.values():
         files.extend(directory / relative for relative in package_files(directory))
     files.extend((REPO_ROOT / 'scripts').glob('*.py'))
