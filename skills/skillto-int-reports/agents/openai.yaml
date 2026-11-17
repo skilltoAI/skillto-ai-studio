@@ -1,0 +1,3 @@
+interface:
+  display_name: "SkillTo 报表"
+  short_description: "管理本地 Metabase 报表、图表和三级导航"

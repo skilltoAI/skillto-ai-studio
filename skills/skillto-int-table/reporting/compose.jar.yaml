@@ -1,0 +1,11 @@
+# Fallback when Docker Hub is unreachable: locally built fixed-version image
+# from the official Metabase release JAR and a pinned Java 21 base image.
+services:
+  metabase:
+    image: skillto/metabase-oss:v0.64.3.6
+    pull_policy: never
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
