@@ -2,7 +2,8 @@
 
 ## 修改范围
 
-`skills/` 是分发源；已安装的 `~/.codex/skills`、`~/.claude/skills` 是运行副本。
+`skills/` 是分发源；已安装的 `~/.agents/skills`、旧 `~/.codex/skills`、
+`~/.claude/skills` 或客户端插件缓存是运行副本。
 新增技能使用 `skills/<name>/SKILL.md`，目录名与 YAML `name` 一致，保留简洁、
 可区分的 `description`。脚本、参考文档、资源跟随各自技能；按需读取参考文档。
 新增/移除子技能时，同时更新父技能路由、README 清单和兼容性说明。

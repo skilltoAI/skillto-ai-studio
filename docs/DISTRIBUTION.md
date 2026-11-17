@@ -33,6 +33,8 @@
   目标路径含空格；未改动用户实际安装目录。
 - Codex skill-creator 的 quick_validate 对 19 个技能通过。
 - Claude 插件和 marketplace 默认清单验证均通过，发现全部 19 项命名空间技能。
+- 从本次干净提交重新克隆后，结构检查与 13 项安装测试通过；使用隔离的
+  `CLAUDE_CONFIG_DIR` 注册本地 marketplace 并实际安装插件，客户端显示 0.2.0 已启用。
 - `git diff --check` 通过；分发源码按文件清单审查并检查凭据模式，未包含私钥、Token、
   Cookie、数据库、本机 EXE、浏览器会话、采集媒体或研究产物。
 
