@@ -204,7 +204,7 @@ class ReviewHandler(BaseHTTPRequestHandler):
                 store.validate_row_fields(validation_table, row["fields"])
                 if not set(row.get("tagIds", [])).issubset(tag_ids):
                     raise ValueError("Imported row references an unknown tag")
-                normalized.append({"id": row.get("id") or store.identifier(), "fields": row["fields"],
+                normalized.append({**row, "id": row.get("id") or store.identifier(), "fields": row["fields"],
                                    "media": row.get("media", []), "tagIds": row.get("tagIds", []),
                                    "rating": row.get("rating", {"score": None, "note": ""}),
                                    "history": row.get("history", []), "createdAt": row.get("createdAt") or store.now(),
