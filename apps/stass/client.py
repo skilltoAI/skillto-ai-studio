@@ -18,6 +18,8 @@ async def execute(profile, operation, name=None, arguments=None, *, transport=No
         response=await http.get(base+'health');response.raise_for_status();identity=response.json()
         if identity.get('service')!='STASS' or not identity.get('instanceId'):
             raise ValueError('Endpoint is not an identified STASS service')
+        if identity.get('protocol') != 1:
+            raise ValueError('Incompatible STASS client protocol; refusing to send credentials')
         if profile.get('instanceId') and profile['instanceId']!=identity['instanceId']:
             raise ValueError('Workspace identity changed; refusing to send credentials')
         secret=Path(profile['tokenFile']).read_text(encoding='utf-8').strip()

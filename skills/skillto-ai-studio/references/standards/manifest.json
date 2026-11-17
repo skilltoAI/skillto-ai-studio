@@ -2,7 +2,7 @@
   "format": 1,
   "packageVersion": "0.3.0",
   "sha256": {
-    "技术规范.md": "7fe7f487286ce821cdb23ca1b18d4e12acf8ffc65f521c73a51e3a466ca8019c",
+    "技术规范.md": "3db98f7694526cf8b86315ee781f747dd6292989d9eaf187fd08da452687b7ec",
     "docs/规范/MCP与API规范.md": "8580f43618bc899b65254195db6014b6dbb84f85ab46c515de1878512ee10b2e",
     "docs/规范/Motion模块规范.md": "3055561372919ed0fde2412d619ff11e07429a2c677d9f0f66dcaec84149fc7b",
     "docs/规范/URL与连接规范.md": "438e4e552a85393802158b3a315591767c441555c4d851c2a07444d7c7517127",
@@ -17,7 +17,8 @@
     "docs/规范/洗稿模块规范.md": "97e5deb8903905f2a1a5999494365cd2b79153ce5688a563581b25a96a342d8f",
     "docs/规范/测试与验收规范.md": "deeabd6ba33a1277f9549dd8c9447aaa47826e24bd8634f4fab96df86b1c116b",
     "docs/规范/浏览器模块规范.md": "b23b0748b9447f460b0508d20cc1e406fb219314f9cffb6dfc460d39505a0754",
-    "docs/规范/版本与协作规范.md": "c3d48f00deb2c4a24a3f10fd4a4eb6b034e8dc5882c565c11ba26f51a209b161",
+    "docs/规范/版本与协作规范.md": "c3734404fbd7044120a50b4518061c63d46f08c65b8bd5c84a9e6894360b546b",
+    "docs/规范/版本与数据一致性规范.md": "756fe549c997b013b5624cebae031bcbae9b3b51de47d90291c99c1fe943a35e",
     "docs/规范/界面与交互规范.md": "511f212c3de4758088ab3a644c8a94ce4cf1546e7a5268ede7111e6bf1365c6a",
     "docs/规范/表格模块规范.md": "8feb482e4f1dab6fe44fda76cde87e7d83f3da45087a57b343a705b40b23957e",
     "docs/规范/迁移与兼容规范.md": "7a3dd18824859cef9a5344740e41d9a133aca65b9bd09a5f383a2e92ccd2240b"

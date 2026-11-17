@@ -58,8 +58,15 @@ def start(root=None):
     runtime = RuntimeState(root)
     with installation_lock(runtime.root):
         state = runtime.read()
+        from release_gate import verify_selected
+        release = verify_selected(runtime, state)
         if not port_available(state['port']):
-            return dict(action='reused', **health(state))
+            identity = health(state)
+            if release and (identity.get('releaseCommit') != release['commit']
+                            or identity.get('dataSchema') != release['dataSchema']
+                            or identity.get('protocol') != release['protocol']):
+                raise ValueError('Running service does not match the selected release')
+            return dict(action='reused', **identity)
         program = state.get('program')
         if not program:
             raise ValueError('No installed program; initialization alone is not installation')
@@ -73,6 +80,10 @@ def start(root=None):
             with token.open('x', encoding='utf-8') as stream:
                 stream.write(secrets.token_urlsafe(48))
         env = os.environ.copy()
+        env['PYTHONDONTWRITEBYTECODE'] = '1'
+        env['STASS_RELEASE_COMMIT'] = release['commit'] if release else ''
+        env['STASS_RELEASE_VERSION'] = release['version'] if release else 'development'
+        env['STASS_DATA_SCHEMA'] = str(state.get('dataSchema', 1))
         launch_id = secrets.token_hex(24)
         env.update(STASS_CLIENT_REGISTRY=str(runtime.root / 'config' / 'clients.json'),
                    STASS_LAUNCH_ID=launch_id, STASS_DATA_ROOT=state['dataRoot'], STASS_TOKEN_FILE=str(token),

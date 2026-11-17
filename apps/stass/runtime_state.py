@@ -101,7 +101,7 @@ class RuntimeState:
             data.mkdir(parents=True, exist_ok=True)
             instance = str(uuid.uuid4())
             state = dict(format=1, instanceId=instance, dataRoot=str(data), port=port,
-                         url=f'http://127.0.0.1:{port}/STASS/', activeVersion=None, hosts={})
+                         url=f'http://127.0.0.1:{port}/STASS/', activeVersion=None, hosts={}, generation=0, dataSchema=1)
             # Identity must exist before any service can open this data directory.
             (data / '.stass-instance').write_text(instance, encoding='utf-8')
             atomic_json(self.path, state)

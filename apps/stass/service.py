@@ -83,7 +83,8 @@ for name, (description, callback, schema) in TOOLS.items():
 
 
 async def health(request):
-    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'pid':os.getpid(),'launchId':os.environ.get('STASS_LAUNCH_ID'),'version':'0.4.0-dev','capabilities':list(TOOLS),
+    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'pid':os.getpid(),'launchId':os.environ.get('STASS_LAUNCH_ID'),'releaseCommit':os.environ.get('STASS_RELEASE_COMMIT'),'version':os.environ.get('STASS_RELEASE_VERSION','0.4.0-dev'),'capabilities':list(TOOLS),
+                         'protocol':1,'dataSchema':int(os.environ.get('STASS_DATA_SCHEMA','1')),
                          'status':'development; UI and cutover pending'})
 
 
