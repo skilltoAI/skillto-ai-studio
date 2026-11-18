@@ -82,7 +82,7 @@ class RuntimeState:
         uuid.UUID(value['instanceId'])
         return value
 
-    def initialize(self, data_root=None, port=8080):
+    def initialize(self, data_root=None, port=8080, *, migrated=False):
         if not 1 <= port <= 65535:
             raise ValueError('Invalid port')
         with installation_lock(self.root):
@@ -95,7 +95,14 @@ class RuntimeState:
                 return state
             data = Path(data_root).resolve() if data_root else self.root / 'data'
             if data.exists() and any(data.iterdir()):
-                raise ValueError('Initial installation requires empty data directory; use migration for existing data')
+                marker = data / 'migration-snapshot.json'
+                if not migrated or not marker.is_file():
+                    raise ValueError('Initial installation requires empty data directory; use migration for existing data')
+                snapshot = json.loads(marker.read_text(encoding='utf-8'))
+                origin = Path(snapshot['source']).resolve()
+                if (snapshot['status'] != 'workspace-copy-verified-not-cutover' or origin == data
+                        or origin in data.parents or data in origin.parents or (data/'.stass-instance').exists()):
+                    raise ValueError('Expected an independent, unused migration snapshot')
             for name in ('versions', 'config', 'backups', 'logs', 'staging'):
                 (self.root / name).mkdir(parents=True, exist_ok=True)
             data.mkdir(parents=True, exist_ok=True)

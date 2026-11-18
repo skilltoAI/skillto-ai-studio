@@ -13,8 +13,9 @@ from pathlib import Path
 
 import rewrite_system
 
-VOICE_ROOT = Path(r"E:\wwai\qwen3-tts\outputs\xiaoyu").resolve()
-TTS_PYTHON = Path(r"E:\wwai\qwen3-tts\.venv\Scripts\python.exe")
+VOICE_ROOT = (Path(os.environ['STASS_DATA_ROOT']) / 'legacy-assets/assets/rewrite-audio' if os.environ.get('STASS_DATA_ROOT')
+              else Path(os.environ.get('SKILLTO_VOICE_ROOT', Path.home()/'skillto-table-data'/'voice'))).resolve()
+TTS_PYTHON = Path(os.environ['STASS_TTS_PYTHON']) if os.environ.get('STASS_TTS_PYTHON') else None
 WORKER = Path(__file__).with_name("rewrite_voice_worker.py")
 FILE_PATTERN = re.compile(r"^rewrite_([0-9a-f-]{36})_(v\d+)_([0-9a-f]{12})\.wav$")
 JOBS: dict[str, dict] = {}
@@ -45,8 +46,6 @@ def get_version(manuscript_id: str, version_id: str):
 
 
 def start(manuscript_id: str, version_id: str) -> dict:
-    if not TTS_PYTHON.is_file() or not WORKER.is_file():
-        raise rewrite_system.RewriteError("本地小与语音环境不完整")
     manuscript, version = get_version(manuscript_id, version_id)
     if manuscript["activeTranscriptVersionId"] != version_id:
         raise rewrite_system.RewriteError("请先切换到要生成语音的版本")
@@ -66,6 +65,8 @@ def start(manuscript_id: str, version_id: str) -> dict:
                                     for segment in json.loads(segment_manifest.read_text(encoding='utf-8'))]
         rewrite_system.attach_voice_audio(manuscript_id, version_id, metadata)
         return {"state": "done", "audio": metadata, "versionId": version_id}
+    if TTS_PYTHON is None or not TTS_PYTHON.is_file() or not WORKER.is_file():
+        raise rewrite_system.RewriteError("本地小与语音环境不完整")
     key = (manuscript_id, version_id)
     with JOB_LOCK:
         old_id = LATEST.get(key)

@@ -14,6 +14,7 @@ from urllib.parse import urlsplit, parse_qs
 
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import StreamingResponse
+import legacy_assets
 
 HERE = Path(__file__).parent
 ASSETS = HERE/'modules/table/assets'
@@ -37,6 +38,8 @@ def create_endpoint(store, rewrites, reports, motions, workbench, data):
     browser_lock=threading.Lock()
 
     class Handler(motions.MotionMixin, workbench.WorkbenchMixin, base.ReviewHandler):
+        def respond_json(self, payload, status=200):
+            return super().respond_json(legacy_assets.rewrite_urls(payload),status)
         def wb_send(self, value, content_type='application/json; charset=utf-8', status=200):
             return self.respond(value if isinstance(value,bytes) else json.dumps(value,ensure_ascii=False).encode(),content_type,status)
         def send_response(self, status, message=None): self.status = status
@@ -91,8 +94,10 @@ def create_endpoint(store, rewrites, reports, motions, workbench, data):
             nonlocal browser_manager
             path=urlsplit(self.path).path
             if path.startswith('/api/motions/'): return self.motion_post()
-            if path in ('/api/rewrites','/api/reports','/api/lineage','/api/browser'):
+            if path in ('/api/rewrites','/api/rewrites/voice','/api/reports','/api/lineage','/api/browser'):
                 args=json.loads(self.rfile.read())
+                if path=='/api/rewrites/voice':
+                    return self.respond_json(rewrite_voice.start(args.get('id',''),args.get('versionId','')))
                 if path=='/api/browser':
                     if not self.local_peer: return self.send_error(403,'Browser control is local only')
                     with browser_lock:
@@ -103,6 +108,9 @@ def create_endpoint(store, rewrites, reports, motions, workbench, data):
             return super().do_POST()
 
     async def endpoint(request):
+        asset_path=request.path_params.get('path','')
+        if request.method in ('GET','HEAD') and asset_path.startswith(legacy_assets.FAMILIES):
+            return legacy_assets.response(data,asset_path)
         pieces=[];size=0
         async for piece in request.stream():
             size+=len(piece)
