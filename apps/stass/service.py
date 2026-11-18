@@ -15,7 +15,7 @@ from starlette.responses import JSONResponse
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.routing import Route
 from http.cookies import SimpleCookie
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlsplit
 from web_session import WebSessions
 
 HERE = Path(__file__).resolve().parent
@@ -109,8 +109,15 @@ async def api(request: Request):
 from mcp.server.transport_security import TransportSecuritySettings
 web_sessions = WebSessions()
 
+def local_web(scope, host):
+    peer = scope.get('client')
+    return bool(peer and peer[0] in ('127.0.0.1','::1')
+                and urlsplit('http://' + host).hostname in ('127.0.0.1','localhost','::1'))
+
 async def pair(request):
     if request.method == 'GET':
+        if local_web(request.scope, request.headers['host']):
+            return RedirectResponse('/STASS/',status_code=303)
         return HTMLResponse('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Skillto.ai 个人工作台配对</title><h1>连接个人工作台</h1><p>在本机程序获取一次性配对码，有效期5分钟。</p><form method="post"><label>配对码 <input name="code" autocomplete="off" required></label><button>连接</button></form></html>', headers={'Cache-Control':'no-store','Content-Security-Policy':"default-src 'none'; form-action 'self'; frame-ancestors 'none'"})
     if request.headers.get('origin') != str(request.base_url).rstrip('/'):
         return JSONResponse({'error':'Same-origin pairing required'},status_code=403)
@@ -166,6 +173,12 @@ class Guard:
                 try: cookies.load(headers.get(b'cookie',b'').decode())
                 except Exception: pass
                 if not client_id and 'stass_session' in cookies and web_sessions.valid(cookies['stass_session'].value): client_id='web'
+                web_path = (path.startswith('/STASS/') and path != '/STASS/mcp'
+                            and path != '/STASS/api/v1/pair-code' and not path.startswith('/STASS/api/v1/tools/'))
+                if not client_id and web_path and local_web(scope,host):
+                    client_id='web'
+                if client_id=='web' and (not web_path or headers.get(b'sec-fetch-site') in (b'cross-site',b'same-site')):
+                    return await JSONResponse({'error':'Browser access requires a same-origin workbench request'},status_code=403)(scope,receive,send)
                 if client_id=='web' and scope['method'] not in ('GET','HEAD','OPTIONS') and origin!=scope.get('scheme','http')+'://'+host:
                     return await JSONResponse({'error':'Same-origin request required'},status_code=403)(scope,receive,send)
                 if not client_id:

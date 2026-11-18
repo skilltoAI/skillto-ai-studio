@@ -19,6 +19,12 @@ class ServiceTests(unittest.TestCase):
                         self.assertEqual((await client.post('/STASS/mcp',json={})).status_code,401)
                         self.assertEqual((await client.get('/STASS/health',headers={'Host':'evil.test'})).status_code,403)
                         self.assertEqual((await client.get('/STASS/health',headers={'Origin':'http://evil.test'})).status_code,403)
+                        self.assertEqual((await client.get('/STASS/',headers={'Sec-Fetch-Site':'cross-site'})).status_code,403)
+                        self.assertEqual((await client.post('/STASS/api/v1/workspace',json={})).status_code,403)
+                        self.assertEqual((await client.get('/STASS/api/v1/pair-code')).status_code,401)
+                        async with httpx2.AsyncClient(transport=httpx2.ASGITransport(app=service.app,client=('192.168.3.60',32100)),base_url='http://localhost:8080') as remote:
+                            denied=await remote.get('/STASS/',headers={'X-Forwarded-For':'127.0.0.1'})
+                            self.assertEqual(denied.headers['location'],'/STASS/pair')
                         health=(await client.get('/STASS/health')).json()
                         self.assertEqual(health['service'],'STASS');self.assertTrue(health['instanceId'])
                         headers={'Authorization':'Bearer '+'fixture-'*8,'Accept':'application/json, text/event-stream'}

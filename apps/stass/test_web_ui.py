@@ -30,9 +30,9 @@ class WebTests(unittest.TestCase):
                     page.on('pageerror',lambda error: errors.append(str(error)))
                     page.on('response',lambda response: failed_assets.append(response.url) if response.status>=400 and any(response.url.split('?')[0].endswith(ext) for ext in ('.js','.css','.png')) else None)
                     page.goto(state['url'])
-                    self.assertTrue(page.url.endswith('/STASS/pair'))
-                    page.locator('input[name=code]').fill(code)
-                    page.get_by_role('button',name='连接',exact=True).click()
+                    self.assertEqual(page.url,state['url'])
+                    page.goto(state['url']+'pair')
+                    self.assertEqual(page.url,state['url'])
                     page.wait_for_selector('.workspace-nav')
                     for name in ('表格','报表','洗稿','Motion 模版','文档','排稿','工具'):
                         page.get_by_role('button',name=name,exact=True).click()

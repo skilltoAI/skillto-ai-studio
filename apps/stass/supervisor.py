@@ -19,7 +19,7 @@ def main():
         handle = kernel.CreateEventW(None, True, False, event_name(state))
         if not handle:
             raise RuntimeError('Cannot create service shutdown event')
-        server = uvicorn.Server(uvicorn.Config('service:app', host='127.0.0.1', port=state['port']))
+        server = uvicorn.Server(uvicorn.Config('service:app', host='127.0.0.1', port=state['port'], proxy_headers=False))
         finished = threading.Event()
         def wait():
             while not finished.is_set():
