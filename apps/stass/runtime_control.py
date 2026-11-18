@@ -91,7 +91,7 @@ def start(root=None):
         for key in ('SKILLTO_TABLE_API_URL', 'SKILLTO_TABLE_API_KEY_FILE'):
             env.pop(key, None)
         with (runtime.root / 'logs' / 'service.log').open('ab') as log:
-            process = subprocess.Popen([str(interpreter), str(source / 'supervisor.py'),
+            process = subprocess.Popen([str(interpreter), '-B', str(source / 'supervisor.py'),
                                         '--root', str(runtime.root)], cwd=source, env=env,
                                        stdin=subprocess.DEVNULL, stdout=log, stderr=log,
                                        creationflags=0x08000000 | 0x00000200)

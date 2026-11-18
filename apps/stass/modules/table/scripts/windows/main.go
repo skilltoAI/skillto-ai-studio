@@ -142,7 +142,7 @@ func manage(c config, operation string, r *receipt) error {
 		return err
 	}
 	root := filepath.Dir(filepath.Dir(current.ConfigFile))
-	cmd := exec.Command(current.PythonExecutable, "-X", "utf8", current.BridgeScript, operation, "--root", root)
+	cmd := exec.Command(current.PythonExecutable, "-B", "-X", "utf8", current.BridgeScript, operation, "--root", root)
 	cmd.Dir = current.WorkingDirectory
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: 0x08000000}
 	output, err := cmd.CombinedOutput()
