@@ -5,7 +5,10 @@ param(
     [ValidateRange(1,65535)][int]$Port
 )
 $ErrorActionPreference = 'Stop'
-$actual = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $PSScriptRoot 'release.json')).Hash
+$sha256 = [Security.Cryptography.SHA256]::Create()
+$manifest = [IO.File]::OpenRead((Join-Path $PSScriptRoot 'release.json'))
+try { $actual = [BitConverter]::ToString($sha256.ComputeHash($manifest)).Replace('-', '') }
+finally { $manifest.Dispose(); $sha256.Dispose() }
 if ($actual -ne $ManifestSha256) { throw 'Offline release manifest SHA-256 mismatch' }
 $arguments = @('-B', '-X', 'utf8', (Join-Path $PSScriptRoot 'program/offline_install.py'), '--package', $PSScriptRoot, '--manifest-sha256', $ManifestSha256.ToLowerInvariant())
 if ($Root) { $arguments += @('--root', $Root) }

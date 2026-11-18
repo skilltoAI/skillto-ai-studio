@@ -38,4 +38,4 @@ if __name__ == '__main__':
     parser.add_argument('--root')
     parser.add_argument('--port', type=int)
     options = parser.parse_args()
-    print(json.dumps(install(options.package, options.manifest_sha256, options.root, options.port), ensure_ascii=False))
+    print(json.dumps(install(options.package, options.manifest_sha256, options.root, options.port)))
