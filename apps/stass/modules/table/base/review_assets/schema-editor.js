@@ -1,5 +1,7 @@
 (() => {
   let definitions = [];
+  let initialValues = [];
+  let deleteButton;
   const previousPreview = videoPreview;
   videoPreview = row => previousPreview(row).replaceAll('title="在抖音播放"', 'title="打开原视频"');
   const previousVideos = openVideos;
@@ -14,7 +16,9 @@
       if (!definitions.some(field => field.name === name)) definitions.push({name, label: name, type: typeof value === 'number' ? 'number' : typeof value === 'boolean' ? 'boolean' : 'text'});
     }
     $('#rowDialogTitle').textContent = row ? '编辑记录' : '添加记录';
-    $('#rowForm').innerHTML = definitions.map((field, index) => {
+    deleteButton ??= $('#deleteRow');
+    const form = $('#rowForm');
+    form.innerHTML = definitions.map((field, index) => {
       const value = row?.fields[field.name];
       const name = `field${index}`;
       let control;
@@ -24,6 +28,8 @@
       else control = `<textarea name="${name}" rows="${['short_video_info','multiple_choice'].includes(field.type) ? 4 : 2}">${escapeHtml(value == null ? '' : typeof value === 'object' ? JSON.stringify(value, null, 2) : value)}</textarea>`;
       return `<label class="field-label">${escapeHtml(field.label || field.name)}${control}</label>`;
     }).join('') + '<div class="modal-actions"><button class="button primary" type="submit">保存</button></div>';
+    if (row && deleteButton) form.querySelector('.modal-actions').prepend(deleteButton);
+    initialValues = definitions.map((_, index) => form.elements[`field${index}`].value);
     $('#rowDialog').showModal();
   };
   const previousSelect = selectTable;
@@ -43,9 +49,10 @@
         const fields = {};
         definitions.forEach((field, index) => {
           const value = event.target.elements[`field${index}`].value;
+          if (state.row && value === initialValues[index]) return;
           fields[field.name] = value === '' ? null : field.type === 'number' ? Number(value) : field.type === 'boolean' ? value === 'true' : ['short_video_info','multiple_choice'].includes(field.type) ? JSON.parse(value) : value;
         });
-        await api('/api/row', {tableId: state.table.id, action: state.row ? 'update' : 'create', rowId: state.row?.id, fields});
+        if (!state.row || Object.keys(fields).length) await api('/api/row', {tableId: state.table.id, action: state.row ? 'update' : 'create', rowId: state.row?.id, fields});
         $('#rowDialog').close();
         await refreshTable();
         notify('已保存到本地文件');

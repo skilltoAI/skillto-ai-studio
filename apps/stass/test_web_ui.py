@@ -54,15 +54,31 @@ class WebTests(unittest.TestCase):
                       }
                       const project=await post('workspace',{action:'create',level:'project',knowledgeBaseId:id,name:'Tables'});
                       const table=await post('workspace',{action:'create',level:'table',knowledgeBaseId:id,projectId:project.id,name:'Embedded Board'});
+                      await post('define',{tableId:table.id,fields:[{name:'name',label:'社区名称',type:'text'},{name:'manualProcessing',label:'人工处理备注',type:'text'}]});
+                      await post('row',{action:'create',tableId:table.id,fields:{name:'Fixture community'}});
                       const kb=await post('rewrites',{action:'create_kb',name:'Fixture'});
                       const drafts=await post('rewrites',{action:'create_project',knowledgeBaseId:kb.id,name:'Drafts'});
                       const sections=Object.fromEntries('claims scenario counterintuitive value similar traffic audience cases'.split(' ').map(key=>[key,{text:'',score:null,scoreNote:''}]));
                       const similar={douyin:[],xiaohongshu:[],youtube:[],x:[]};
                       const draft=await post('rewrites',{action:'create',knowledgeBaseId:kb.id,projectId:drafts.id,manuscript:{title:'Embedded fixture',transcript:'[00:00] Source',sections,similar}});
                       await post('rewrites',{action:'link_motion_storyboard',id:draft.id,tableId:table.id,expectedRevision:0});
-                      return draft.id;
+                      return {draftId:draft.id,tableId:table.id};
                     }''',result['body'])
-                    page.goto(state['url']+'?section=rewrites&manuscript='+item+'&rewriteTab=motionStoryboard')
+                    page.goto(state['url']+'?table='+item['tableId'])
+                    row=page.locator('tbody tr[data-id]').first
+                    row.locator('[data-action=edit]').click()
+                    note=page.get_by_role('textbox',name='人工处理备注')
+                    self.assertEqual(note.input_value(),'')
+                    note.fill('已联系运营方\n等待回复')
+                    page.locator('#rowForm').get_by_role('button',name='保存',exact=True).click()
+                    row.get_by_text('等待回复',exact=False).wait_for()
+                    page.reload()
+                    row.get_by_text('等待回复',exact=False).wait_for()
+                    row.locator('[data-action=edit]').click()
+                    self.assertEqual(note.input_value(),'已联系运营方\n等待回复')
+                    self.assertEqual(page.get_by_role('textbox',name='社区名称').input_value(),'Fixture community')
+                    page.locator('#rowDialog .close-modal').click()
+                    page.goto(state['url']+'?section=rewrites&manuscript='+item['draftId']+'&rewriteTab=motionStoryboard')
                     frame=page.frame_locator('iframe.rewrite-motion-table')
                     frame.locator('#tableTitle:text-is("Embedded Board")').wait_for()
                     self.assertEqual(page.locator('iframe.rewrite-motion-table').get_attribute('data-table-loaded'),'1')

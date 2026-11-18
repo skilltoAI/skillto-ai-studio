@@ -80,6 +80,7 @@ def create_endpoint(store, rewrites, reports, motions, workbench, data):
                         asset=ASSETS/(stem+'.'+extension)
                         if asset.is_file() or stem=='motion-system':
                             extra += ('<link rel="stylesheet" href="/'+stem+'.css">' if extension=='css' else '<script src="/'+stem+'.js" defer></script>')
+                extra += '<script src="/schema-editor.js" defer></script>'
                 page=page.replace('</head>',extra+'</head>').replace('抖音账号表','个人工作台')
                 return self.respond(page.encode(),'text/html; charset=utf-8')
             if path.startswith('/api/motions/') or path in ('/motion-system.js','/motion-system.css'):
