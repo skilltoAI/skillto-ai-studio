@@ -35,3 +35,9 @@ Windows 环境依赖锁在 requirements-windows.lock.txt。服务需要 STASS_DA
 ## 网页接入进度
 
 `/STASS/` 已连接原生页面和共享模块适配；首次访问进入 `/STASS/pair`。本机管理令牌可通过 `/STASS/api/v1/pair-code` 获取一次性配对码，手动POST后建立网页会话。完整启动器配对入口仍待接入；不将此开发页面作为生产替换入口。真实Chromium测试覆盖导航、品牌资产与表格基本读写，短链和模块全功能仍需验收。
+
+## 构建离线 Windows x64 候选包
+
+准备构建机 Go、Python 3.13 x64、官方 Python 3.13.17 amd64 嵌入式 zip 和锁定 requirements 的二进制 wheel。构建器验证官方 Python 压缩包摘要，使用本地 wheel 目录离线组装。先使用 `build_launcher.ps1` 构建同一提交的 GUI EXE，再运行 `build_offline.py --help` 检查参数。构建结果为含 `release.json` 和 `Install.ps1` 的目录。候选包可压缩交付，压缩包及清单摘要分别记录。
+
+管理员测试先设置 `STASS_TEST_OFFLINE_PACKAGE` 指向解压目录，再运行 `python -m unittest discover -s apps/stass -p test_offline_package.py -v`。该测试会建立隔离目录，从包内运行时启动真实程序，重复安装并检查数据，最后调用已安装 EXE 停止实例。当前包不覆盖生产数据迁移、宿主自动注册及升级回退。

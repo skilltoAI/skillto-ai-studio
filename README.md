@@ -26,9 +26,15 @@ python scripts/install.py --list
 ```
 
 随后按下面“快速安装”中的 Codex 或 Claude 命令安装技能，已有副本须先比较备份。
-程序目前仅提供[开发运行说明](apps/stass/README.md)和构建入口
-`powershell -NoProfile -File apps/stass/build_launcher.ps1`，产出 `runtime/Skillto.ai Studio.exe`。
-该 EXE 仍是迁移基线启动器，不能视作新 STASS 完整安装包，不应部署替代生产工作台。
+当前可从开发分支构建并验证 **Windows x64 离线候选包**。候选包包含新版 EXE、嵌入式 Python、依赖、前端和 19 个技能。解压后，从可信交付渠道核对发布清单摘要，在包目录运行：
+
+```powershell
+.\Install.ps1 -ManifestSha256 $manifestSha256
+```
+
+`$manifestSha256` 为交付方提供的 `release.json` SHA-256。默认安装到 `%LOCALAPPDATA%\Skillto.ai\Studio`，命令返回实际 EXE 路径及服务地址。重复安装同一个包会复用已有实例。候选版应在隔离环境验证，隔离用法可加 `-Root <新目录> -Port <空闲端口>`。EXE 读取显式隔离配置时传入 `--config <新目录>/config/installation.json`。
+
+各宿主的技能复制和 MCP 配置仍需独立验收。远程私有 npx 安装、生产数据切换和完整升级回退尚未交付。构建与候选包验证见[程序开发说明](apps/stass/README.md)。
 
 [Windows 安装审计及待补项目](docs/WINDOWS-INSTALL-AUDIT.md)列出了证据、已验证范围和阻塞项；
 完整安装要求由[技术规范](技术规范.md)及[启动器与部署规范](docs/规范/启动器与部署规范.md)约束。
