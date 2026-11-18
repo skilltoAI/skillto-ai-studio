@@ -295,14 +295,13 @@
   const stepIcon=key=>'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+({script:'<path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h6"/>',manuscriptAnalysis:'<path d="m12 3 2.5 6 6.5 3-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-3z"/>',keyframeAnalysis:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1"/><path d="m4 17 5-4 3 2 4-5 4 7"/>',openingStoryboard:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',motionStoryboard:'<path d="m9 7 8 5-8 5z"/><rect x="2" y="3" width="20" height="18" rx="2"/>',fullStoryboard:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M3 14h18"/>'}[key])+'</svg>';
   function bindManuscriptTabs() {
     const card=panel.querySelector('.rewrite-transcript-card');if(!card)return;
-    const heading=card.querySelector('.rewrite-version-heading');
     const script=document.createElement('div');script.id='rewrite-pane-script';script.dataset.manuscriptPane='script';script.setAttribute('role','tabpanel');script.setAttribute('aria-labelledby','rewrite-tab-script');
-    for(const child of [...card.children])if(child!==heading)script.append(child);
+    for(const child of [...card.children])script.append(child);
     card.append(script);
     const labels={script:'文案版本',...analysisLabels,openingStoryboard:'前12秒分镜',motionStoryboard:'motion分镜表'};
     const nav=document.createElement('div');nav.className='rewrite-manuscript-tabs';nav.setAttribute('role','tablist');nav.setAttribute('aria-label','稿件内容与分析');
     nav.innerHTML=Object.entries(labels).map(([key,label])=>'<button type="button" id="rewrite-tab-'+key+'" role="tab" data-manuscript-tab="'+key+'" aria-controls="rewrite-pane-'+key+'">'+stepIcon(key)+'<span>'+label+'</span></button>').join('');
-    panel.querySelector(".rewrite-main").prepend(nav);
+    card.before(nav);
     card.append(storyboardPane("openingStoryboard","前12秒分镜"),motionStoryboardPane());
     for(const [key,label] of Object.entries(analysisLabels)) {
       const draft=analysisDraft(key), section=document.createElement('section');
@@ -323,8 +322,6 @@
       if(!labels[key])key='script';current=key;
       for(const button of nav.children){const active=button.dataset.manuscriptTab===key;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;}
       card.querySelectorAll('[data-manuscript-pane]').forEach(node=>node.hidden=node.dataset.manuscriptPane!==key);
-      heading.querySelector('.rewrite-version-heading-actions').hidden=key!=='script';
-      heading.querySelector('h3').textContent=key==='script'?(selected.sourceUrl?.includes('/note/')?'原图文页面 OCR／文案版本':'原视频口播逐字稿／文案版本'):labels[key];
       const motion=card.querySelector('#rewrite-pane-motionStoryboard');if(key==='motionStoryboard')motion.mount();else motion.unmount();
       if(key==='script')refreshLineStats();
     }
@@ -343,7 +340,7 @@
     if(!comparisonViews.has(selected.id)) {
       let saved={};try{saved=JSON.parse(localStorage.getItem('skillto.rewrite.compare.'+selected.id)||'{}')||{};}catch(_error){}
       const requestedLeft=new URL(location.href).searchParams.get('compareLeft');
-      comparisonViews.set(selected.id,{enabled:requestedLeft?true:saved.enabled!==false,leftId:requestedLeft||saved.leftId});
+      comparisonViews.set(selected.id,{enabled:Boolean(requestedLeft)||saved.enabled===true,leftId:requestedLeft||saved.leftId});
     }
     const view=comparisonViews.get(selected.id), versions=selected.transcriptVersions;
     if(!versions.some(v=>v.id===view.leftId))view.leftId=versions[Math.max(0,versions.findIndex(v=>v.id===activeVersion().id)-1)].id;
@@ -353,8 +350,7 @@
   function comparisonHtml() {
     const view=comparisonView(), reference=selected.transcriptVersions.find(v=>v.id===view.leftId), version=activeVersion();
     const options=id=>selected.transcriptVersions.map(v=>'<option value="'+esc(v.id)+'" '+(v.id===id?'selected':'')+'>'+esc(v.label)+'</option>').join('');
-    return '<div class="rewrite-compare-controls"><button type="button" data-compare-toggle>'+ (view.enabled?'单版本编辑':'双版本编辑')+'</button></div>'+
-      '<section class="rewrite-compare" '+(view.enabled?'':'hidden')+' aria-label="双版本多行编辑"><div class="rewrite-dual-editors">'+
+    return '<section class="rewrite-compare" '+(view.enabled?'':'hidden')+' aria-label="双版本多行编辑"><div class="rewrite-dual-editors">'+
       '<label class="rewrite-dual-pane">左侧版本<select data-compare-left aria-label="左侧版本">'+options(reference.id)+'</select><textarea class="rewrite-compare-left-text" aria-label="左侧版本正文" wrap="off" spellcheck="false" '+(reference.id==='v0'?'readonly':'')+'></textarea><span class="rewrite-left-save-status" role="status">'+(reference.id==='v0'?'V0 原稿只读':'已自动保存')+'</span></label>'+
       '<label class="rewrite-dual-pane">右侧版本<select data-compare-right aria-label="右侧版本">'+options(version.id)+'</select><textarea class="rewrite-compare-right-text" aria-label="右侧版本正文" wrap="off" spellcheck="false" '+(version.id==='v0'?'readonly':'')+'></textarea><span class="rewrite-compare-summary" role="status">'+(version.id==='v0'?'V0 原稿只读':'已自动保存')+'</span></label></div></section>';
   }
@@ -421,13 +417,12 @@
     const version = activeVersion();
     if (!version) return '';
     const original = version.id === 'v0';
-    return '<section class="rewrite-card rewrite-transcript-card"><div class="rewrite-version-heading"><h3>'+(selected.sourceUrl?.includes('/note/') ? '原图文页面 OCR／文案版本' : '原视频口播逐字稿／文案版本')+'</h3><div class="rewrite-version-heading-actions"><button type="button" data-generate-voice>小与AI语音</button><button type="button" data-new-version>＋ 新增版本</button></div></div>'+
-      '<div class="rewrite-version-tabs" role="group" aria-label="稿件版本">'+selected.transcriptVersions.map(item => '<button type="button" data-version="'+esc(item.id)+'" class="'+(item.id === version.id?'active':'')+'" aria-pressed="'+(item.id === version.id)+'">'+esc(item.label)+'</button>').join('')+'</div>'+
-      '<p class="rewrite-transcript-note">'+(original?'V0 是 ASR／OCR 原稿，正文只读；可标注逐行类型。':'新版本从上一版复制；稿件、Prompt 和逐行类型修改后自动保存。')+' 视频总时长：'+(selected.videoDurationSeconds ? esc(selected.videoDurationSeconds)+' 秒' : '未设置，编辑稿件后填写秒数')+'。逐行字数不计空格、标点和时间戳；时间仅供估算。全选复制稿件文本框不会带上两侧辅助栏。</p>'+
-      '<div class="rewrite-voice-panel"><span class="rewrite-voice-status" role="status">'+(version.voiceAudio ? '当前版本的小与语音已生成' : '当前版本尚未生成语音')+'</span>'+(version.voiceAudio ? (version.voiceAudio.segments?.length ? version.voiceAudio.segments : [{url:version.voiceAudio.url,label:'完整音频'}]).map(segment=>'<div class="rewrite-voice-segment"><span>'+esc(segment.label)+(segment.characters?' · '+segment.characters+'字':'')+'</span><audio controls preload="none" src="'+esc(segment.url)+'"></audio><a href="'+esc(segment.url)+'" download>下载 WAV</a></div>').join('') : '')+'</div>'+
+    const options = selected.transcriptVersions.map(item => '<option value="'+esc(item.id)+'" '+(item.id===version.id?'selected':'')+'>'+esc(item.label)+'</option>').join('');
+    return '<section class="rewrite-card rewrite-transcript-card"><div class="rewrite-editor-toolbar"><label class="rewrite-version-picker">版本<select data-version-select>'+options+'</select></label><button type="button" data-new-version>＋ 新增版本</button><button type="button" data-compare-toggle>'+(comparisonView().enabled?'单版本编辑':'双版本编辑')+'</button><span class="rewrite-editor-meta"><span class="rewrite-version-status" role="status">'+(original?'原稿只读':'已自动保存')+'</span>'+(selected.videoDurationSeconds?' · '+timeLabel(Number(selected.videoDurationSeconds)):'')+'</span><button type="button" data-generate-voice>小与AI语音</button></div>'+
+      '<details class="rewrite-voice-details" '+(version.voiceAudio?'':'hidden')+'><summary>语音播放与下载</summary>'+
+      '<div class="rewrite-voice-panel"><span class="rewrite-voice-status" role="status">'+(version.voiceAudio ? '当前版本的小与语音已生成' : '当前版本尚未生成语音')+'</span>'+(version.voiceAudio ? (version.voiceAudio.segments?.length ? version.voiceAudio.segments : [{url:version.voiceAudio.url,label:'完整音频'}]).map(segment=>'<div class="rewrite-voice-segment"><span>'+esc(segment.label)+(segment.characters?' · '+segment.characters+'字':'')+'</span><audio controls preload="none" src="'+esc(segment.url)+'"></audio><a href="'+esc(segment.url)+'" download>下载 WAV</a></div>').join('') : '')+'</div></details>'+
       comparisonHtml()+
-      '<div class="rewrite-version-grid"><div class="rewrite-line-panel"><p class="rewrite-line-caption">行 · 字 · 预计起止</p><div class="rewrite-line-table" role="table" aria-label="所有行的字数与估算时间"></div></div><div class="rewrite-version-inputs"><label class="rewrite-script-label">稿件内容<textarea class="rewrite-version-text" rows="20" wrap="off" spellcheck="false" '+(original?'readonly':'')+'>'+esc(version.text)+'</textarea></label><label>此版本的 Prompt<textarea class="rewrite-version-prompt" rows="6" placeholder="记录生成或修改此版本使用的 Prompt" '+(original?'readonly':'')+'>'+esc(version.prompt || '')+'</textarea></label>'+
-      '<div class="rewrite-version-actions"><span class="rewrite-version-status" role="status">已自动保存</span></div></div><div class="rewrite-line-type-panel"><p class="rewrite-line-caption">逐行类型 · 可多选</p><div class="rewrite-line-types" aria-label="稿件逐行类型"></div></div></div>'+
+      '<div class="rewrite-version-grid"><div class="rewrite-version-inputs"><label class="rewrite-script-label">稿件内容<textarea class="rewrite-version-text" rows="20" wrap="off" spellcheck="false" '+(original?'readonly':'')+'>'+esc(version.text)+'</textarea></label><details class="rewrite-prompt-details"><summary>版本 Prompt</summary><label><textarea aria-label="此版本的 Prompt" class="rewrite-version-prompt" rows="6" placeholder="记录生成或修改此版本使用的 Prompt" '+(original?'readonly':'')+'>'+esc(version.prompt || '')+'</textarea></label></details></div><div class="rewrite-line-type-panel"><p class="rewrite-line-caption" title="字数不计标点、空格和时间戳。起止时间仅供估算。">逐行标注 · 字数 / 时间</p><div class="rewrite-line-types" aria-label="稿件逐行类型"></div></div></div>'+
       '<dialog class="rewrite-remotion-dialog"><form method="dialog"><h3>Remotion Prompt</h3><p class="rewrite-remotion-line"></p><label>该行的 Remotion Prompt<textarea class="rewrite-remotion-prompt" rows="8" placeholder="描述这一行对应的 Remotion 画面、动画或镜头"></textarea></label><div class="rewrite-remotion-actions"><button type="button" data-remotion-cancel>取消</button><button type="button" data-remotion-save>保存 Prompt</button></div></form></dialog></section>';
   }
   function timeLabel(seconds) {
@@ -463,17 +458,16 @@
   }
   function refreshLineStats() {
     const editor = panel.querySelector('.rewrite-version-text');
-    const table = panel.querySelector('.rewrite-line-table');
     const types = panel.querySelector('.rewrite-line-types');
-    if (!editor || !table || !types) return;
+    if (!editor || !types) return;
     const rows = lineStats(editor.value,activeVersion()?.id === 'v0');
-    table.innerHTML = rows.map(row => '<div class="rewrite-line-row" role="row" data-line="'+row.lineNo+'"><span>'+row.lineNo+'</span><span>'+row.chars+'</span><span>'+timeLabel(row.start)+'–'+timeLabel(row.end)+'</span></div>').join('');
     types.innerHTML = rows.map(row => {
       const annotation = lineAnnotationsDraft[row.lineNo-1] || {tags:[],remotionPrompt:''};
-      return '<div class="rewrite-line-type-row" data-line="'+row.lineNo+'">'+Object.entries(lineTags).map(([key,label]) => '<button type="button" class="rewrite-line-tag '+(annotation.tags.includes(key)?'active':'')+'" data-tag="'+key+'" aria-pressed="'+annotation.tags.includes(key)+'" aria-label="第 '+row.lineNo+' 行 '+label+'">'+label+'</button>').join('')+
+      const timing = timeLabel(row.start)+'–'+timeLabel(row.end);
+      const tags = row.chars || annotation.tags.length ? Object.entries(lineTags) : [];
+      return '<div class="rewrite-line-type-row" data-line="'+row.lineNo+'"><span class="rewrite-line-meta" title="'+row.chars+' 字 · '+timing+'">'+row.lineNo+' <small>'+row.chars+'字</small></span><span class="rewrite-line-time" title="'+timing+'">'+timeLabel(row.start)+'</span>'+tags.map(([key,label]) => '<button type="button" class="rewrite-line-tag '+(annotation.tags.includes(key)?'active':'')+'" data-tag="'+key+'" aria-pressed="'+annotation.tags.includes(key)+'" aria-label="第 '+row.lineNo+' 行 '+label+'">'+label+'</button>').join('')+
         (annotation.tags.includes('remotion')?'<button type="button" class="rewrite-remotion-edit" data-remotion-edit aria-label="编辑第 '+row.lineNo+' 行 Remotion Prompt">编辑</button>':'')+'</div>';
     }).join('');
-    table.scrollTop = editor.scrollTop;
     types.scrollTop = editor.scrollTop;
   }
   function reconcileAnnotations(nextLines) {
@@ -565,6 +559,8 @@
       status.textContent = result.error || '稿件已修改，请重新生成语音';
     } else if (result.state === 'queued' || result.state === 'running') {
       button.disabled = true;
+      const voice = panel.querySelector('.rewrite-voice-details');
+      if (voice) voice.hidden = false;
       status.textContent = result.state === 'queued' ? '小与语音排队中…' : '小与语音生成中，较长稿件可能需要几分钟…';
       clearTimeout(voicePollTimer);
       voicePollTimer = setTimeout(() => watchVoiceJob(manuscriptId,versionId,result.jobId),2000);
@@ -574,15 +570,13 @@
     const editor = panel.querySelector('.rewrite-version-text');
     if (!editor) return;
     const promptEditor = panel.querySelector('.rewrite-version-prompt');
-    const lineTable = panel.querySelector('.rewrite-line-table');
     const lineTypes = panel.querySelector('.rewrite-line-types');
     draftLines = editor.value.split(/\r?\n/);
     lineAnnotationsDraft = draftLines.map((_,i) => ({tags:[...(activeVersion().lineAnnotations?.[i]?.tags || [])],remotionPrompt:activeVersion().lineAnnotations?.[i]?.remotionPrompt || ''}));
     editor.addEventListener('input', () => {reconcileAnnotations(editor.value.split(/\r?\n/)); refreshLineStats(); queueVersionSave();});
     editor.addEventListener('blur', () => flushVersion().catch(error => notice(error.message,true)));
-    editor.addEventListener('scroll', () => {lineTable.scrollTop = editor.scrollTop; lineTypes.scrollTop = editor.scrollTop;});
-    lineTable.addEventListener('scroll', () => {editor.scrollTop = lineTable.scrollTop; lineTypes.scrollTop = lineTable.scrollTop;});
-    lineTypes.addEventListener('scroll', () => {editor.scrollTop = lineTypes.scrollTop; lineTable.scrollTop = lineTypes.scrollTop;});
+    editor.addEventListener('scroll', () => {lineTypes.scrollTop = editor.scrollTop;});
+    lineTypes.addEventListener('scroll', () => {editor.scrollTop = lineTypes.scrollTop;});
     lineTypes.addEventListener('click', event => {
       const button = event.target.closest('button'), row = button?.closest('[data-line]');
       if (!row) return;
@@ -611,6 +605,9 @@
       try {
         await flushVersion();
         const manuscriptId = selected.id, versionId = activeVersion().id;
+        const voice = panel.querySelector('.rewrite-voice-details');
+        voice.hidden = false;
+        voice.open = true;
         panel.querySelector('.rewrite-voice-status').textContent = '正在提交小与语音任务…';
         showVoiceState(await requestVoice({id:manuscriptId,versionId}),manuscriptId,versionId);
       } catch(error) {const status=panel.querySelector('.rewrite-voice-status');if(status) status.textContent='生成失败：'+error.message;}
@@ -619,11 +616,15 @@
       try {await flushVersion(); const baseId=activeVersion().id; adopt(await api({action:'create_version',id:selected.id,baseVersionId:baseId})); comparisonView().leftId=baseId; render(); notice('已新增 '+activeVersion().label);}
       catch(error) {notice(error.message,true);}
     };
-    panel.querySelectorAll('[data-version]').forEach(button => button.onclick = async () => {
-      if (button.dataset.version === activeVersion().id) return;
-      try {await flushVersion(); adopt(await api({action:'select_version',id:selected.id,versionId:button.dataset.version})); render();}
-      catch(error) {notice(error.message,true);}
-    });
+    const versionPicker = panel.querySelector('[data-version-select]');
+    versionPicker.onchange = async () => {
+      const versionId = versionPicker.value;
+      if (versionId === activeVersion().id) return;
+      versionPicker.disabled = true;
+      try {await flushVersion(); adopt(await api({action:'select_version',id:selected.id,versionId})); render();}
+      catch(error) {versionPicker.value = activeVersion().id; notice(error.message,true);}
+      finally {versionPicker.disabled = false;}
+    };
     refreshLineStats();
     bindComparison();
     watchVoiceJob(selected.id,activeVersion().id);
@@ -643,7 +644,9 @@
     if (!panel || !data) return;
     clearTimeout(voicePollTimer);
     panel.className = 'workspace-section rewrite-section';
-    panel.innerHTML = '<div class="rewrite-layout"><aside class="rewrite-sidebar"><h1>洗稿</h1><p>原稿拆解 · 相似素材 · 二创</p><button data-add="kb">＋ 新建知识库</button><nav aria-label="知识库、项目和稿件">'+tree()+'</nav></aside><main class="rewrite-main"><p class="rewrite-notice" role="status"></p>'+detail()+'</main></div>';
+    panel.innerHTML = '<div class="rewrite-layout"><button type="button" class="rewrite-sidebar-toggle" aria-controls="rewrite-sidebar" aria-expanded="'+(!selected)+'">稿件目录</button><aside id="rewrite-sidebar" class="rewrite-sidebar"><h1>稿件目录</h1><button data-add="kb">＋ 新建知识库</button><nav aria-label="知识库、项目和稿件">'+tree()+'</nav></aside><main class="rewrite-main"><p class="rewrite-notice" role="status"></p>'+detail()+'</main></div>';
+    const sidebarToggle = panel.querySelector('.rewrite-sidebar-toggle');
+    sidebarToggle.onclick = () => sidebarToggle.setAttribute('aria-expanded', String(sidebarToggle.getAttribute('aria-expanded') !== 'true'));
     panel.querySelectorAll('[data-manuscript]').forEach(node => node.onclick = async () => {try {await flushVersion(); selected = data.manuscripts.find(x => x.id === node.dataset.manuscript); editing=false; setSelected(selected.id); render();} catch(error) {notice(error.message,true);}});
     panel.querySelectorAll('summary button').forEach(node => node.onclick = event => { event.preventDefault(); event.stopPropagation(); hierarchy(node.dataset); });
     panel.querySelectorAll('[data-add]').forEach(node => node.onclick = () => add(node.dataset));

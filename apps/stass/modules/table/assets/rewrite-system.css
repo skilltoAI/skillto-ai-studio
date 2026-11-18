@@ -101,6 +101,49 @@
 
 /* Keep segmented voice files beside the manuscript on wider screens. */
 .rewrite-voice-segment{display:grid;gap:6px;padding:8px 0;border-bottom:1px solid #e5eee8}.rewrite-voice-segment audio{width:100%;max-width:100%}
-@media(min-width:1100px){#rewrite-pane-script{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px}#rewrite-pane-script> *{grid-column:1}#rewrite-pane-script>.rewrite-version-tabs,#rewrite-pane-script>.rewrite-transcript-note{grid-column:1/-1}#rewrite-pane-script>.rewrite-voice-panel{grid-column:2;grid-row:3/9;display:block;align-self:start}#rewrite-pane-script>.rewrite-voice-panel>.rewrite-voice-status{display:block;margin-bottom:8px}}
+
+/* Manuscript workspace: title, functional tabs, one command row, then content. */
+.rewrite-section .rewrite-main{display:block;padding:14px clamp(12px,1.6vw,24px) 32px}
+.rewrite-section .rewrite-heading{align-items:center;gap:12px;margin:0 0 8px}
+.rewrite-section .rewrite-heading h2{margin:0;font-size:18px;font-weight:650;line-height:1.4;color:#202522}
+.rewrite-section .rewrite-heading .rewrite-path{margin:0 0 3px;color:#626a64}
+.rewrite-section .rewrite-notice:empty{display:none}
+.rewrite-section .rewrite-notice{min-height:0;margin:0 0 8px}
+.rewrite-section .rewrite-manuscript-tabs{margin:0 0 12px;padding:0;gap:8px!important;border-bottom:1px solid var(--studio-border,#e7e7e7)!important}
+.rewrite-section .rewrite-manuscript-tabs button{flex:0 0 auto;min-width:0;min-height:38px;padding:7px 10px!important;gap:6px;border-bottom:2px solid transparent!important}
+.rewrite-section .rewrite-manuscript-tabs button[aria-selected=true]{border-bottom-color:#27684d!important;color:#245a44!important}
+.rewrite-section .rewrite-manuscript-tabs button::after{display:none}
+.rewrite-section .rewrite-manuscript-tabs svg{width:17px;height:17px}
+.rewrite-section .rewrite-transcript-card{padding:12px;margin-bottom:12px}
+.rewrite-editor-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;font-size:13px}
+.rewrite-version-picker{display:flex;align-items:center;gap:6px;color:#454e47}
+.rewrite-editor-toolbar :is(button,select){min-height:34px;padding:4px 9px;border:1px solid #d9dedb;border-radius:6px;background:#fff;color:#27352c;font:inherit}
+.rewrite-editor-toolbar button{cursor:pointer}
+.rewrite-editor-toolbar button:disabled{opacity:.55;cursor:wait}
+.rewrite-editor-toolbar :is(button,select):focus-visible{outline:2px solid #27684d;outline-offset:2px}
+.rewrite-editor-toolbar [data-new-version]{background:#edf5ef;color:#23523e;border-color:#cbded0}
+.rewrite-editor-meta{margin-inline-start:auto;font-size:12px;color:#59635b;white-space:nowrap}
+.rewrite-comparing .rewrite-version-picker{display:none}
+.rewrite-section .rewrite-version-grid{grid-template-columns:minmax(0,1fr) minmax(214px,246px);gap:12px;overflow:visible}
+.rewrite-section .rewrite-version-grid .rewrite-script-label{gap:5px;color:#38433b}
+.rewrite-section .rewrite-script-label>textarea,.rewrite-section .rewrite-line-types{height:clamp(320px,calc(100vh - 300px),660px)}
+.rewrite-section .rewrite-version-grid .rewrite-line-caption{padding:0 0 5px;line-height:normal;background:none;color:#59635b;font-weight:500}
+.rewrite-section .rewrite-line-types{padding-inline:5px;background:#f8faf8}
+.rewrite-line-meta{flex:0 0 45px;font-variant-numeric:tabular-nums;color:#59635b;font-size:11px}
+.rewrite-line-meta small{color:#657269;font-size:10px}
+.rewrite-line-time{flex:0 0 42px;color:#59635b;font:10px ui-monospace,Consolas,monospace}
+.rewrite-sidebar-toggle{display:none}
+.rewrite-prompt-details>summary,.rewrite-voice-details>summary{color:#46564c;font-size:13px;cursor:pointer;padding:5px 0}
+.rewrite-voice-details{margin-bottom:8px}
+.rewrite-voice-details[hidden]{display:none}
+@media(max-width:760px){
+  .rewrite-section .rewrite-sidebar-toggle{display:block;margin:8px 12px 0;padding:5px 9px;min-height:34px;border:1px solid #d9dedb;border-radius:6px;background:#fff;color:#26382c;font:inherit}
+  .rewrite-section .rewrite-sidebar-toggle[aria-expanded=false]+.rewrite-sidebar{display:none}
+  .rewrite-section .rewrite-heading{display:flex;flex-wrap:wrap}
+  .rewrite-section .rewrite-heading .rewrite-actions{margin:0}
+  .rewrite-section .rewrite-version-grid{grid-template-columns:minmax(0,1fr)}
+  .rewrite-section .rewrite-line-types{height:168px}
+  .rewrite-editor-meta{margin-inline-start:0}
+}
 
 #rewrite-pane-script[hidden]{display:none}
