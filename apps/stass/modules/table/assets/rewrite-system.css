@@ -104,26 +104,30 @@
 
 /* Manuscript workspace: title, functional tabs, one command row, then content. */
 .rewrite-section .rewrite-main{display:block;padding:14px clamp(12px,1.6vw,24px) 32px}
-.rewrite-section .rewrite-heading{align-items:center;gap:12px;margin:0 0 8px}
+.rewrite-section .rewrite-heading{align-items:center;gap:12px;margin:0 0 4px}
 .rewrite-section .rewrite-heading h2{margin:0;font-size:18px;font-weight:650;line-height:1.4;color:#202522}
 .rewrite-section .rewrite-heading .rewrite-path{margin:0 0 3px;color:#626a64}
 .rewrite-section .rewrite-notice:empty{display:none}
 .rewrite-section .rewrite-notice{min-height:0;margin:0 0 8px}
-.rewrite-section .rewrite-manuscript-tabs{margin:0 0 12px;padding:0;gap:8px!important;border-bottom:1px solid var(--studio-border,#e7e7e7)!important}
-.rewrite-section .rewrite-manuscript-tabs button{flex:0 0 auto;min-width:0;min-height:38px;padding:7px 10px!important;gap:6px;border-bottom:2px solid transparent!important}
-.rewrite-section .rewrite-manuscript-tabs button[aria-selected=true]{border-bottom-color:#27684d!important;color:#245a44!important}
-.rewrite-section .rewrite-manuscript-tabs button::after{display:none}
-.rewrite-section .rewrite-manuscript-tabs svg{width:17px;height:17px}
+.rewrite-section .rewrite-manuscript-tabs{margin:0 0 8px;padding:0 2px 2px;gap:0!important;border-bottom:0!important}
+.rewrite-section .rewrite-manuscript-tabs button{flex:0 0 auto;min-width:0;min-height:32px;padding:3px 0!important;gap:6px;color:#5b6760!important;border:0!important}
+.rewrite-section .rewrite-manuscript-tabs button[aria-selected=true]{color:#245a44!important}
+.rewrite-section .rewrite-manuscript-tabs button:not(:last-child)::after{display:block;flex:none;width:22px;height:1px;margin:0 7px 0 2px;background:#c9d6cd}
+.rewrite-step-marker{display:inline-grid;place-items:center;flex:none;width:21px;height:21px;border:1px solid #c1cec5;border-radius:50%;color:#54685d;background:#f7f9f7;font:600 11px/1 system-ui,sans-serif}
+.rewrite-manuscript-tabs button[aria-selected=true] .rewrite-step-marker{color:#fff;background:#27684d;border-color:#27684d}
+.rewrite-manuscript-tabs button:hover .rewrite-step-marker{border-color:#27684d}
 .rewrite-section .rewrite-transcript-card{padding:12px;margin-bottom:12px}
-.rewrite-editor-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;font-size:13px}
-.rewrite-version-picker{display:flex;align-items:center;gap:6px;color:#454e47}
+.rewrite-editor-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;font-size:13px}
+.rewrite-version-choices{position:relative;display:flex;align-items:center;gap:4px;min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:thin;padding:2px;white-space:nowrap}
+.rewrite-editor-toolbar .rewrite-version-choices button{flex:none;min-width:31px;min-height:29px;padding:3px 7px}
+.rewrite-editor-toolbar .rewrite-version-choices button[aria-pressed=true]{color:#234e3c;background:#eaf3ed;border-color:#a8c7b3;font-weight:650}
 .rewrite-editor-toolbar :is(button,select){min-height:34px;padding:4px 9px;border:1px solid #d9dedb;border-radius:6px;background:#fff;color:#27352c;font:inherit}
 .rewrite-editor-toolbar button{cursor:pointer}
 .rewrite-editor-toolbar button:disabled{opacity:.55;cursor:wait}
 .rewrite-editor-toolbar :is(button,select):focus-visible{outline:2px solid #27684d;outline-offset:2px}
 .rewrite-editor-toolbar [data-new-version]{background:#edf5ef;color:#23523e;border-color:#cbded0}
 .rewrite-editor-meta{margin-inline-start:auto;font-size:12px;color:#59635b;white-space:nowrap}
-.rewrite-comparing .rewrite-version-picker{display:none}
+.rewrite-comparing .rewrite-version-choices{display:none}
 .rewrite-section .rewrite-version-grid{grid-template-columns:minmax(0,1fr) minmax(214px,246px);gap:12px;overflow:visible}
 .rewrite-section .rewrite-version-grid .rewrite-script-label{gap:5px;color:#38433b}
 .rewrite-section .rewrite-script-label>textarea,.rewrite-section .rewrite-line-types{height:clamp(320px,calc(100vh - 300px),660px)}
@@ -144,6 +148,7 @@
   .rewrite-section .rewrite-version-grid{grid-template-columns:minmax(0,1fr)}
   .rewrite-section .rewrite-line-types{height:168px}
   .rewrite-editor-meta{margin-inline-start:0}
+  .rewrite-editor-toolbar .rewrite-version-choices{flex-basis:100%}
 }
 
 #rewrite-pane-script[hidden]{display:none}

@@ -292,7 +292,6 @@
     }
     draw();return section;
   }
-  const stepIcon=key=>'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+({script:'<path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h6"/>',manuscriptAnalysis:'<path d="m12 3 2.5 6 6.5 3-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-3z"/>',keyframeAnalysis:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1"/><path d="m4 17 5-4 3 2 4-5 4 7"/>',openingStoryboard:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',motionStoryboard:'<path d="m9 7 8 5-8 5z"/><rect x="2" y="3" width="20" height="18" rx="2"/>',fullStoryboard:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M3 14h18"/>'}[key])+'</svg>';
   function bindManuscriptTabs() {
     const card=panel.querySelector('.rewrite-transcript-card');if(!card)return;
     const script=document.createElement('div');script.id='rewrite-pane-script';script.dataset.manuscriptPane='script';script.setAttribute('role','tabpanel');script.setAttribute('aria-labelledby','rewrite-tab-script');
@@ -300,7 +299,7 @@
     card.append(script);
     const labels={script:'文案版本',...analysisLabels,openingStoryboard:'前12秒分镜',motionStoryboard:'motion分镜表'};
     const nav=document.createElement('div');nav.className='rewrite-manuscript-tabs';nav.setAttribute('role','tablist');nav.setAttribute('aria-label','稿件内容与分析');
-    nav.innerHTML=Object.entries(labels).map(([key,label])=>'<button type="button" id="rewrite-tab-'+key+'" role="tab" data-manuscript-tab="'+key+'" aria-controls="rewrite-pane-'+key+'">'+stepIcon(key)+'<span>'+label+'</span></button>').join('');
+    nav.innerHTML=Object.entries(labels).map(([key,label],index)=>'<button type="button" id="rewrite-tab-'+key+'" role="tab" data-manuscript-tab="'+key+'" aria-controls="rewrite-pane-'+key+'">'+'<span class="rewrite-step-marker" aria-hidden="true">'+(index+1)+'</span><span>'+label+'</span></button>').join('');
     card.before(nav);
     card.append(storyboardPane("openingStoryboard","前12秒分镜"),motionStoryboardPane());
     for(const [key,label] of Object.entries(analysisLabels)) {
@@ -417,8 +416,9 @@
     const version = activeVersion();
     if (!version) return '';
     const original = version.id === 'v0';
-    const options = selected.transcriptVersions.map(item => '<option value="'+esc(item.id)+'" '+(item.id===version.id?'selected':'')+'>'+esc(item.label)+'</option>').join('');
-    return '<section class="rewrite-card rewrite-transcript-card"><div class="rewrite-editor-toolbar"><label class="rewrite-version-picker">版本<select data-version-select>'+options+'</select></label><button type="button" data-new-version>＋ 新增版本</button><button type="button" data-compare-toggle>'+(comparisonView().enabled?'单版本编辑':'双版本编辑')+'</button><span class="rewrite-editor-meta"><span class="rewrite-version-status" role="status">'+(original?'原稿只读':'已自动保存')+'</span>'+(selected.videoDurationSeconds?' · '+timeLabel(Number(selected.videoDurationSeconds)):'')+'</span><button type="button" data-generate-voice>小与AI语音</button></div>'+
+    const versionButtons = selected.transcriptVersions.map(item =>
+      '<button type="button" data-version-choice="'+esc(item.id)+'" aria-pressed="'+(item.id===version.id)+'">'+esc(item.label)+'</button>').join('');
+    return '<section class="rewrite-card rewrite-transcript-card"><div class="rewrite-editor-toolbar"><div class="rewrite-version-choices" role="group" aria-label="稿件版本">'+versionButtons+'</div><button type="button" data-new-version>＋ 新增版本</button><button type="button" data-compare-toggle>'+(comparisonView().enabled?'单版本编辑':'双版本编辑')+'</button><span class="rewrite-editor-meta"><span class="rewrite-version-status" role="status">'+(original?'原稿只读':'已自动保存')+'</span>'+(selected.videoDurationSeconds?' · '+timeLabel(Number(selected.videoDurationSeconds)):'')+'</span><button type="button" data-generate-voice>小与AI语音</button></div>'+
       '<details class="rewrite-voice-details" '+(version.voiceAudio?'':'hidden')+'><summary>语音播放与下载</summary>'+
       '<div class="rewrite-voice-panel"><span class="rewrite-voice-status" role="status">'+(version.voiceAudio ? '当前版本的小与语音已生成' : '当前版本尚未生成语音')+'</span>'+(version.voiceAudio ? (version.voiceAudio.segments?.length ? version.voiceAudio.segments : [{url:version.voiceAudio.url,label:'完整音频'}]).map(segment=>'<div class="rewrite-voice-segment"><span>'+esc(segment.label)+(segment.characters?' · '+segment.characters+'字':'')+'</span><audio controls preload="none" src="'+esc(segment.url)+'"></audio><a href="'+esc(segment.url)+'" download>下载 WAV</a></div>').join('') : '')+'</div></details>'+
       comparisonHtml()+
@@ -616,14 +616,23 @@
       try {await flushVersion(); const baseId=activeVersion().id; adopt(await api({action:'create_version',id:selected.id,baseVersionId:baseId})); comparisonView().leftId=baseId; render(); notice('已新增 '+activeVersion().label);}
       catch(error) {notice(error.message,true);}
     };
-    const versionPicker = panel.querySelector('[data-version-select]');
-    versionPicker.onchange = async () => {
-      const versionId = versionPicker.value;
-      if (versionId === activeVersion().id) return;
-      versionPicker.disabled = true;
-      try {await flushVersion(); adopt(await api({action:'select_version',id:selected.id,versionId})); render();}
-      catch(error) {versionPicker.value = activeVersion().id; notice(error.message,true);}
-      finally {versionPicker.disabled = false;}
+    const choices = panel.querySelector('.rewrite-version-choices');
+    const currentChoice = choices.querySelector('[aria-pressed="true"]');
+    if (currentChoice && choices.scrollWidth > choices.clientWidth) choices.scrollLeft = currentChoice.offsetLeft;
+    choices.onclick = async event => {
+      const button = event.target.closest('[data-version-choice]');
+      if (!button || button.dataset.versionChoice === activeVersion().id) return;
+      const versionId = button.dataset.versionChoice;
+      const buttons = [...choices.querySelectorAll('button')];
+      const returnFocus = document.activeElement === button;
+      buttons.forEach(item => item.disabled = true);
+      try {
+        await flushVersion();
+        adopt(await api({action:'select_version',id:selected.id,versionId}));
+        render();
+        if (returnFocus) panel.querySelector('.rewrite-version-choices [aria-pressed="true"]')?.focus({preventScroll:true});
+      } catch (error) {notice(error.message,true);}
+      finally {buttons.forEach(item => item.disabled = false);}
     };
     refreshLineStats();
     bindComparison();
