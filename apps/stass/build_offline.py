@@ -40,10 +40,13 @@ def build(output, version, python_zip, wheels, launcher):
         shutil.copyfile(launcher,payload/'Skillto.ai Studio.exe')
         with zipfile.ZipFile(python_zip) as archive:
             archive.extractall(runtime)
-        (runtime/'python313._pth').write_text('python313.zip\n.\npackages\n../program\n',encoding='ascii')
+        (runtime/'python313._pth').write_text(
+            'python313.zip\n.\npackages\npackages/win32\npackages/win32/lib\npackages/Pythonwin\n../program\n',encoding='ascii')
         subprocess.run([sys.executable,'-m','pip','install','--no-index','--find-links',str(wheels),
                         '--only-binary=:all:','--no-compile','--target',str(runtime/'packages'),
                         '-r',str(payload/'program/requirements-windows.lock.txt')],check=True)
+        for library in (runtime/'packages/pywin32_system32').glob('*.dll'):
+            shutil.copy2(library, runtime/library.name)
         subprocess.run([str(runtime/'python.exe'),'-B','-c','import uvicorn, mcp, playwright, psycopg'],check=True)
         files={path.relative_to(payload).as_posix():sha256(path) for path in sorted(payload.rglob('*')) if path.is_file()}
         manifest=payload/'release.json'
