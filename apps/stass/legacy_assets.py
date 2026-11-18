@@ -12,7 +12,9 @@ FAMILIES = ('assets/research/', 'assets/rewrite-case/', 'assets/rewrite-audio/',
             'generated/', 'media/', 'artifacts/omni_depth/')
 EXTENSIONS = {'.png','.jpg','.jpeg','.webp','.gif','.mp4','.webm','.wav','.mp3','.txt','.md','.vtt','.srt'}
 PREFIX = '(?:' + '|'.join(map(re.escape,FAMILIES)) + ')'
-REFERENCE = re.compile(r'(?<![\w/:.])(?:https?://(?:127\.0\.0\.1|localhost):8880)?/(' + PREFIX + r'[^\s<>"\'`\])?#]+)')
+SUFFIX = '(?:' + '|'.join(map(re.escape, sorted(EXTENSIONS))) + ')'
+REFERENCE = re.compile(r'(?<![\w/:.])(?:https?://(?:127\.0\.0\.1|localhost):8880)?/('
+                       + PREFIX + r'[^\s<>"\'`\\\])?#]+?' + SUFFIX + r')(?![A-Za-z0-9])', re.IGNORECASE)
 
 
 def relative(value):
