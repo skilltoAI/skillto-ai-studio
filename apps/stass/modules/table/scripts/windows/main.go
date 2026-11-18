@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -25,6 +24,12 @@ import (
 )
 
 type config struct {
+	InstanceID string `json:"instanceId"`
+	Program    struct {
+		Directory string `json:"directory"`
+		Python    string `json:"python"`
+	} `json:"program"`
+	ConfigFile       string `json:"-"`
 	PythonExecutable string `json:"pythonExecutable"`
 	ServiceScript    string `json:"serviceScript"`
 	WorkingDirectory string `json:"workingDirectory"`
@@ -41,6 +46,7 @@ type receipt struct {
 	LogPath              string `json:"logPath"`
 }
 type health struct {
+	InstanceID    string `json:"instanceId"`
 	Service       string `json:"service"`
 	DataRoot      string `json:"dataRoot"`
 	PID           int    `json:"pid"`
@@ -59,51 +65,35 @@ var (
 )
 
 func wide(s string) *uint16     { p, _ := syscall.UTF16PtrFromString(s); return p }
-func samePath(a, b string) bool { return strings.EqualFold(filepath.Clean(a), filepath.Clean(b)) }
-// Accept the old wire identity during a staged client/service upgrade.
-func isTableService(name string) bool {
-	return name == "skillto-ai-studio-table" || name == "skillto-int-table"
-}
 func readConfig(path string) (config, string, error) {
 	var c config
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		return c, "", err
 	}
-	b, err := os.ReadFile(abs)
+	body, err := os.ReadFile(abs)
 	if err != nil {
-		return c, "", fmt.Errorf("无法读取启动配置 %s: %w", abs, err)
+		return c, "", fmt.Errorf("尚未安装共享工作台，请先运行离线安装器: %w", err)
 	}
-	b = bytes.TrimPrefix(b, []byte{0xef, 0xbb, 0xbf})
-	if err = json.Unmarshal(b, &c); err != nil {
-		return c, "", fmt.Errorf("启动配置格式错误: %w", err)
+	if err = json.Unmarshal(bytes.TrimPrefix(body, []byte{0xef, 0xbb, 0xbf}), &c); err != nil {
+		return c, "", err
 	}
-	if c.URL == "" {
-		c.URL = "http://127.0.0.1:8880/"
+	parsed, err := url.Parse(c.URL)
+	if err != nil || parsed.Scheme != "http" || parsed.Hostname() != "127.0.0.1" || parsed.Port() == "" || parsed.Path != "/STASS/" || parsed.User != nil || parsed.RawQuery != "" || parsed.Fragment != "" || c.InstanceID == "" {
+		return c, "", errors.New("共享实例配置无效，必须使用本机STASS地址和实例ID")
 	}
-	u, err := url.Parse(c.URL)
-	if err != nil || u.Scheme != "http" || u.Hostname() != "127.0.0.1" || u.Port() == "" || u.User != nil || u.Path != "/" || u.RawQuery != "" || u.Fragment != "" {
-		return c, "", errors.New("配置 URL 必须为 http://127.0.0.1:端口/；默认端口 8880")
-	}
-	if c.DataRoot == "" || !filepath.IsAbs(c.DataRoot) {
-		return c, "", errors.New("dataRoot 必须是本地报表目录的绝对路径")
-	}
-	if c.BridgeScript == "" {
-		c.BridgeScript = filepath.Join(filepath.Dir(abs), "scripts", "launcher_service.py")
-	}
+	c.ConfigFile = abs
+	c.PythonExecutable = c.Program.Python
+	c.WorkingDirectory = c.Program.Directory
+	c.ServiceScript = filepath.Join(c.Program.Directory, "service.py")
+	c.BridgeScript = filepath.Join(c.Program.Directory, "runtime_control.py")
 	return c, abs, nil
 }
 func configPath(override string) string {
 	if override != "" {
 		return override
 	}
-	exe, _ := os.Executable()
-	adjacent := filepath.Join(filepath.Dir(exe), "launcher.local.json")
-	if _, err := os.Stat(adjacent); err == nil {
-		return adjacent
-	}
-	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".codex", "skills", "skillto-ai-studio-table", "launcher.local.json")
+	return filepath.Join(os.Getenv("LOCALAPPDATA"), "Skillto.ai", "Studio", "config", "installation.json")
 }
 func get(path string) ([]byte, int, error) {
 	resp, err := client.Get(path)
@@ -115,62 +105,15 @@ func get(path string) ([]byte, int, error) {
 	return b, resp.StatusCode, err
 }
 func probe(c config) (bool, int, error) {
-	b, status, err := get(c.URL + "api/launcher-health")
+	body, status, err := get(c.URL + "health")
 	if err != nil {
 		return false, 0, nil
 	}
-	if status == 200 {
-		var h health
-		if json.Unmarshal(b, &h) == nil && isTableService(h.Service) {
-			if !samePath(h.DataRoot, c.DataRoot) {
-				return false, 0, fmt.Errorf("此端口已有报表服务，但数据目录不同：%s", h.DataRoot)
-			}
-			return true, h.PID, nil
-		}
+	var h health
+	if status != 200 || json.Unmarshal(body, &h) != nil || h.Service != "STASS" || h.InstanceID != c.InstanceID {
+		return false, 0, errors.New("此地址不是选定的STASS实例，未接管其他程序")
 	}
-	// Compatibility with a table server that predates the launcher health endpoint.
-	b, status, err = get(c.URL + "api/catalog")
-	if err != nil || status != 200 {
-		return false, 0, nil
-	}
-	var catalog struct {
-		Version        int             `json:"version"`
-		KnowledgeBases json.RawMessage `json:"knowledgeBases"`
-	}
-	if json.Unmarshal(b, &catalog) != nil || catalog.Version != 2 || len(catalog.KnowledgeBases) == 0 || catalog.KnowledgeBases[0] != '[' {
-		return false, 0, nil
-	}
-	html, status, err := get(c.URL)
-	if err == nil && status == 200 && bytes.Contains(html, []byte("/schema-controls.js")) && bytes.Contains(html, []byte("/research-adapter.js")) {
-		log.Print("Reusing legacy local table service; it has no launcher health endpoint")
-		return true, 0, nil
-	}
-	return false, 0, nil
-}
-func occupied(c config) bool {
-	u, _ := url.Parse(c.URL)
-	conn, err := net.DialTimeout("tcp", u.Host, 400*time.Millisecond)
-	if err != nil {
-		return false
-	}
-	conn.Close()
-	return true
-}
-func lock(port string) (func(), error) {
-	// A Windows mutex belongs to an OS thread, not a Go goroutine.
-	runtime.LockOSThread()
-	h, _, err := createMutex.Call(0, 0, uintptr(unsafe.Pointer(wide("Local\\SkillToIntTable-"+port))))
-	if h == 0 {
-		runtime.UnlockOSThread()
-		return nil, fmt.Errorf("创建启动锁失败: %v", err)
-	}
-	result, _, _ := waitObject.Call(h, 45000)
-	if result != 0 && result != 0x80 {
-		syscall.CloseHandle(syscall.Handle(h))
-		runtime.UnlockOSThread()
-		return nil, errors.New("另一个启动器仍在启动服务，请稍后重试")
-	}
-	return func() { releaseMutex.Call(h); syscall.CloseHandle(syscall.Handle(h)); runtime.UnlockOSThread() }, nil
+	return true, h.PID, nil
 }
 func validateFiles(c config) error {
 	for _, p := range []string{c.PythonExecutable, c.ServiceScript, c.BridgeScript} {
@@ -190,72 +133,68 @@ func validateFiles(c config) error {
 	}
 	return nil
 }
-func start(c config, path string, r *receipt) error {
-	u, _ := url.Parse(c.URL)
-	unlock, err := lock(u.Port())
+func manage(c config, operation string, r *receipt) error {
+	current, _, err := readConfig(c.ConfigFile)
 	if err != nil {
 		return err
 	}
-	defer unlock()
-	ready, pid, err := probe(c)
+	if err = validateFiles(current); err != nil {
+		return err
+	}
+	root := filepath.Dir(filepath.Dir(current.ConfigFile))
+	cmd := exec.Command(current.PythonExecutable, "-X", "utf8", current.BridgeScript, operation, "--root", root)
+	cmd.Dir = current.WorkingDirectory
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: 0x08000000}
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("共享工作台%s未完成: %s", operation, string(output))
+	}
+	var result struct {
+		Action string `json:"action"`
+		PID    int    `json:"pid"`
+	}
+	if err = json.Unmarshal(output, &result); err != nil {
+		return fmt.Errorf("管理器返回无效结果: %w", err)
+	}
+	r.Action = result.Action
+	r.ServerPID = result.PID
+	r.URL = current.URL
+	return nil
+}
+func start(c config, path string, r *receipt) error { return manage(c, "start", r) }
+func showPairCode(c config, window uintptr) error {
+	current, _, err := readConfig(c.ConfigFile)
 	if err != nil {
 		return err
 	}
-	if ready {
-		r.Action = "reused"
-		r.ServerPID = pid
-		return nil
+	token, err := os.ReadFile(filepath.Join(filepath.Dir(current.ConfigFile), "admin.token"))
+	if err != nil {
+		return errors.New("无法读取本机配对凭据")
 	}
-	if occupied(c) {
-		return fmt.Errorf("端口 %s 已被其他程序占用，未启动报表服务。请关闭占用程序或修改 launcher.local.json", u.Port())
-	}
-	if err = validateFiles(c); err != nil {
-		return err
-	}
-	cmd := exec.Command(c.PythonExecutable, "-X", "utf8", c.BridgeScript, "--config", path)
-	cmd.Dir = c.WorkingDirectory
-	for _, e := range os.Environ() {
-		k, _, _ := strings.Cut(e, "=")
-		if !strings.EqualFold(k, "SKILLTO_TABLE_API_URL") && !strings.EqualFold(k, "SKILLTO_TABLE_API_KEY_FILE") && !strings.EqualFold(k, "SKILLTO_TABLE_ROOT") {
-			cmd.Env = append(cmd.Env, e)
-		}
-	}
-	cmd.Env = append(cmd.Env, "SKILLTO_TABLE_ROOT="+c.DataRoot, "PYTHONUTF8=1")
-	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: 0x08000000 | 0x00000200}
-	serviceLog, err := os.OpenFile(filepath.Join(filepath.Dir(r.LogPath), "service.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	req, err := http.NewRequest("GET", current.URL+"api/v1/pair-code", nil)
 	if err != nil {
 		return err
 	}
-	cmd.Stdout = serviceLog
-	cmd.Stderr = serviceLog
-	if err = cmd.Start(); err != nil {
-		serviceLog.Close()
-		return fmt.Errorf("无法启动 Python 报表服务: %w", err)
+	req.Header.Set("Authorization", "Bearer "+strings.TrimSpace(string(token)))
+	response, err := client.Do(req)
+	if err != nil {
+		return errors.New("无法连接配对接口")
 	}
-	serviceLog.Close()
-	done := make(chan error, 1)
-	go func() { done <- cmd.Wait() }()
-	deadline := time.Now().Add(35 * time.Second)
-	for time.Now().Before(deadline) {
-		ready, pid, err = probe(c)
-		if err != nil {
-			_ = cmd.Process.Kill()
-			return err
-		}
-		if ready {
-			r.Action = "started"
-			r.ServerPID = pid
-			return nil
-		}
-		select {
-		case exitErr := <-done:
-			return fmt.Errorf("报表服务启动后退出 (%v)，请查看 service.log", exitErr)
-		default:
-		}
-		time.Sleep(250 * time.Millisecond)
+	defer response.Body.Close()
+	if response.StatusCode != 200 {
+		return errors.New("配对接口拒绝请求，请确认本机实例已启动")
 	}
-	_ = cmd.Process.Kill()
-	return errors.New("等待报表服务就绪超时，已结束本次启动的进程。请查看 service.log")
+	var result struct {
+		Code string `json:"code"`
+	}
+	if err = json.NewDecoder(io.LimitReader(response.Body, 4096)).Decode(&result); err != nil {
+		return err
+	}
+	if result.Code == "" {
+		return errors.New("服务未返回配对码")
+	}
+	messageBox.Call(window, uintptr(unsafe.Pointer(wide("网页配对码（5分钟内有效，仅可使用一次）：\n\n"+result.Code+"\n\n可按 Ctrl+C 复制此对话框内容，然后在网页输入配对码。"))), uintptr(unsafe.Pointer(wide("SKillto.ai 个人工作台 · 配对"))), 0)
+	return nil
 }
 func openBrowser(address string) error {
 	runtime.LockOSThread()
@@ -284,7 +223,7 @@ func run() int {
 	if base == "" {
 		base = os.TempDir()
 	}
-	dir := filepath.Join(base, "SkillToTable", "logs")
+	dir := filepath.Join(base, "Skillto.ai", "Studio", "logs")
 	r := receipt{Action: "error", LogPath: filepath.Join(dir, "launcher.log")}
 	err := os.MkdirAll(dir, 0700)
 	if err == nil {

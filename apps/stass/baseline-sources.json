@@ -712,5 +712,17 @@
     "path": "scripts/report_cli.py",
     "baseline": "repository",
     "sha256": "c90b4e009966f51a2ab90573b1e1a723f850c9c8a701e32f8c856003d3dd01d2"
+  },
+  {
+    "module": "table",
+    "path": "assets/table-lineage.js",
+    "baseline": "installed",
+    "sha256": "44b5ea2ada22e59c3a4b36c284ebe4022c532b1fc43d48e0e0da42a5b00136db"
+  },
+  {
+    "module": "table",
+    "path": "assets/table-lineage.css",
+    "baseline": "installed",
+    "sha256": "b005b461fab1b0b9d69385371a9d6c78abf733f6a8a90c94a82700b72ef64f2d"
   }
 ]

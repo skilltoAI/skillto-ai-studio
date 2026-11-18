@@ -31,3 +31,7 @@ Windows 环境依赖锁在 requirements-windows.lock.txt。服务需要 STASS_DA
 尚未提供 install/update/rollback/uninstall，未实现命令明确失败；不能把npx帮助或诊断通过当作一行完整安装通过。
 
 新增测试：`test_runtime_state.py`、`test_runtime_control.py`、`test_multi_client.py`，分别验证跨进程状态、真实服务生命周期及三个独立凭据的stdio/HTTP读写与撤销。
+
+## 网页接入进度
+
+`/STASS/` 已连接原生页面和共享模块适配；首次访问进入 `/STASS/pair`。本机管理令牌可通过 `/STASS/api/v1/pair-code` 获取一次性配对码，手动POST后建立网页会话。完整启动器配对入口仍待接入；不将此开发页面作为生产替换入口。真实Chromium测试覆盖导航、品牌资产与表格基本读写，短链和模块全功能仍需验收。

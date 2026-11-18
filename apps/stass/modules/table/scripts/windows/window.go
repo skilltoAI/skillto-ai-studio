@@ -25,6 +25,7 @@ const (
 	idStop     = 1002
 	idOpen     = 1003
 	idBrowsers = 1004
+	idPair     = 1005
 )
 
 var (
@@ -144,8 +145,9 @@ func controlWindow(c config, path string, r *receipt, resultFile string) error {
 	app.startButton = child("BUTTON", "启动服务", 27, 185, 162, 40, idStart, 0x10000)
 	app.stopButton = child("BUTTON", "关闭服务", 210, 185, 162, 40, idStop, 0x10000)
 	app.openButton = child("BUTTON", "打开工作台", 393, 185, 162, 40, idOpen, 0x10001)
-	child("BUTTON", "浏览器用户 · 创建 / 改名 / 删除 / 打开", 27, 238, 528, 40, idBrowsers, 0x10000)
-	child("STATIC", "最小化后继续运行；关闭窗口会保存并关闭受管浏览器。", 27, 300, 535, 25, 0, 0)
+	child("BUTTON", "浏览器用户", 27, 238, 350, 40, idBrowsers, 0x10000)
+	child("BUTTON", "获取网页配对码", 393, 238, 162, 40, idPair, 0x10000)
+	child("STATIC", "首次使用请获取网页配对码；最小化后服务继续运行。", 27, 300, 535, 25, 0, 0)
 	sendMessage.Call(hwnd, 0x0080, 0, smallIcon)
 	sendMessage.Call(hwnd, 0x0080, 1, largeIcon)
 	app.buttons()
@@ -235,6 +237,8 @@ func (a *controller) perform(operation string, openAfter bool) {
 			result.err = openBrowser(a.cfg.URL)
 			result.result.BrowserOpenRequested = result.err == nil
 			result.ready = true
+		case "pair":
+			result.err = showPairCode(a.cfg, a.hwnd)
 		case "browsers":
 			result.err = openBrowser(a.cfg.URL + "browser-users")
 		case "refresh":
@@ -304,6 +308,10 @@ func windowProc(hwnd uintptr, message uint32, wParam, lParam uintptr) uintptr {
 				a.perform("stop", false)
 			case idOpen:
 				a.perform("open", false)
+			case idPair:
+				if a.running {
+					a.perform("pair", false)
+				}
 			case idBrowsers:
 				if a.running {
 					a.perform("browsers", false)

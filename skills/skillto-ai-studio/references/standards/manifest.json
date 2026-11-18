@@ -2,11 +2,11 @@
   "format": 1,
   "packageVersion": "0.3.0",
   "sha256": {
-    "技术规范.md": "3db98f7694526cf8b86315ee781f747dd6292989d9eaf187fd08da452687b7ec",
+    "技术规范.md": "3efd87fe408ed0cbdfa3c1aca2750a5f2b276ce368c8a8077e19a9d7aaf043af",
     "docs/规范/MCP与API规范.md": "8580f43618bc899b65254195db6014b6dbb84f85ab46c515de1878512ee10b2e",
     "docs/规范/Motion模块规范.md": "3055561372919ed0fde2412d619ff11e07429a2c677d9f0f66dcaec84149fc7b",
     "docs/规范/URL与连接规范.md": "438e4e552a85393802158b3a315591767c441555c4d851c2a07444d7c7517127",
-    "docs/规范/启动器与部署规范.md": "4e323bffb9361a10ef1cb50b7c2e86779d1e353354b2ac9bbbccfb21fe47db5f",
+    "docs/规范/启动器与部署规范.md": "75eaf85a7efe80b0d5e0bbac72be93f655cb087a48a09b8e534e0889b2371346",
     "docs/规范/工具模块规范.md": "e54c6624e3ebc6bbd99dafc8508804ad07250ac90514c3eb5042b385cdfd19f8",
     "docs/规范/报表模块规范.md": "d98aa9789f835cc5fd51b78db9fcf7d0c5d89fd32f0775e46612309c9be6fb67",
     "docs/规范/拉片模块规范.md": "e734f342a9b906dcd758b8ff256ca789e3e4c6368a20c7a3332e3cae11460d9f",
@@ -19,7 +19,7 @@
     "docs/规范/浏览器模块规范.md": "b23b0748b9447f460b0508d20cc1e406fb219314f9cffb6dfc460d39505a0754",
     "docs/规范/版本与协作规范.md": "c3734404fbd7044120a50b4518061c63d46f08c65b8bd5c84a9e6894360b546b",
     "docs/规范/版本与数据一致性规范.md": "756fe549c997b013b5624cebae031bcbae9b3b51de47d90291c99c1fe943a35e",
-    "docs/规范/界面与交互规范.md": "511f212c3de4758088ab3a644c8a94ce4cf1546e7a5268ede7111e6bf1365c6a",
+    "docs/规范/界面与交互规范.md": "230237e0b8d45e21b20791acf9519d816360542841928f9b2ba43ae750aaecf3",
     "docs/规范/表格模块规范.md": "8feb482e4f1dab6fe44fda76cde87e7d83f3da45087a57b343a705b40b23957e",
     "docs/规范/迁移与兼容规范.md": "7a3dd18824859cef9a5344740e41d9a133aca65b9bd09a5f383a2e92ccd2240b"
   }

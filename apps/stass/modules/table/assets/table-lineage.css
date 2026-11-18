@@ -1,0 +1,15 @@
+.table-lineage{margin:0 0 16px;border:1px solid #d9e2df;border-radius:10px;background:#f9fbfa;color:#243b34}
+.table-lineage[hidden]{display:none}
+.table-lineage>summary{cursor:pointer;padding:12px 16px;font-weight:650}
+.table-lineage>summary span{margin-left:8px;color:#60736c;font-size:.82em;font-weight:400}
+.lineage-body{padding:0 16px 16px;display:grid;gap:10px}
+.lineage-body section{padding:8px 0;border-top:1px solid #e6eeea}
+.lineage-body strong{display:block;margin-bottom:3px}
+.lineage-body p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.lineage-body form{display:grid;gap:12px}
+.lineage-body label{display:grid;gap:4px;font-weight:600}
+.lineage-body textarea{box-sizing:border-box;width:100%;min-height:70px;padding:8px;border:1px solid #cad6d0;border-radius:6px;font:inherit;font-weight:400;resize:vertical}
+.lineage-actions{display:flex;gap:8px}
+.lineage-body button{width:max-content;padding:6px 12px;border:1px solid #a9beb4;border-radius:6px;background:#fff;cursor:pointer}
+.lineage-body button:focus-visible,.table-lineage>summary:focus-visible{outline:2px solid #287c61;outline-offset:2px}
+#lineageMessage{font-size:.9em}

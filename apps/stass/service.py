@@ -12,7 +12,11 @@ from typing import Any
 from mcp.server import MCPServer
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.routing import Route
+from http.cookies import SimpleCookie
+from urllib.parse import parse_qs
+from web_session import WebSessions
 
 HERE = Path(__file__).resolve().parent
 DATA = Path(os.environ['STASS_DATA_ROOT']).resolve(strict=True)
@@ -103,9 +107,44 @@ async def api(request: Request):
 
 
 from mcp.server.transport_security import TransportSecuritySettings
+web_sessions = WebSessions()
+
+async def pair(request):
+    if request.method == 'GET':
+        return HTMLResponse('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Skillto.ai 个人工作台配对</title><h1>连接个人工作台</h1><p>在本机程序获取一次性配对码，有效期5分钟。</p><form method="post"><label>配对码 <input name="code" autocomplete="off" required></label><button>连接</button></form></html>', headers={'Cache-Control':'no-store','Content-Security-Policy':"default-src 'none'; form-action 'self'; frame-ancestors 'none'"})
+    if request.headers.get('origin') != str(request.base_url).rstrip('/'):
+        return JSONResponse({'error':'Same-origin pairing required'},status_code=403)
+    raw = await request.body()
+    if len(raw)>1024: return JSONResponse({'error':'Pairing request too large'},status_code=413)
+    try:
+        token = web_sessions.exchange(parse_qs(raw.decode()).get('code',[''])[0], request.client.host if request.client else 'unknown')
+    except ValueError as exc:
+        return JSONResponse({'error':str(exc)},status_code=400)
+    response = RedirectResponse('/STASS/',status_code=303)
+    response.set_cookie('stass_session',token,httponly=True,samesite='strict',secure=request.url.scheme=='https',path='/STASS/',max_age=43200)
+    return response
+
+async def pair_code(request):
+    if request.state.stass_client!='admin' or not request.client or request.client.host not in ('127.0.0.1','::1','testclient'):
+        return JSONResponse({'error':'Local administrator required'},status_code=403)
+    return JSONResponse({'code':web_sessions.issue(),'expiresIn':300},headers={'Cache-Control':'no-store'})
+
+from web_ui import create_endpoint
+web_endpoint=create_endpoint(tables,rewrites,reports,motions,workbench,DATA)
 inner=server.streamable_http_app(streamable_http_path='/STASS/mcp',json_response=True,stateless_http=True,
     transport_security=TransportSecuritySettings(allowed_hosts=list(ALLOWED_HOSTS),allowed_origins=['http://'+host for host in ALLOWED_HOSTS]+['https://'+host for host in ALLOWED_HOSTS]))
 inner.router.routes.extend([Route('/STASS/health',health),Route('/STASS/api/v1/tools/{tool}',api,methods=['POST'])])
+inner.router.routes.extend([Route('/STASS/pair',pair,methods=['GET','POST']),Route('/STASS/api/v1/pair-code',pair_code),Route('/STASS/{path:path}',web_endpoint,methods=['GET','POST'])])
+from contextlib import asynccontextmanager
+original_lifespan=inner.router.lifespan_context
+@asynccontextmanager
+async def web_lifespan(application):
+    async with original_lifespan(application):
+        try: yield
+        finally:
+            from starlette.concurrency import run_in_threadpool
+            await run_in_threadpool(web_endpoint.close)
+inner.router.lifespan_context=web_lifespan
 
 
 class Guard:
@@ -119,13 +158,20 @@ class Guard:
             origin=headers.get(b'origin',b'').decode()
             if origin and origin != scope.get('scheme','http')+'://'+host:
                 return await JSONResponse({'error':'Invalid origin'},status_code=403)(scope,receive,send)
-            if path!='/STASS/health':
+            if path not in ('/STASS/health','/STASS/pair'):
                 authorization = headers.get(b'authorization',b'').decode()
                 is_admin = secrets.compare_digest(authorization,'Bearer '+TOKEN)
                 client_id = 'admin' if is_admin else authenticate(os.environ.get('STASS_CLIENT_REGISTRY'), authorization[7:] if authorization.startswith('Bearer ') else '')
+                cookies=SimpleCookie()
+                try: cookies.load(headers.get(b'cookie',b'').decode())
+                except Exception: pass
+                if not client_id and 'stass_session' in cookies and web_sessions.valid(cookies['stass_session'].value): client_id='web'
+                if client_id=='web' and scope['method'] not in ('GET','HEAD','OPTIONS') and origin!=scope.get('scheme','http')+'://'+host:
+                    return await JSONResponse({'error':'Same-origin request required'},status_code=403)(scope,receive,send)
                 if not client_id:
+                    if path=='/STASS/': return await RedirectResponse('/STASS/pair')(scope,receive,send)
                     return await JSONResponse({'error':'Authentication required'},status_code=401)(scope,receive,send)
-                if client_id != 'admin' and path != '/STASS/mcp':
+                if client_id not in ('admin','web') and path != '/STASS/mcp':
                     return await JSONResponse({'error':'Host credentials only permit MCP access'},status_code=403)(scope,receive,send)
                 scope.setdefault('state', {})['stass_client'] = client_id
         return await self.application(scope,receive,send)
