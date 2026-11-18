@@ -105,7 +105,7 @@
       window.metabaseConfig = {isGuest: true, instanceUrl: catalog.metabaseUrl};
       scriptPromise = new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = catalog.metabaseUrl + '/app/embed.js';
+        script.src = new URL('app/embed.js', catalog.metabaseUrl).href;
         script.onload = resolve; script.onerror = () => {
           scriptPromise = null;
           script.remove();

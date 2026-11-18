@@ -170,7 +170,18 @@
   }
   function checkMotionTable() {
     const frame=panel?.querySelector('.rewrite-motion-table');
-    if(frame?.contentWindow?.rewriteTableReadyToLeave)frame.contentWindow.rewriteTableReadyToLeave();
+    if (!frame) return;
+    let readyToLeave;
+    try { readyToLeave = frame.contentWindow?.rewriteTableReadyToLeave; }
+    catch (error) {
+      if (error.name !== 'SecurityError') throw error;
+      if (frame.dataset.tableLoaded) throw new Error('分镜表连接已中断，请检查未保存内容');
+      return;
+    }
+    if (typeof readyToLeave === 'function') {
+      frame.dataset.tableLoaded = '1';
+      readyToLeave();
+    }
   }
   function motionStoryboardPane() {
     const section=document.createElement('section'),board=selected.motionStoryboard||{versions:[],activeVersionId:'',revision:0};
@@ -204,7 +215,20 @@
         const response=await fetch('/api/table?id='+encodeURIComponent(active.tableId));const table=await response.json();
         if(!response.ok||table.id!==active.tableId)throw Error(table.error||'分镜表不可用');
         if(!loading.isConnected)return;
-        const frame=document.createElement('iframe');frame.className='rewrite-motion-table';frame.title='motion分镜表 '+active.label;frame.src='/?table='+encodeURIComponent(active.tableId)+'&rewriteEmbed=1';host.replaceChildren(frame);
+        const frame=document.createElement('iframe');frame.className='rewrite-motion-table';frame.title='motion分镜表 '+active.label;frame.src='/?table='+encodeURIComponent(active.tableId)+'&rewriteEmbed=1';
+        frame.addEventListener('load', () => {
+          try {
+            if (typeof frame.contentWindow.rewriteTableReadyToLeave !== 'function') throw new Error('分镜表脚本未就绪');
+            frame.dataset.tableLoaded = '1';
+          } catch (error) {
+            if (frame.dataset.tableLoaded) return;
+            const message = document.createElement('p');
+            message.setAttribute('role', 'status');
+            message.textContent = '分镜表未能加载，请重新进入此标签重试。';
+            host.replaceChildren(message);
+          }
+        });
+        host.replaceChildren(frame);
       }catch(e){if(loading.isConnected){loading.textContent='载入失败：'+e.message;const retry=document.createElement('button');retry.type='button';retry.textContent='重试';retry.onclick=()=>{host.replaceChildren();section.mount();};host.append(retry);}}
     };
     section.unmount=()=>{section.querySelector('[data-motion-host]').replaceChildren();};

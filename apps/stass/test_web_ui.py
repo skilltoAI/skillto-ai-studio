@@ -45,6 +45,29 @@ class WebTests(unittest.TestCase):
                     request=urllib.request.Request(state['url']+'api/v1/tools/table_workspace',data=b'{}',headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'})
                     with urllib.request.urlopen(request) as response:
                         self.assertEqual(json.load(response)['result']['knowledgeBases'][0]['id'],result['body']['id'])
+                    item=page.evaluate('''async ({id}) => {
+                      async function post(path, body) {
+                        const response=await fetch('/STASS/api/v1/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+                        const result=await response.json();
+                        if(!response.ok) throw Error(JSON.stringify(result));
+                        return result;
+                      }
+                      const project=await post('workspace',{action:'create',level:'project',knowledgeBaseId:id,name:'Tables'});
+                      const table=await post('workspace',{action:'create',level:'table',knowledgeBaseId:id,projectId:project.id,name:'Embedded Board'});
+                      const kb=await post('rewrites',{action:'create_kb',name:'Fixture'});
+                      const drafts=await post('rewrites',{action:'create_project',knowledgeBaseId:kb.id,name:'Drafts'});
+                      const sections=Object.fromEntries('claims scenario counterintuitive value similar traffic audience cases'.split(' ').map(key=>[key,{text:'',score:null,scoreNote:''}]));
+                      const similar={douyin:[],xiaohongshu:[],youtube:[],x:[]};
+                      const draft=await post('rewrites',{action:'create',knowledgeBaseId:kb.id,projectId:drafts.id,manuscript:{title:'Embedded fixture',transcript:'[00:00] Source',sections,similar}});
+                      await post('rewrites',{action:'link_motion_storyboard',id:draft.id,tableId:table.id,expectedRevision:0});
+                      return draft.id;
+                    }''',result['body'])
+                    page.goto(state['url']+'?section=rewrites&manuscript='+item+'&rewriteTab=motionStoryboard')
+                    frame=page.frame_locator('iframe.rewrite-motion-table')
+                    frame.locator('#tableTitle:text-is("Embedded Board")').wait_for()
+                    self.assertEqual(page.locator('iframe.rewrite-motion-table').get_attribute('data-table-loaded'),'1')
+                    page.get_by_role('tab',name='文案版本').click()
+                    page.locator('iframe.rewrite-motion-table').wait_for(state='detached')
                     self.assertEqual(errors,[])
                     self.assertEqual(failed_assets,[])
                     logo=page.locator('.workspace-nav-brand img')
@@ -53,7 +76,8 @@ class WebTests(unittest.TestCase):
                     page.wait_for_load_state('networkidle')
                     self.assertTrue(page.url.startswith(state['url']))
                     page.goto(state['url']+'browser-users')
-                    page.wait_for_load_state('networkidle')
+                    page.get_by_text('暂无浏览器用户，请先创建。',exact=True).wait_for()
+                    self.assertEqual(failed_assets,[])
                     self.assertEqual(errors,[])
                     browser.close()
             finally: stop(root)

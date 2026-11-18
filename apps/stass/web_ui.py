@@ -53,7 +53,16 @@ def create_endpoint(store, rewrites, reports, motions, workbench, data):
             if any(kind in content_type for kind in ('html','javascript','css')):
                 body = prefix_text(body.decode('utf-8')).encode('utf-8')
             if 'text/html' in content_type:
-                self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' https: data:; media-src 'self' https: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src 'self' http://127.0.0.1:3330; frame-ancestors 'none'")
+                page = urlsplit(self.path)
+                query = parse_qs(page.query)
+                embedded_table = page.path == '/' and query.get('rewriteEmbed') == ['1'] and bool(query.get('table'))
+                ancestors = "'self'" if embedded_table else "'none'"
+                metabase = reports.METABASE_URL
+                self.send_header('Content-Security-Policy',
+                    f"default-src 'self'; img-src 'self' https: data: {metabase}; media-src 'self' https: blob:; "
+                    f"script-src 'self' {metabase}; connect-src 'self' {metabase}; "
+                    f"style-src 'self' 'unsafe-inline' {metabase}; font-src 'self' data: {metabase}; "
+                    f"frame-src 'self' {metabase}; frame-ancestors {ancestors}")
             self.send_response(status)
             self.send_header('Content-Type',content_type)
             self.send_header('Content-Length',len(body))
