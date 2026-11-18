@@ -22,7 +22,7 @@ async def serve(profile_path):
         _, result = await execute(profile(), 'call', params.name, params.arguments)
         return types.CallToolResult.model_validate(result)
 
-    server = Server('STASS client bridge', version='0.4.0-dev',
+    server = Server('STASS client bridge', version='0.4.6',
                     on_list_tools=list_tools, on_call_tool=call_tool)
     async with stdio_server() as (read, write):
         await server.run(read, write, server.create_initialization_options())

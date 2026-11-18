@@ -16,17 +16,16 @@
 
 **当前未达到“在另一台 Windows 上完整安装 STASS 程序与全部技能”的交付门槛。**
 技能复制安装器已存在；它不安装独立程序或自动注册新 STASS MCP。
-本次 STASS 开发位于 `codex/stass-migration` 分支，普通 clone 的默认分支不包含该分支全部变更。
-要检查此开发版本，请显式获取该分支（需使用你自己的仓库读取权限）：
+`main` 包含 STASS 程序和技能源码。要安装与 `v0.4.6` 对应的技能版本，请获取固定标签并使用自己的仓库读取权限：
 
 ```powershell
-git clone --branch codex/stass-migration --single-branch https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+git clone --branch v0.4.6 --single-branch https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
 cd skillto-ai-studio
 python scripts/install.py --list
 ```
 
 随后按下面“快速安装”中的 Codex 或 Claude 命令安装技能，已有副本须先比较备份。
-当前可从开发分支构建并验证 **Windows x64 离线候选包**。候选包包含新版 EXE、嵌入式 Python、依赖、前端和 19 个技能。解压后，从可信交付渠道核对发布清单摘要，在包目录运行：
+可从发行标签构建并验证 **Windows x64 离线候选包**。候选包包含新版 EXE、嵌入式 Python、依赖、前端和 19 个技能。解压后，从可信交付渠道核对发布清单摘要，在包目录运行：
 
 ```powershell
 .\Install.ps1 -ManifestSha256 $manifestSha256
@@ -34,7 +33,7 @@ python scripts/install.py --list
 
 `$manifestSha256` 为交付方提供的 `release.json` SHA-256。默认安装到 `%LOCALAPPDATA%\Skillto.ai\Studio`，命令返回实际 EXE 路径及服务地址。重复安装同一个包会复用已有实例。候选版应在隔离环境验证，隔离用法可加 `-Root <新目录> -Port <空闲端口>`。EXE 读取显式隔离配置时传入 `--config <新目录>/config/installation.json`。
 
-各宿主的技能复制和 MCP 配置仍需独立验收。远程私有 npx 安装、生产数据切换和完整升级回退尚未交付。构建与候选包验证见[程序开发说明](apps/stass/README.md)。
+各宿主的技能复制和 MCP 配置仍需独立验收。远程私有 npx 安装、跨主机数据迁移和完整升级回退仍需验收。构建与候选包验证见[程序开发说明](apps/stass/README.md)。
 
 [Windows 安装审计及待补项目](docs/WINDOWS-INSTALL-AUDIT.md)列出了证据、已验证范围和阻塞项；
 完整安装要求由[技术规范](技术规范.md)及[启动器与部署规范](docs/规范/启动器与部署规范.md)约束。

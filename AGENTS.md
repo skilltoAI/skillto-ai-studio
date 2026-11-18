@@ -49,6 +49,7 @@ an installed copy, compare it with the repository and copy only the intended fil
   不要求将密码放入 `.env`、Git 配置或仓库文件。
 - Codeup 网络操作必须通过上述脚本明确选择操作方向：`probe --scope fetch`、
   `probe --scope push`、`fetch`、`clone --destination <目录>`、`push --branch codex/<任务>`。
+  只有用户明确授权主分支合并和发布时，允许用 `release --tag vX.Y.Z` 原子推送 main 和已验证标签。
   `probe` 只检查远端读取，不能证明写权限；`fetch` 不等于已合并或成功同步。
 - 保留原 `origin`，不把 Codeup 凭据用于 GitHub。不自动推送、合并主分支、打标签或发布。
   详细操作和两天同步规则见 [CONTRIBUTING.md](CONTRIBUTING.md)。

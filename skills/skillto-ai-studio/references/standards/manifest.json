@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "packageVersion": "0.3.0",
+  "packageVersion": "0.4.6",
   "sha256": {
     "技术规范.md": "3efd87fe408ed0cbdfa3c1aca2750a5f2b276ce368c8a8077e19a9d7aaf043af",
     "docs/规范/MCP与API规范.md": "8580f43618bc899b65254195db6014b6dbb84f85ab46c515de1878512ee10b2e",

@@ -108,6 +108,18 @@ def command(scope: str, operation: str, target: str | None = None):
         if checked.returncode or not target.startswith('codex/'):
             raise ValueError('Specify a valid codex/ task branch; this helper never pushes main, tags or deletes')
         args += ['push', url, f'refs/heads/{target}:refs/heads/{target}']
+    elif operation == 'release' and scope == 'push' and target:
+        import re
+        if not re.fullmatch(r'v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', target):
+            raise ValueError('Release requires an explicit vMAJOR.MINOR.PATCH tag')
+        tag = 'refs/tags/' + target
+        annotated = subprocess.run(['git', 'cat-file', '-t', tag], capture_output=True)
+        revision = subprocess.run(['git', 'rev-parse', '--verify', tag+'^{commit}'], capture_output=True)
+        head = subprocess.run(['git', 'rev-parse', '--verify', 'HEAD'], capture_output=True)
+        if annotated.stdout.strip() != b'tag' or revision.returncode or head.returncode or revision.stdout != head.stdout:
+            raise ValueError('Release requires a local annotated tag pointing to the current commit')
+        commit = head.stdout.decode('ascii').strip()
+        args += ['push', '--atomic', url, f'{commit}:refs/heads/main', f'{tag}:{tag}']
     else:
         raise ValueError('Operation and credential scope do not match')
     return args, env, values
@@ -117,14 +129,16 @@ def main() -> int:
     if len(sys.argv) == 4 and sys.argv[1] == '_credential':
         return credential(sys.argv[2], sys.argv[3])
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation', choices=['probe', 'fetch', 'clone', 'push'])
+    parser.add_argument('operation', choices=['probe', 'fetch', 'clone', 'push', 'release'])
     parser.add_argument('--scope', choices=['fetch', 'push'])
     parser.add_argument('--destination')
     parser.add_argument('--branch')
+    parser.add_argument('--tag')
     a = parser.parse_args()
-    scope = a.scope or ('push' if a.operation == 'push' else 'fetch')
+    scope = a.scope or ('push' if a.operation in ('push', 'release') else 'fetch')
     try:
-        args, env, values = command(scope, a.operation, a.destination if a.operation == 'clone' else a.branch)
+        target = {'clone':a.destination, 'push':a.branch, 'release':a.tag}.get(a.operation)
+        args, env, values = command(scope, a.operation, target)
         result = subprocess.run(args, env=env, capture_output=True)
         for output, stream in [(result.stdout, sys.stdout), (result.stderr, sys.stderr)]:
             message = output.decode('utf-8', errors='replace')

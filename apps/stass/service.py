@@ -41,7 +41,7 @@ import motion_http as motions
 import workbench
 rewrites.TABLE_STORE = tables
 
-server = MCPServer('STASS', version='0.4.0-dev')
+server = MCPServer('STASS', version='0.4.6')
 TOOLS = {name: (description, callback, tables.tool_schema(name, description, hints)['inputSchema'])
          for name, (description, callback, hints) in tables.TOOLS.items() if name.startswith('table_')}
 
@@ -87,7 +87,7 @@ for name, (description, callback, schema) in TOOLS.items():
 
 
 async def health(request):
-    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'pid':os.getpid(),'launchId':os.environ.get('STASS_LAUNCH_ID'),'releaseCommit':os.environ.get('STASS_RELEASE_COMMIT'),'version':os.environ.get('STASS_RELEASE_VERSION','0.4.0-dev'),'capabilities':list(TOOLS),
+    return JSONResponse({'service':'STASS','instanceId':INSTANCE,'pid':os.getpid(),'launchId':os.environ.get('STASS_LAUNCH_ID'),'releaseCommit':os.environ.get('STASS_RELEASE_COMMIT'),'version':os.environ.get('STASS_RELEASE_VERSION','0.4.6'),'capabilities':list(TOOLS),
                          'protocol':1,'dataSchema':int(os.environ.get('STASS_DATA_SCHEMA','1')),
                          'status':'development; UI and cutover pending'})
 

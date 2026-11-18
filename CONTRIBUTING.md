@@ -92,7 +92,7 @@ python scripts/codeup_git.py clone --destination <新的目录>
 python scripts/codeup_git.py push --branch codex/<任务>
 ```
 
-该入口只推送指定任务分支，不推送主分支、标签、删除或 force 更新。下列发布规则继续适用。
+该入口只推送指定任务分支。经用户明确授权合并主分支并发布后，确保本地发布提交包含 Codeup main，验证产物，创建指向 HEAD 的带说明标签，再用 `python scripts/codeup_git.py release --tag vX.Y.Z` 原子推送 main 和该标签。此命令不允许强推；分支保护报错时走 Codeup 审查。推送后回读 main 及标签所指提交。下列发布规则继续适用。
 
 1. 确定代码许可和品牌素材的再分发范围；当前仓库未声明开源许可证，不推定 MIT 等许可。
 2. 审查变更、暂存清单和敏感信息；确认所需新技能/参考资源均已纳入提交。
