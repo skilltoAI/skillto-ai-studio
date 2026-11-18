@@ -6,6 +6,7 @@ The expected manifest digest must come from the explicitly selected release reco
 from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
@@ -53,18 +54,26 @@ def verify_package(root, expected_digest):
     files = manifest.get('files', {})
     if not files or len({name.casefold() for name in files}) != len(files):
         raise ValueError('Empty or case-colliding release file list')
-    for name, digest in files.items():
-        if name == 'release.json' or not re.fullmatch('[a-f0-9]{64}', digest):
-            raise ValueError('Invalid release file hash')
-        if sha256(relative_file(root, name)) != digest:
-            raise ValueError('Release file digest mismatch: ' + name)
+    if 'release.json' in files:
+        raise ValueError('Manifest cannot list itself')
     actual = set()
-    for path in root.rglob('*'):
-        relative_file(root, path.relative_to(root).as_posix())
-        if path.is_file():
-            actual.add(path.relative_to(root).as_posix())
-    if actual != set(files) | {'release.json'}:
-        raise ValueError('Unlisted files in release package')
+    for directory, directories, filenames in os.walk(root, followlinks=False):
+        for name in directories + filenames:
+            path = Path(directory) / name
+            if path.is_symlink() or (hasattr(path, 'is_junction') and path.is_junction()):
+                raise ValueError('Release links and junctions are forbidden')
+        for name in filenames:
+            path = Path(directory) / name
+            relative = path.relative_to(root).as_posix()
+            if relative == 'release.json':
+                continue
+            if relative not in files:
+                raise ValueError('Unlisted files in release package: ' + relative)
+            if sha256(path) != files[relative]:
+                raise ValueError('Release file digest mismatch: ' + relative)
+            actual.add(relative)
+    if actual != set(files):
+        raise ValueError('Missing files in release package')
     for required in ('program/service.py', 'program/supervisor.py', 'runtime/python.exe', 'Skillto.ai Studio.exe'):
         if required not in files:
             raise ValueError('Required program component missing: ' + required)

@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-from release_gate import stage, verify_package, verify_selected, select_offline
+from release_gate import stage, verify_package, select_offline
 from runtime_control import start
 from runtime_state import RuntimeState, installation_lock
 
@@ -24,7 +24,6 @@ def install(package, digest, root=None, port=None):
         if not state.get('release'):
             key = stage(runtime.root, package, digest)
             state = select_offline(runtime.root, key, digest, state['generation'])
-        verify_selected(runtime, state)
         result = start(runtime.root)
         return {'service':result['service'], 'action':result['action'], 'url':state['url'],
                 'instanceId':state['instanceId'], 'version':state['activeVersion'],

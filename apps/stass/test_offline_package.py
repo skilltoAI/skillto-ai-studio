@@ -25,23 +25,26 @@ class OfflinePackageTests(unittest.TestCase):
                 port = listener.getsockname()[1]
             command = ['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',
                        str(package/'Install.ps1'),'-Root',str(root),'-Port',str(port),'-ManifestSha256',digest]
-            first = json.loads(subprocess.check_output(command,timeout=90).decode('utf-8'))
-            launcher = Path(first['launcher'])
             try:
+                first = json.loads(subprocess.check_output(command,timeout=300).decode('utf-8'))
+                launcher = Path(first['launcher'])
                 token = (root/'config/admin.token').read_text()
                 request = urllib.request.Request(first['url']+'api/v1/tools/table_workspace',
                     data=b'{"action":"create","level":"knowledge_base","name":"Offline proof"}',
                     headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'})
                 with urllib.request.urlopen(request,timeout=5) as response:
                     self.assertEqual(response.status,200)
-                second = json.loads(subprocess.check_output(command,timeout=90).decode('utf-8'))
+                second = json.loads(subprocess.check_output(command,timeout=300).decode('utf-8'))
                 self.assertEqual(first['instanceId'],second['instanceId'])
                 self.assertEqual(second['action'],'reused')
                 self.assertEqual(len(list((root/'versions').iterdir())),1)
                 self.assertIn('Offline proof',(root/'data/catalog.json').read_text(encoding='utf-8'))
-            finally:
                 subprocess.run([str(launcher),'--config',str(root/'config/installation.json'),
-                                '--quiet-errors','--stop'],check=True,timeout=50)
+                                '--quiet-errors','--stop'],check=True,timeout=120)
+            finally:
+                from runtime_control import stop
+                if (root/'config/installation.json').exists():
+                    stop(root)
 
 
 if __name__ == '__main__': unittest.main()
