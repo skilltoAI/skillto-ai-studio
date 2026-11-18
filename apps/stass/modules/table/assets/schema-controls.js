@@ -1,6 +1,10 @@
 /* Shared schema-driven controls for the SkillTo review page. */
 (() => {
   const views = new Map();
+  const noteDrafts = new Map();
+  const noteKey = (tableId, rowId, field) => JSON.stringify([tableId,rowId,field]);
+  const inlineNote = field => field.type === 'text' && !field.readOnly &&
+    (field.name === 'manualProcessing' || field.label === '人工处理备注');
   const mediaTypes = new Set(['image', 'video', 'short_video_info']);
   const present = value => value != null && (typeof value !== 'string' || value.trim() !== '') && (!Array.isArray(value) || value.some(item => item != null && item !== ''));
   const printable = value => Array.isArray(value) ? value.map(printable).join(' / ') : value && typeof value === 'object' ? JSON.stringify(value) : String(value ?? '');
@@ -73,7 +77,7 @@
     }
     if (host.dataset.table !== state.table.id || view.schema !== signature) {
       host.dataset.table = state.table.id; view.schema = signature;
-      host.innerHTML = `<details class="schema-filter-panel"><summary>字段筛选 <span id="schemaActiveCount"></span></summary><div class="schema-fields">${fields.map((f,i) => fieldControl(f,i,view.filters[f.name])).join('')}</div><p id="schemaFilterError" role="status"></p></details><details class="schema-column-panel"><summary>显示字段</summary><div class="schema-column-actions"><button type="button" data-columns="all">全选</button><button type="button" data-columns="reset">恢复默认</button></div><div class="schema-columns">${fields.map(f=>`<label><input type="checkbox" data-column="${escapeHtml(f.name)}" ${view.visible.has(f.name)?'checked':''}>${escapeHtml(f.label||f.name)}</label>`).join('')}</div></details>`;
+      host.innerHTML = `<details class="schema-filter-panel"><summary>字段筛选 <span id="schemaActiveCount"></span></summary><div class="schema-fields">${fields.map((f,i) => fieldControl(f,i,view.filters[f.name])).join('')}</div><p id="schemaFilterError" role="status"></p></details><details class="schema-column-panel"><summary>显示字段</summary><div class="schema-column-actions"><button type="button" data-columns="all">全选</button><button type="button" data-columns="reset">恢复默认</button></div><div class="schema-columns">${fields.map(f=>`<label><input type="checkbox" data-column="${escapeHtml(f.name)}" ${view.visible.has(f.name)?'checked':''}>${escapeHtml(f.label||f.name)}</label>`).join('')}</div></details><button class="button schema-field-order" type="button" ${state.table.fields.length<2?'disabled':''}>字段排序</button>`;
       host.oninput = event => {
         const cell = event.target.closest('[data-field]');
         if (!cell) return;
@@ -90,6 +94,7 @@
         } else if (event.target.matches('select')) host.oninput(event);
       };
       host.onclick = event => {
+        if (event.target.closest('.schema-field-order')) { openFieldOrder(); return; }
         const mode = event.target.dataset.columns;
         if (!mode) return;
         const current = viewFor(state.table);
@@ -107,6 +112,49 @@
       const r=view.filters[f.name]; return r?.min && r?.max && (f.type==='number'?Number(r.min)>Number(r.max):r.min>r.max);
     });
     document.getElementById('schemaFilterError').textContent = inverted.length ? `${inverted.map(f=>f.label||f.name).join('、')}：最小值不能大于最大值` : '';
+  }
+  function openFieldOrder() {
+    const tableId = state.table.id;
+    const fields = new Map(state.table.fields.map(field => [field.name,field.label || field.name]));
+    const original = [...fields.keys()];
+    const order = [...original];
+    const dialog = document.createElement('dialog');
+    dialog.className = 'schema-order-dialog';
+    dialog.setAttribute('aria-labelledby','schemaOrderTitle');
+    dialog.innerHTML = '<h2 id="schemaOrderTitle">字段排序</h2><p>选择字段后调整位置。排序对本表生效。</p><select size="10" aria-label="字段顺序"></select><div class="schema-order-actions"><button type="button" data-move="-1">↑ 上移</button><button type="button" data-move="1">↓ 下移</button><button type="button" data-first>移到首列</button></div><p role="status" class="schema-order-status"></p><div class="schema-order-actions"><button type="button" data-cancel>取消</button><button type="button" data-save>保存顺序</button></div>';
+    const list = dialog.querySelector('select');
+    const status = dialog.querySelector('[role=status]');
+    function draw(selected) {
+      list.replaceChildren(...order.map((name,index) => new Option(`${index+1}. ${fields.get(name)}`,name)));
+      list.value = selected;
+    }
+    function move(target) {
+      const index = list.selectedIndex;
+      if (index < 0 || target < 0 || target >= order.length || index === target) return;
+      const [name] = order.splice(index,1);
+      order.splice(target,0,name);
+      draw(name);
+    }
+    dialog.querySelectorAll('[data-move]').forEach(button => {
+      button.onclick = () => move(list.selectedIndex + Number(button.dataset.move));
+    });
+    dialog.querySelector('[data-first]').onclick = () => move(0);
+    dialog.querySelector('[data-cancel]').onclick = () => dialog.close();
+    dialog.addEventListener('close',() => dialog.remove());
+    dialog.querySelector('[data-save]').onclick = async event => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      try {
+        const definitions = await api('/api/define',{tableId,fieldOrder:order,expectedFieldOrder:original});
+        if (state.table?.id === tableId) { state.table.fields = definitions; renderRows(); }
+        dialog.close();
+        notify('已保存字段顺序');
+      } catch (error) {status.textContent = error.message;}
+      finally {button.disabled = false;}
+    };
+    draw(original[0]);
+    document.body.append(dialog);
+    dialog.showModal();
   }
   function saveColumns(view) {
     try { localStorage.setItem(`skillto-columns:${state.table.id}`, JSON.stringify([...view.visible])); }
@@ -209,6 +257,13 @@
   }
   function cellHtml(row,field) {
     const value=row.fields[field.name];
+    if (inlineNote(field)) {
+      const key = noteKey(state.table.id,row.id,field.name);
+      const label = escapeHtml(field.label || field.name);
+      const draft = noteDrafts.get(key);
+      if (draft) return `<form class="schema-inline-note" data-note-field="${escapeHtml(field.name)}"><textarea rows="3" aria-label="${label}">${escapeHtml(draft.text)}</textarea><div><button type="submit" ${draft.pending?'disabled':''}>保存备注</button><button type="button" data-note-cancel ${draft.pending?'disabled':''}>取消</button></div><small role="status">${escapeHtml(draft.error || '')}</small></form>`;
+      return `<button class="schema-note-display" type="button" data-note-edit="${escapeHtml(field.name)}" aria-label="编辑${label}">${present(value)?escapeHtml(printable(value)):'＋ 填写备注'}</button>`;
+    }
     if (field.candidateGroup && field.type==='image') return renderCandidateCell(row,field).replace(/^<td[^>]*>|<\/td>$/g,'');
     if (field.type==='short_video_info') return videoPreview({...row,fields:{...row.fields,recentVideos:Array.isArray(value)?value:[]}});
     if (field.type==='image') {
@@ -246,6 +301,50 @@
   };
   document.addEventListener('DOMContentLoaded',()=>{
     const rows = $('#rows');
+    rows.addEventListener('click',event=>{
+      const edit = event.target.closest('[data-note-edit]');
+      const cancel = event.target.closest('[data-note-cancel]');
+      if (!edit && !cancel) return;
+      const line = event.target.closest('tr');
+      const rowId = line.dataset.id;
+      const field = edit ? edit.dataset.noteEdit : cancel.closest('form').dataset.noteField;
+      const key = noteKey(state.table.id,rowId,field);
+      if (cancel) noteDrafts.delete(key);
+      else {
+        const row = state.table.rows.find(item=>item.id===rowId);
+        const before = row.fields[field] ?? null;
+        noteDrafts.set(key,{before,text:printable(before)});
+      }
+      renderRows();
+      [...rows.querySelectorAll('tr[data-id]')].find(item=>item.dataset.id===rowId)
+        ?.querySelector(cancel ? '[data-note-edit]' : '.schema-inline-note textarea')?.focus({preventScroll:true});
+    });
+    rows.addEventListener('input',event=>{
+      const form = event.target.closest('.schema-inline-note');
+      if (!form) return;
+      const draft = noteDrafts.get(noteKey(state.table.id,form.closest('tr').dataset.id,form.dataset.noteField));
+      if (draft) draft.text = event.target.value;
+    });
+    rows.addEventListener('submit',async event=>{
+      const form = event.target.closest('.schema-inline-note');
+      if (!form) return;
+      event.preventDefault();
+      const tableId = state.table.id, rowId = form.closest('tr').dataset.id, field = form.dataset.noteField;
+      const key = noteKey(tableId,rowId,field), draft = noteDrafts.get(key);
+      if (!draft || draft.pending) return;
+      draft.pending = true;
+      form.querySelectorAll('textarea,button').forEach(control=>control.disabled = true);
+      try {
+        const updated = await api('/api/row',{tableId,rowId,action:'update',fields:{[field]:draft.text},expectedFields:{[field]:draft.before}});
+        noteDrafts.delete(key);
+        if (state.table?.id === tableId) {
+          const index = state.table.rows.findIndex(row=>row.id===rowId);
+          if (index >= 0) state.table.rows[index] = updated;
+        }
+        notify('已保存人工处理备注');
+      } catch (error) { draft.error = error.message; }
+      finally {draft.pending = false; if (state.table?.id === tableId) renderRows();}
+    });
     rows.addEventListener('change', async event => {
       const input = event.target.closest('input[data-schema-boolean]');
       if (!input) return;

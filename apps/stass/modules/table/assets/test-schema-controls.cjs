@@ -15,8 +15,8 @@ const table = {id:'test', fields:[
   {id:'four',fields:{amount:'   ',when:''},tagIds:[]}
 ]};
 // Capture the adapter's view through its column-persistence read; no production exports needed.
-let map;
-class TrackingMap extends Map { constructor(...args) {super(...args);map=this;} }
+const maps = [];
+class TrackingMap extends Map { constructor(...args) {super(...args);maps.push(this);} }
 const context = vm.createContext({Map:TrackingMap,Set,JSON,Number,String,Array,Object,
   state:{table,sort:{field:'amount',direction:1}}, $:s=>controls[s],
   filteredRows:()=>[],renderRows:()=>{}, selectTable:()=>{},
@@ -24,6 +24,7 @@ const context = vm.createContext({Map:TrackingMap,Set,JSON,Number,String,Array,O
 });
 vm.runInContext(source,context);
 context.filteredRows();
+const map = maps.find(candidate => candidate.has(table.id));
 const ids = () => Array.from(context.filteredRows(),row=>row.id);
 function check(filters, expected) {
   map.get('test').filters=filters;

@@ -66,9 +66,33 @@ class WebTests(unittest.TestCase):
                     }''',result['body'])
                     page.goto(state['url']+'?table='+item['tableId'])
                     row=page.locator('tbody tr[data-id]').first
+                    page.get_by_role('button',name='字段排序',exact=True).click()
+                    order = page.get_by_role('dialog',name='字段排序')
+                    order.get_by_role('listbox',name='字段顺序').select_option('manualProcessing')
+                    order.get_by_role('button',name='移到首列').click()
+                    order.get_by_role('button',name='保存顺序').click()
+                    order.wait_for(state='detached')
+                    self.assertIn('人工处理备注',page.locator('#tableHead th').first.inner_text())
+                    row.get_by_role('button',name='编辑人工处理备注').click()
+                    inline_note=row.get_by_role('textbox',name='人工处理备注')
+                    inline_note.fill('单元格内填写\n已核对')
+                    row.get_by_role('button',name='保存备注').click()
+                    row.get_by_text('已核对',exact=False).wait_for()
+                    page.reload()
+                    row.get_by_text('已核对',exact=False).wait_for()
+                    self.assertIn('人工处理备注',page.locator('#tableHead th').first.inner_text())
+                    origin = {'Origin':state['url'].removesuffix('/STASS/')}
+                    stale_order = page.request.post(state['url']+'api/v1/define',headers=origin,
+                        data={'tableId':item['tableId'],'fieldOrder':['name','manualProcessing'],
+                              'expectedFieldOrder':['name','manualProcessing']})
+                    self.assertEqual(stale_order.status,400)
+                    stale_note = page.request.post(state['url']+'api/v1/row',headers=origin,
+                        data={'tableId':item['tableId'],'rowId':row.get_attribute('data-id'),'action':'update',
+                              'fields':{'manualProcessing':'旧页面覆盖'},'expectedFields':{'manualProcessing':None}})
+                    self.assertEqual(stale_note.status,400)
                     row.locator('[data-action=edit]').click()
                     note=page.get_by_role('textbox',name='人工处理备注')
-                    self.assertEqual(note.input_value(),'')
+                    self.assertEqual(note.input_value(),'单元格内填写\n已核对')
                     note.fill('已联系运营方\n等待回复')
                     page.locator('#rowForm').get_by_role('button',name='保存',exact=True).click()
                     row.get_by_text('等待回复',exact=False).wait_for()

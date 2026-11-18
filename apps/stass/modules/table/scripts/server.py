@@ -188,6 +188,22 @@ def table_define(args):
     with locked():
         table = load_table(args["tableId"])
         definitions = args.get("fields")
+        if "fieldOrder" in args:
+            order = args["fieldOrder"]
+            by_name = {field["name"]: field for field in table["fields"]}
+            current = list(by_name)
+            if definitions is not None:
+                raise ValueError("字段排序和定义修改需分别提交")
+            if args.get("expectedFieldOrder", current) != current:
+                raise ValueError("字段顺序已变化，请刷新后重试")
+            if (not isinstance(order, list) or any(not isinstance(name, str) for name in order)
+                    or len(order) != len(current) or set(order) != set(current)):
+                raise ValueError("字段排序必须包含当前所有字段，且每个字段仅出现一次")
+            if order != current:
+                table["fields"] = [by_name[name] for name in order]
+                table["history"].append(event("reorder_fields", current, order))
+                write_json(table_path(args["tableId"]), table)
+            return table["fields"]
         if definitions is None:
             return table["fields"]
         names = set()
@@ -316,6 +332,11 @@ def table_save_row(args):
             row = find(table["rows"], args.get("rowId"), "Row")
             if action == "update":
                 validate_row_fields(table, args.get("fields", {}))
+                expected = args.get("expectedFields", {})
+                if not isinstance(expected, dict) or not expected.keys() <= args.get("fields", {}).keys():
+                    raise ValueError("比较值必须对应本次修改的字段")
+                if any(row["fields"].get(key) != value for key, value in expected.items()):
+                    raise ValueError("此字段已被修改，请核对最新值后再保存")
                 if "selectedCandidateImages" in args.get("fields", {}):
                     raise ValueError("Use table_select_candidates to change selected images")
                 candidate_fields = candidate_image_fields(table)
@@ -440,7 +461,8 @@ TOOLS = {
                          "knowledgeBaseId": "parent ID for project/table", "projectId": "parent ID for table",
                          "id": "item ID for rename/delete", "name": "display name", "cascade": "confirm nonempty deletion"}),
     "table_define": ("Read or set a table's business field definitions.", table_define,
-                     {"tableId": "table ID", "fields": "optional list of {name,label,type,options?}"}),
+                     {"tableId": "table ID", "fields": "optional list of {name,label,type,options?}",
+                      "fieldOrder": "optional permutation of existing field names", "expectedFieldOrder": "optional order originally read by the editor"}),
     "table_lineage": ("Read or update a table's data sources, collection/organization methods, rules, and destinations.", table_lineage,
                       {"tableId": "table ID", "dataLineage": "optional object with sources, methods, rules, destinations"}),
     "table_query": ("Find table rows with text, field, date, score, tag, or media filters.", table_query,
@@ -448,7 +470,7 @@ TOOLS = {
                      "scoreStatus": "scored|unscored", "tagIds": "all required tag IDs", "mediaType": "image|video"}),
     "table_save_row": ("Create, edit, or delete one business record.", table_save_row,
                        {"tableId": "table ID", "action": "create|update|delete", "rowId": "row ID for update/delete",
-                        "fields": "business field values", "media": "image/video entries"}),
+                        "fields": "business field values", "media": "image/video entries", "expectedFields": "optional previous values of fields being updated"}),
     "table_review": ("Rate a row and assign its table-specific tags.", table_review,
                      {"tableId": "table ID", "rowId": "row ID", "score": "1-5 or null", "note": "rating reason",
                       "tagIds": "complete list of assigned tag IDs"}),
@@ -480,9 +502,12 @@ def tool_schema(name, description, hints):
                   for key, hint in hints.items()}
     if name == "table_save_row":
         properties["fields"] = {"type": "object", "description": hints["fields"], "additionalProperties": True}
+        properties["expectedFields"] = {"type": "object", "description": hints["expectedFields"], "additionalProperties": True}
         properties["media"] = {"type": "array", "items": {"type": "object"}}
     if name == "table_define":
         properties["fields"] = {"type": "array", "items": {"type": "object"}}
+        for key in ("fieldOrder", "expectedFieldOrder"):
+            properties[key] = {"type": "array", "items": {"type": "string"}, "description": hints[key]}
     if name == "table_lineage":
         properties["dataLineage"] = {"type": "object", "properties": {field: {"type": "string"} for field in LINEAGE_FIELDS},
                                      "additionalProperties": False}
