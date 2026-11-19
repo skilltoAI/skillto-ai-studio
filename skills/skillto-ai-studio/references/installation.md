@@ -7,23 +7,15 @@ Studio 部署组件需另外配置。不能把“19 个技能已加载”当作�
 
 ## 1. 获取源码
 
-先安装 Git、Python 3.10+ 和目标客户端，并用自己的账号获得 Codeup 仓库读取权限。
+先安装 Git、Python 3.10+ 和目标客户端。安装源码来自公开的 [GitHub 仓库](https://github.com/skilltoAI/skillto-ai-studio)。
 Windows 下若 `python` 不可用而 `py -3` 可用，可把以下 `python` 替换为 `py -3`；
 macOS/Linux 通常使用 `python3`。不要依赖其他人的 Python 绝对路径。
 
 ```sh
-git clone https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+git clone https://github.com/skilltoAI/skillto-ai-studio.git
 cd skillto-ai-studio
 python --version
 python scripts/install.py --list
-```
-
-仓库私有时，每位用户配置自己的 Codeup HTTPS 凭据或 SSH 密钥；公钥用于登记，
-不能代替客户端的私钥认证。不要把维护者私钥分发给安装者，也不要把 Token 写在克隆 URL。
-已有 SSH 权限的用户可使用：
-
-```sh
-git clone git@codeup.aliyun.com:6856a1da33ca8867a4350914/skillto-ai-studio.git
 ```
 
 如团队规定固定版本，先 `git checkout <已审核的提交SHA或实际存在的标签>`，
@@ -104,16 +96,15 @@ PowerShell 对应 `-Skill <名称>`；Shell 支持 `sh install.sh <名称> --age
 
 ## 5. Claude Code 插件安装（二选一）
 
-插件和直接复制方式任选其一。通过 Codeup 的 Git URL 注册 marketplace：
+插件和直接复制方式任选其一。通过本项目的 GitHub 地址注册 marketplace：
 
 ```sh
-claude plugin marketplace add https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+claude plugin marketplace add https://github.com/skilltoAI/skillto-ai-studio.git
 claude plugin install skillto-ai-studio@skillto-ai-studio-marketplace
 claude plugin list
 ```
 
-私有仓库认证复用当前机器的 Git 访问能力；先确认 `git ls-remote <仓库URL>` 成功。
-HTTPS 不适用时，可改为自己有权限的 SSH Git URL。不要公开仓库来绕过权限问题。
+如注册失败，先用 `git ls-remote https://github.com/skilltoAI/skillto-ai-studio.git HEAD` 检查 GitHub 连通性。
 
 离线/内网部署也可先复制完整审核过的仓库，再注册本地绝对路径：
 
@@ -152,12 +143,12 @@ MCP 配置要显式指定本机 Python 与加载后的脚本路径。以表格�
 不会自动切换到新名称。安装器遇到同一目标根目录中的旧名副本会停止，不删除旧副本。
 
 直接安装的升级：记录当前提交与安装目录，将要更新的每个同名技能目录备份到
-客户端发现目录以外；获取并审核新提交，先 `--dry-run`，再安装。整套升级保持父子
+客户端发现目录以外；从上面的 GitHub 地址获取并审核新提交，先 `--dry-run`，再安装。整套升级保持父子
 版本一致；有本地自定义时逐文件比较，不能用整目录覆盖解决冲突。
 回滚时停止自己启动且空闲的相关服务，把新副本移到发现目录外，再恢复对应备份。
 技能文件的回滚不等于业务数据回滚，运行数据另行备份。
 
-插件升级使用客户端的 marketplace 更新与插件更新：
+插件升级前，确认注册的 `skillto-ai-studio-marketplace` 来源为上述 GitHub 地址。仍使用历史来源时，先备份自定义配置，按当前安装范围重新注册同名 marketplace，再执行更新。
 
 ```sh
 claude plugin marketplace update skillto-ai-studio-marketplace
@@ -179,7 +170,7 @@ claude plugin update skillto-ai-studio@skillto-ai-studio-marketplace
 | Claude 工具名不同或不存在 | 发现当前连接的实际能力；安装技能不会创造 MCP 或 `image_gen` |
 | 新机器不能访问 `192.168.3.188` | 这是维护者 LAN 部署；按兼容性说明获得网络/服务，不能伪称已连接 |
 | Studio 网页无法启动 | 检查外部 `douyin_tracker.review_web` 及研究页资源；本仓库的 stdio 表格 MCP 可独立运行，完整网页并非自包含安装包 |
-| 私有 Codeup 无法克隆 | 请仓库管理员授予读取权限，配置本机 Git 认证；技能安装器不处理账号权限 |
+| 无法从 GitHub 克隆 | 核对仓库地址、网络和代理设置，先用上面的 `git ls-remote` 检查 |
 
 2026-11-17 核对的官方说明：
 [Codex skills](https://developers.openai.com/codex/skills/)、

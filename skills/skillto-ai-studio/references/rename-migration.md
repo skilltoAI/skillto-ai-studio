@@ -13,8 +13,8 @@
 | Claude 直接安装调用例 | `/skillto-int-table` | `/skillto-ai-studio-table` |
 | Claude 插件调用例 | `/skillto-int:skillto-int-table` | `/skillto-ai-studio:skillto-ai-studio-table` |
 
-全部新名称见 [18 项清单](child-setup.md)。仓库 URL 仍为
-`https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git`。
+全部新名称见 [18 项清单](child-setup.md)。当前安装源码来自
+[项目 GitHub 仓库](https://github.com/skilltoAI/skillto-ai-studio)。
 0.3.0 不分发旧名称的重复技能，也不自动迁移客户端已有安装。
 
 ## 直接复制安装的升级
@@ -42,7 +42,7 @@
 ```sh
 claude plugin uninstall skillto-int@skillto-int-marketplace --scope user --keep-data
 claude plugin marketplace remove --scope user skillto-int-marketplace
-claude plugin marketplace add https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+claude plugin marketplace add https://github.com/skilltoAI/skillto-ai-studio.git
 claude plugin install skillto-ai-studio@skillto-ai-studio-marketplace
 claude plugin list
 ```

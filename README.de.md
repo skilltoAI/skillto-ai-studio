@@ -12,12 +12,11 @@
 <p align="center"><a href="#übersicht">Übersicht</a> · <a href="#architektur">Architektur</a> · <a href="#funktionen">Funktionen</a> · <a href="#screenshots">Screenshots</a> · <a href="#schnellstart">Schnellstart</a> · <a href="skills/skillto-ai-studio/references/installation.md">Dokumentation</a><br>
   <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
-  <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
   <a href="apps/stass/README.md"><kbd>STASS MCP</kbd></a>
 </p>
 
-<p align="center"><a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <kbd>Deutsch</kbd></p>
+<p align="center"><a href="README.zh-CN.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.md"><kbd>English</kbd></a> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <kbd>Deutsch</kbd></p>
 
 ## Übersicht
 
@@ -44,7 +43,7 @@ Agenten wählen Workflows über Skills und arbeiten per Personal MCP im lokalen 
 - **KI-gestützter Schnitt und Motion Design.** Analysiere Referenzclips, wähle Ausschnitte aus und plane den Schnitt anhand von Rohmaterial und Untertiteln mit HyperFrames oder Remotion. Motion verwaltet Vorlagen und Vorschauen.
 - **KI-Bild- und Videogenerierung.** Entwickle aus Cover-Ideen, Figurenreferenzen und Einstellungen visuelle Workflows. Creator MCP ordnet Medien zu, prüft Abläufe, führt autorisierte Generierungsaufträge aus und ruft Ergebnisse ab. Verfügbare APIs, Modelle und Skills richten sich nach dem Angebot der Website und den Kontoberechtigungen.
 
-[Skill-Verzeichnis](README.md#技能清单) · [Kompatibilität und Abhängigkeiten](skills/skillto-ai-studio/references/compatibility.md)
+[Skill-Verzeichnis](README.md#skill-catalogue) · [Kompatibilität und Abhängigkeiten](skills/skillto-ai-studio/references/compatibility.md)
 
 ## Screenshots
 
@@ -75,6 +74,6 @@ python scripts/install.py --agent codex
 
 Für Claude Code ersetzt du `--agent codex` durch `--agent claude`. In einer neuen Sitzung startest du den Skill mit `$skillto-ai-studio` in Codex oder `/skillto-ai-studio` in Claude Code.
 
-Die Befehle installieren die Skills. Die Windows-Anwendung, die MCP-Registrierung und externe Generierungsdienste werden separat eingerichtet. Das Windows-Offline-Paket ist ein Kandidat zur Erprobung. Die vollständige Prüfung von Installation und Upgrades auf anderen Windows-Rechnern steht noch aus.
+Die Befehle installieren die Skills. Die Windows-Anwendung, die MCP-Registrierung und externe Generierungsdienste werden separat eingerichtet. Unter [GitHub Releases](https://github.com/skilltoAI/skillto-ai-studio/releases) steht derzeit kein Windows-Installer bereit. Ein Offline-Testpaket lässt sich aus dem GitHub-Quellcode nach der unten verlinkten Windows-Anleitung erstellen. Die vollständige Prüfung auf anderen Windows-Rechnern steht noch aus.
 
-[Windows-Installation und Status](README.md#windows-完整安装状态) · [Installation, Updates und Fehlerbehebung](skills/skillto-ai-studio/references/installation.md) · [Mitwirken](CONTRIBUTING.md)
+[Windows-Installation und Status](README.md#windows-workspace) · [Installation, Updates und Fehlerbehebung](skills/skillto-ai-studio/references/installation.md) · [Mitwirken](CONTRIBUTING.md)

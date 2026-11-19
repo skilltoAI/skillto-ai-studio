@@ -12,12 +12,11 @@
 <p align="center"><a href="#概要">概要</a> · <a href="#アーキテクチャ">アーキテクチャ</a> · <a href="#主な機能">機能</a> · <a href="#スクリーンショット">画面</a> · <a href="#クイックスタート">インストール</a> · <a href="skills/skillto-ai-studio/references/installation.md">ドキュメント</a><br>
   <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
-  <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
   <a href="apps/stass/README.md"><kbd>STASS MCP</kbd></a>
 </p>
 
-<p align="center"><a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <kbd>日本語</kbd> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
+<p align="center"><a href="README.zh-CN.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.md"><kbd>English</kbd></a> &nbsp; <kbd>日本語</kbd> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
 
 ## 概要
 
@@ -44,7 +43,7 @@ Skillto.ai の公式サービスと連携します。公式サイトで利用可
 - **AI を使った動画編集とモーション**。参考動画を分析して区間を選び、仮編集や字幕から HyperFrames または Remotion での編集を計画します。Motion ではテンプレートとプレビューを管理できます。
 - **AI 画像・動画生成**。表紙、キャラクター、ショット案をビジュアルワークフローにまとめます。Creator MCP で素材の割り当て、検証、承認済み生成ジョブの実行、結果の取得ができます。利用できる API、モデル、Skill は公式サイトの提供範囲とアカウント権限に応じます。
 
-[スキル一覧](README.md#技能清单) · [対応クライアントと依存関係](skills/skillto-ai-studio/references/compatibility.md)
+[スキル一覧](README.md#skill-catalogue) · [対応クライアントと依存関係](skills/skillto-ai-studio/references/compatibility.md)
 
 ## スクリーンショット
 
@@ -75,6 +74,6 @@ python scripts/install.py --agent codex
 
 Claude Code の場合は `--agent codex` を `--agent claude` に置き換えます。新しいセッションで、Codex では `$skillto-ai-studio`、Claude Code では `/skillto-ai-studio` を呼び出します。
 
-この手順でインストールされるのはスキルです。Windows 用ワークステーション、MCP の登録、外部の生成サービスは個別に設定します。オフラインパッケージは候補版で、別の Windows 環境での完全なインストールと更新の検証は継続中です。
+この手順でインストールされるのはスキルです。Windows 用ワークステーション、MCP の登録、外部の生成サービスは個別に設定します。[GitHub Releases](https://github.com/skilltoAI/skillto-ai-studio/releases) では現在 Windows インストーラーを配布していません。下記の Windows 手順に従い、GitHub のソースからオフライン候補版をビルドできます。別の Windows 環境での完全なインストールと更新の検証は継続中です。
 
-[Windows の導入状況](README.md#windows-完整安装状态) · [導入・更新・トラブルシューティング](skills/skillto-ai-studio/references/installation.md) · [開発への参加](CONTRIBUTING.md)
+[Windows の導入状況](README.md#windows-workspace) · [導入・更新・トラブルシューティング](skills/skillto-ai-studio/references/installation.md) · [開発への参加](CONTRIBUTING.md)
