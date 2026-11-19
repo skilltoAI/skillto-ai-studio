@@ -1,22 +1,59 @@
-# Skillto-AI-Studio
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/assets/studio-logo-dark.png">
+    <img src="docs/readme/assets/studio-logo-light.png" alt="Skillto.ai | 个人工作台" width="650">
+  </picture>
+</p>
 
-面向 Codex 与 Claude Code 的内容采集、媒体分析、视觉工作流和本地内容工作台技能集。
-仓库分发 **1 个父技能 + 18 个子技能**，以 `skills/` 为源码；支持 Windows、macOS、Linux
-复制安装和 Claude Code 插件安装。外部服务、生成工具与完整 Studio 网页有独立运行依赖。
+<h1 align="center">Skillto.ai Studio</h1>
 
-代码仓库：[Codeup · Skillto-AI-Studio](https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio)。
-私有仓库需要每位使用者获得读取权限并配置自己的 Git 认证。
+<p align="center">面向内容创作与日常办公的 AI 个人工作台</p>
 
-- [统一安装、升级、回滚与故障排查](skills/skillto-ai-studio/references/installation.md)
-- [18 个子技能逐项配置与验收](skills/skillto-ai-studio/references/child-setup.md)
-- [宿主兼容性与外部依赖](skills/skillto-ai-studio/references/compatibility.md)
-- [0.3.0：从旧技能名迁移](skills/skillto-ai-studio/references/rename-migration.md)
+<p align="center"><a href="#核心功能">功能</a> · <a href="#系统截图">系统截图</a> · <a href="#快速安装">快速安装</a> · <a href="skills/skillto-ai-studio/references/installation.md">文档</a><br>
+  <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
+  <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
+  <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
+  <a href="apps/stass/README.md"><kbd>STASS MCP</kbd></a>
+</p>
+
+<p align="center"><kbd>简体中文</kbd> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
+
+## 适合谁
+
+| 人群 | 可以用它做什么 |
+| --- | --- |
+| **AI 知识付费博主** | 研究选题、拆解参考视频、写课程口播、做封面和分镜，并记录审稿意见。 |
+| **日常 AI 办公用户** | 把文档、资料、数据和待办整理进知识库与项目，用表格、报表和人工备注跟进。 |
+| **AI 创作者** | 管理角色、场景、分镜和 Motion 模板，把图片、视频生成和剪辑接进可复查的制作流程。 |
+
+## 核心功能
+
+- **Skills 任务路由**。1 个父技能按任务选择 18 个子技能，覆盖内容采集、媒体分析、分镜、封面、报表和制作流程。 [完整技能清单](#技能清单)
+- **与 Agent 协作**。在支持的宿主中配置 STASS MCP，让 Codex、Claude Code 等 Agent 读取和更新工作台记录。人可以在网页上查看同一实例的数据并补充审稿意见。 [宿主兼容性与依赖](skills/skillto-ai-studio/references/compatibility.md)
+- **AI 剪辑与动效**。拉片、选段和笔记帮助分析参考素材。口播剪辑技能根据粗剪与字幕规划 HyperFrames 或 Remotion 编辑，Motion 模块管理模板与预览。 [口播剪辑技能](skills/skillto-ai-studio-talking-head-edit/SKILL.md)
+- **AI 生图与生视频**。封面、角色卡和分镜技能整理构图、提示词及参考素材；Creator MCP 可编排视觉工作流，绑定素材、校验并运行经授权的任务。实际生成取决于宿主提供的生成工具、服务配置和权限。 [视觉工作流技能](skills/skillto-ai-studio-workflow-mcp/SKILL.md)
+
+## 系统截图
+
+以下截图来自运行中的 STASS，使用隔离环境里的虚构示例。
+
+**内容工作台 · 选题表与人工备注**
+
+![内容工作台 · 选题表与人工备注](docs/readme/assets/studio-tables.png)
+
+**稿件工作台 · 文案版本与逐行标注**
+
+![稿件工作台 · 文案版本与逐行标注](docs/readme/assets/studio-rewrite.png)
+
+**Motion 分镜 · 在稿件内查看关联表格**
+
+![Motion 分镜 · 在稿件内查看关联表格](docs/readme/assets/studio-storyboard.png)
 
 ## Windows 完整安装状态
 
 **当前未达到“在另一台 Windows 上完整安装 STASS 程序与全部技能”的交付门槛。**
 技能复制安装器已存在；它不安装独立程序或自动注册新 STASS MCP。
-`main` 包含 STASS 程序和技能源码。要安装与 `v0.4.6` 对应的技能版本，请获取固定标签并使用自己的仓库读取权限：
+GitHub 提供项目源码。要使用 Codeup 上的 `v0.4.6` 固定版本，请使用自己的仓库读取权限：
 
 ```powershell
 git clone --branch v0.4.6 --single-branch https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
@@ -67,7 +104,7 @@ python scripts/install.py --list
 需要 Git、Python 3.10+ 和目标客户端。在终端运行（macOS/Linux 可用 `python3`）：
 
 ```sh
-git clone https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+git clone https://github.com/skilltoAI/skillto-ai-studio.git
 cd skillto-ai-studio
 python scripts/install.py --list
 python scripts/install.py --agent codex --dry-run
@@ -93,7 +130,7 @@ Windows 也可运行 `.\install.ps1 -Agent codex`，macOS/Linux 可用
 与直接复制方式二选一；先确保本机 Git 能读取该仓库：
 
 ```sh
-claude plugin marketplace add https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git
+claude plugin marketplace add https://github.com/skilltoAI/skillto-ai-studio.git
 claude plugin install skillto-ai-studio@skillto-ai-studio-marketplace
 claude plugin list
 ```
@@ -107,9 +144,8 @@ claude plugin list
 表格 stdio MCP 只需 Python 标准库，另外注册到客户端。采集需要授权会话与浏览器；
 SaaS 工作流需要 Creator MCP、自己的 Key 和对应权限。
 
-旧技能分发中的完整 Studio HTTP 网页仍依赖未打包的 `douyin_tracker.review_web` 与研究页资源；
-STASS 开发目录已迁入基础网页源码，但尚未完成独立页面与服务集成；
-Qwen 客户端固定维护者局域网部署；小与配音依赖外部 Windows 部署；封面与角色库指定的
+独立 STASS 程序包含实际工作台网页。Windows 一体化分发、自动注册 MCP 和完整业务验收仍有缺项，见上面的安装状态。
+Qwen 客户端依赖局域网部署，小与配音依赖外部 Windows 部署。封面与角色库指定的
 `image_gen` 不由本仓库提供，普通 Claude Code 无法仅靠此插件获得它。
 各项准备、支持边界和验收条件均列在[子技能安装表](skills/skillto-ai-studio/references/child-setup.md)。
 不能把整套安装成功描述成所有业务已经跨平台验证。
