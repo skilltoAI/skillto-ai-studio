@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### 2026-11-19 · STASS-023 · 架构图视觉与技能清单
+
+- 架构图改用 README 的同款工作台 Logo，重新排布本机与云端连接，逐项标注 18 个子 Skill 的仓库名称。
+- 验证 Skill 名称与仓库一致、Logo 资源一致、浏览器渲染和仓库检查。沿用现有品牌及架构规范，无运行行为或数据格式变化。
+
 ### 2026-11-19 · STASS-022 · 工作台架构图
 
 - 四语 README 增加 16:9 架构图，展示 Agent、父 Skill 与 18 个子 Skill、Personal MCP、Personal Server、个人数据和 Skillto.ai 平台。
