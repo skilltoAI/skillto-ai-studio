@@ -9,7 +9,7 @@
 
 <p align="center">Der KI-native persönliche Arbeitsplatz für Agenten</p>
 
-<p align="center"><a href="#übersicht">Übersicht</a> · <a href="#funktionen">Funktionen</a> · <a href="#screenshots">Screenshots</a> · <a href="#schnellstart">Schnellstart</a> · <a href="skills/skillto-ai-studio/references/installation.md">Dokumentation</a><br>
+<p align="center"><a href="#übersicht">Übersicht</a> · <a href="#architektur">Architektur</a> · <a href="#funktionen">Funktionen</a> · <a href="#screenshots">Screenshots</a> · <a href="#schnellstart">Schnellstart</a> · <a href="skills/skillto-ai-studio/references/installation.md">Dokumentation</a><br>
   <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
@@ -24,6 +24,12 @@
 **Skillto.ai Studio ist ein KI-nativer persönlicher Arbeitsplatz.** Beschreibe dein Ziel in natürlicher Sprache. Der Agent wählt passende Skills aus, arbeitet per MCP mit deinen Einträgen und hinterlegt prüfbare Ergebnisse in Wissenssammlungen, Tabellen, Skripten und Storyboards. Du kannst die Ergebnisse jederzeit prüfen und bearbeiten.
 
 Studio verbindet deinen Arbeitsplatz mit dem offiziellen Angebot von Skillto.ai. Verfügbare **KI-Assets, KI-APIs und Skills** von der Website lassen sich nach Einrichtung und Autorisierung der Dienste in deine Workflows einbinden. Recherchematerial, Zwischenschritte und Ergebnisse bleiben von der Idee über die Generierung und den Schnitt bis zur Freigabe im selben Projekt. [Skillto.ai besuchen](https://www.skillto.ai/)
+
+## Architektur
+
+![Architektur von Skillto.ai Studio. Agenten arbeiten mit Skills und Personal MCP auf dem lokalen Personal Server und greifen separat auf Skillto.ai zu.](docs/readme/assets/studio-architecture.svg)
+
+Agenten wählen Workflows über Skills und arbeiten per Personal MCP im lokalen Arbeitsbereich. Der Personal Server speichert Projektdaten. Autorisierte Clients nutzen Cloud-Assets und Generierung über Skillto.ai.
 
 ## Für wen ist das Projekt gedacht?
 

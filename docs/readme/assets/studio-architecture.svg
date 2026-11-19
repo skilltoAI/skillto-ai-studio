@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc" lang="en">
+<title id="title">Skillto.ai Studio — AI-native and Skill-native architecture</title>
+<desc id="desc">Agent hosts use the Studio parent Skill and 18 specialised Skills to call Personal MCP, which provides tools backed by the local Personal Server. The browser and the browser extension use the server's module API. The server owns local records and media. Separately, authorised clients access the Skillto.ai platform for AI assets, APIs, Skills and cloud visual workflows.</desc>
+<defs>
+  <linearGradient id="background" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop stop-color="#0b1721"/><stop offset="1" stop-color="#0b1120"/>
+  </linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0H0V40" fill="none" stroke="#36475c" opacity=".18"/>
+  </pattern>
+  <marker id="green-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0 0L10 5 0 10Z" fill="#4ce39a"/>
+  </marker>
+  <marker id="blue-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0 0L10 5 0 10Z" fill="#82aaff"/>
+  </marker>
+  <marker id="slate-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0 0L10 5 0 10Z" fill="#91a9bc"/>
+  </marker>
+</defs>
+<style>
+  text { font-family: "Segoe UI", Arial, sans-serif; fill: #f3f8fc; }
+  .muted { fill: #adc1d1; }
+  .green { fill: #65efac; }
+  .blue { fill: #a6c3ff; }
+  .code { font-family: Consolas, monospace; }
+  .caps { letter-spacing: 2px; font-weight: 700; }
+</style>
+<rect width="1600" height="900" rx="22" fill="url(#background)"/>
+<rect x="1" y="1" width="1598" height="898" rx="22" fill="url(#grid)" stroke="#344c5e"/>
+
+<text x="48" y="77" font-size="56" font-weight="750" text-anchor="start" class="">Skillto.ai Studio</text>
+<text x="50" y="120" font-size="26" font-weight="400" text-anchor="start" class="muted">Personal workspace architecture</text>
+<rect x="1107" y="49" width="194" height="44" rx="22" fill="#152e2b" stroke="#356b55"/>
+<text x="1238.0" y="77.0" font-size="17" font-weight="650" text-anchor="middle" class="green">AI 原生 · AI-NATIVE</text>
+<rect x="1316" y="49" width="236" height="44" rx="22" fill="#152e2b" stroke="#356b55"/>
+<text x="1451.0" y="77.0" font-size="17" font-weight="650" text-anchor="middle" class="green">Skill 原生 · SKILL-NATIVE</text>
+<path d="M48 148H1552" stroke="#3c5469" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="48" y="191" width="500" height="586" rx="20" fill="#10202c" stroke="#2c4659"/>
+<rect x="598" y="191" width="484" height="586" rx="20" fill="#10202c" stroke="#2c4659"/>
+<rect x="1132" y="191" width="420" height="586" rx="20" fill="#10202c" stroke="#2c4659"/>
+<text x="72" y="228" font-size="17" font-weight="400" text-anchor="start" class="caps green">AGENTS &amp; SKILLS</text>
+<text x="622" y="228" font-size="17" font-weight="400" text-anchor="start" class="caps green">STASS · PERSONAL WORKSPACE</text>
+<text x="1156" y="228" font-size="17" font-weight="400" text-anchor="start" class="caps blue">SKILLTO.AI · CLOUD PLATFORM</text>
+<rect x="72" y="249" width="452" height="71" rx="12" fill="#192e3b" stroke="#3c5968"/>
+<text x="90" y="278" font-size="24" font-weight="700" text-anchor="start" class="">Agent hosts</text>
+<text x="90" y="301" font-size="18" font-weight="400" text-anchor="start" class="muted">Natural language  ·  Codex / Claude Code</text>
+<path d="M298 321V346" stroke="#4ce39a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green-arrow)"/>
+<rect x="72" y="348" width="452" height="406" rx="12" fill="#142c2d" stroke="#3a685a"/>
+<text x="90" y="382" font-size="29" font-weight="700" text-anchor="start" class="">Studio parent Skill</text>
+<text x="90" y="411" font-size="18" font-weight="400" text-anchor="start" class="muted">Routes work to 18 specialised Skills</text>
+<rect x="90" y="424" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="442" font-size="17" font-weight="700" text-anchor="start" class="green">Source research</text>
+<text x="104" y="461" font-size="16" font-weight="400" text-anchor="start" class="muted">Douyin/XHS · TikTok · Qwen media analysis</text>
+<rect x="90" y="475" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="493" font-size="17" font-weight="700" text-anchor="start" class="green">Workspace</text>
+<text x="104" y="512" font-size="16" font-weight="400" text-anchor="start" class="muted">Table · Reports · Browser workbench</text>
+<rect x="90" y="526" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="544" font-size="17" font-weight="700" text-anchor="start" class="green">Editorial</text>
+<text x="104" y="563" font-size="16" font-weight="400" text-anchor="start" class="muted">Rewrite · Explainer storyboard · Talking-head edit</text>
+<rect x="90" y="577" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="595" font-size="17" font-weight="700" text-anchor="start" class="green">Visual assets</text>
+<text x="104" y="614" font-size="16" font-weight="400" text-anchor="start" class="muted">Style library · Xiaoyu cover · Character card</text>
+<rect x="90" y="628" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="646" font-size="17" font-weight="700" text-anchor="start" class="green">Production</text>
+<text x="104" y="665" font-size="16" font-weight="400" text-anchor="start" class="muted">Motion · IP store · Creator workflow MCP</text>
+<rect x="90" y="679" width="416" height="46" rx="8" fill="#172f36" stroke="#2b5057"/>
+<text x="104" y="697" font-size="17" font-weight="700" text-anchor="start" class="green">Video workflows</text>
+<text x="104" y="716" font-size="16" font-weight="400" text-anchor="start" class="muted">Depth-gray replica · Depth-gray workflow · H3</text>
+<rect x="622" y="249" width="436" height="56" rx="12" fill="#182b39" stroke="#3c5968"/>
+<text x="640" y="284" font-size="19" font-weight="700" text-anchor="start" class="">Human access</text>
+<text x="1040" y="283" font-size="18" font-weight="400" text-anchor="end" class="muted">Browser UI / extension</text>
+<rect x="622" y="348" width="436" height="116" rx="14" fill="#143438" stroke="#4ce39a"/>
+<text x="644" y="389" font-size="33" font-weight="750" text-anchor="start" class="">Personal MCP</text>
+<text x="644" y="425" font-size="20" font-weight="650" text-anchor="start" class="code green">/STASS/mcp</text>
+<text x="815" y="425" font-size="17" font-weight="400" text-anchor="start" class="muted">Workspace tools</text>
+<path d="M525 395H620" stroke="#4ce39a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green-arrow)"/>
+<text x="573" y="385" font-size="15" font-weight="700" text-anchor="middle" class="green">MCP</text>
+<rect x="622" y="510" width="436" height="124" rx="14" fill="#143438" stroke="#4ce39a"/>
+<text x="644" y="553" font-size="32" font-weight="750" text-anchor="start" class="">Personal Server</text>
+<text x="644" y="582" font-size="21" font-weight="400" text-anchor="start" class="muted">STASS · Shared business logic</text>
+<text x="644" y="609" font-size="17" font-weight="400" text-anchor="start" class="muted">Tables · Scripts · Motion · Reports · Clips</text>
+<path d="M840 465V508" stroke="#4ce39a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green-arrow)"/>
+<path d="M1033 306H1072V567H1059" stroke="#91a9bc" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#slate-arrow)"/>
+<text x="1018" y="329" font-size="17" font-weight="600" text-anchor="end" class="muted">Module API</text>
+<rect x="622" y="679" width="436" height="75" rx="12" fill="#142937" stroke="#3c5968"/>
+<text x="644" y="709" font-size="22" font-weight="700" text-anchor="start" class="">Personal data</text>
+<text x="644" y="736" font-size="18" font-weight="400" text-anchor="start" class="muted">Projects · Records · Versions · Media</text>
+<path d="M840 635V677" stroke="#4ce39a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green-arrow)"/>
+<rect x="1156" y="249" width="372" height="84" rx="14" fill="#1a2b47" stroke="#476aa5"/>
+<text x="1177" y="286" font-size="31" font-weight="750" text-anchor="start" class="">Skillto.ai</text>
+<text x="1177" y="313" font-size="18" font-weight="400" text-anchor="start" class="blue">Official platform</text>
+<rect x="1156" y="347" width="372" height="76" rx="11" fill="#172842" stroke="#3c5379"/>
+<text x="1177" y="378" font-size="22" font-weight="700" text-anchor="start" class="">AI assets</text>
+<text x="1177" y="402" font-size="18" font-weight="400" text-anchor="start" class="muted">Media and visual workflow resources</text>
+<rect x="1156" y="437" width="372" height="76" rx="11" fill="#172842" stroke="#3c5379"/>
+<text x="1177" y="468" font-size="22" font-weight="700" text-anchor="start" class="">AI APIs</text>
+<text x="1177" y="492" font-size="18" font-weight="400" text-anchor="start" class="muted">Image and video generation services</text>
+<rect x="1156" y="527" width="372" height="76" rx="11" fill="#172842" stroke="#3c5379"/>
+<text x="1177" y="558" font-size="22" font-weight="700" text-anchor="start" class="">Skills</text>
+<text x="1177" y="582" font-size="18" font-weight="400" text-anchor="start" class="muted">Reusable capabilities for agents</text>
+<rect x="1156" y="617" width="372" height="76" rx="11" fill="#172842" stroke="#3c5379"/>
+<text x="1177" y="648" font-size="22" font-weight="700" text-anchor="start" class="">Creator MCP</text>
+<text x="1177" y="672" font-size="18" font-weight="400" text-anchor="start" class="muted">Build and run visual workflows</text>
+<path d="M298 755V830H1342V778" stroke="#82aaff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue-arrow)" stroke-dasharray="8 7"/>
+<rect x="515" y="807" width="598" height="46" rx="23" fill="#131f32" stroke="#415985"/>
+<text x="814" y="837" font-size="20" font-weight="650" text-anchor="middle" class="blue">Authorised platform access · Creator MCP &amp; APIs</text>
+</svg>

@@ -9,7 +9,7 @@
 
 <p align="center">为 Agent 而建的 AI Native 个人工作台</p>
 
-<p align="center"><a href="#项目介绍">项目介绍</a> · <a href="#核心功能">功能</a> · <a href="#系统截图">系统截图</a> · <a href="#快速安装">快速安装</a> · <a href="skills/skillto-ai-studio/references/installation.md">文档</a><br>
+<p align="center"><a href="#项目介绍">项目介绍</a> · <a href="#系统架构">架构</a> · <a href="#核心功能">功能</a> · <a href="#系统截图">系统截图</a> · <a href="#快速安装">快速安装</a> · <a href="skills/skillto-ai-studio/references/installation.md">文档</a><br>
   <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
@@ -24,6 +24,12 @@
 Skillto.ai Studio 是一款 **AI Native 个人工作台**。你用自然语言描述目标，Agent 通过 Skill 选择工作流，通过 MCP 操作工作台，在知识库、表格、稿件和分镜里留下可查阅的结果。你可以在同一个工作台接手编辑、审阅和确认下一步。
 
 工作台连接 Skillto.ai 官方生态。创作者可从官网获取可用的 **AI 资产、AI API 和 Skill**，并在完成服务接入和授权后，将它们用于本地工作流。从选题研究到分镜、生成、剪辑和审阅，素材、过程和成果可以沉淀到同一个项目。 [访问 Skillto.ai 官网](https://www.skillto.ai/)
+
+## 系统架构
+
+![Skillto.ai Studio 16:9 架构图。Agent 以 Skill 驱动任务，通过 Personal MCP 操作本机 Personal Server，并按授权接入 Skillto.ai 平台。](docs/readme/assets/studio-architecture.svg)
+
+AI 原生体现在 Agent 可以通过 MCP 直接执行工作台操作，Skill 原生体现在 1 个父 Skill 将任务路由给 18 个专业 Skill。Personal Server 保存本机数据，云端资产与生成能力通过 Skillto.ai 授权接入。
 
 ## 适合谁
 

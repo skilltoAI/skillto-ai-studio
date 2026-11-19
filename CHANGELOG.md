@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### 2026-11-19 · STASS-022 · 工作台架构图
+
+- 四语 README 增加 16:9 架构图，展示 Agent、父 Skill 与 18 个子 Skill、Personal MCP、Personal Server、个人数据和 Skillto.ai 平台。
+- 验证架构图渲染、四语导航、仓库检查及 24 项测试。图示沿用现有架构和授权规范，无运行行为或数据格式变化。
+
 ### 2026-11-19 · STASS-021 · AI Native 产品介绍
 
 - 四语 README 明确自然语言、Skill 编排与 MCP 操作的协作方式，增加 Skillto.ai 官网和资产、API、Skill 的生态接入说明。

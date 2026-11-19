@@ -9,7 +9,7 @@
 
 <p align="center">The AI-native personal workspace built for agents</p>
 
-<p align="center"><a href="#overview">Overview</a> · <a href="#features">Features</a> · <a href="#screenshots">Screenshots</a> · <a href="#quick-start">Quick start</a> · <a href="skills/skillto-ai-studio/references/installation.md">Documentation</a><br>
+<p align="center"><a href="#overview">Overview</a> · <a href="#architecture">Architecture</a> · <a href="#features">Features</a> · <a href="#screenshots">Screenshots</a> · <a href="#quick-start">Quick start</a> · <a href="skills/skillto-ai-studio/references/installation.md">Documentation</a><br>
   <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
@@ -24,6 +24,12 @@
 **Skillto.ai Studio is an AI-native personal workspace.** Describe what you want to achieve, and your agent selects the right Skills, works with your records through MCP, and leaves results you can review in knowledge bases, tables, scripts and storyboards. You can step in to edit the work, review it or decide what happens next.
 
 Studio connects to the official Skillto.ai ecosystem. Bring available **AI assets, AI APIs and Skills** from the website into your workflow once the relevant services are connected and authorised. Keep the materials, decisions and deliverables for research, generation, editing and review together in one project. [Visit Skillto.ai](https://www.skillto.ai/)
+
+## Architecture
+
+![Skillto.ai Studio architecture. Agents use Skills and Personal MCP to operate the local Personal Server and connect to the Skillto.ai platform separately.](docs/readme/assets/studio-architecture.svg)
+
+Agents use Skills to choose a workflow and Personal MCP to act on the local workspace. The Personal Server stores project data. Authorised clients connect to Skillto.ai for cloud assets and generation.
 
 ## Who it is for
 
