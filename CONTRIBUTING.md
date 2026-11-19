@@ -106,5 +106,31 @@ python scripts/codeup_git.py push --branch codex/<任务>
 6. 工作区有其他任务未提交内容时，保留原工作区与索引。可在隔离目录整理本次需要分发的
    源码快照，明确记录源提交和纳入范围，再验证、提交与推送；不把整个工作目录打包上传。
 
-`.github/workflows/validate.yml` 是可选 GitHub 镜像的跨系统 CI，Codeup 不会自动执行它。
+## 发布到 GitHub
+
+目标为 [skilltoAI/skillto-ai-studio](https://github.com/skilltoAI/skillto-ai-studio)，使用独立远端 `github`。已有 `origin` 和 `codeup` 继续用于各自仓库。维护者在同一 Windows 用户下使用 Git for Windows 和 Git Credential Manager（GCM），通过 Windows 凭据管理器复用 GitHub HTTPS OAuth 登录。新环境按浏览器提示登录有仓库写权限的账号。提交作者配置与 GitHub 登录分别核查。
+
+```powershell
+git config --show-origin --show-scope --get-all credential.helper
+git credential-manager github list
+git remote -v
+# 仅在尚无 github 远端时添加
+git remote add github https://github.com/skilltoAI/skillto-ai-studio.git
+git remote get-url --push --all github
+git ls-remote --symref github HEAD
+```
+
+认证缺失或失效时可执行 `git credential-manager github login --browser`，通过浏览器完成授权。[GitHub 凭据缓存说明](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git?platform=windows)
+
+确认目标仓库、分支和公开范围，按本文件执行检查与本地提交。首次公开推送须审查待推送提交可达的历史，既有 Git 忽略规则不影响已跟踪的历史内容。获得推送授权后执行（将 `<任务分支>` 替换为实际分支）：
+
+```powershell
+git push github HEAD:refs/heads/<任务分支>
+git ls-remote --exit-code github refs/heads/<任务分支>
+git rev-parse HEAD
+```
+
+回读的远端 SHA 必须与本地提交一致。分支规则拒绝时按仓库要求提交 PR。GitHub 推送不替代 Codeup 的拉新、发布和认证流程。
+
+`.github/workflows/validate.yml` 是 GitHub 的跨系统 CI，Codeup 不会自动执行它。
 Codeup 流水线可运行同样的三条基础检查；本地测试无需任何服务凭据。
