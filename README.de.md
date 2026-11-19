@@ -47,7 +47,21 @@ Agenten wählen Workflows über Skills und arbeiten per Personal MCP im lokalen 
 
 ## Screenshots
 
-Aufnahmen aus einer laufenden STASS-Instanz mit fiktiven Beispieldaten.
+Die ersten beiden Bilder zeigen den Windows-Launcher und den Beam-Editor aus dem Integrationsbuild. Der Standardbranch enthält diesen Build noch nicht. Ein Windows-Installer steht noch nicht zum Download bereit.
+
+### Desktop-Arbeitsplatz
+
+Der Windows-Launcher zeigt den Status des persönlichen Servers und bietet Schaltflächen zum Starten, Beenden und Öffnen des Arbeitsplatzes. Auch Browserprofile, Web-Kopplungscodes und die 3D-Bildschirmaufnahme sind von dort erreichbar. Im Browser stehen Multimedia-Tabellen, Tags, Motion-Vorlagen, Skripte und Storyboards bereit.
+
+![Desktop-Arbeitsplatz](docs/readme/assets/studio-desktop-workspace.png)
+
+### 3D-Bildschirmaufnahme und Schnitt
+
+Der Eintrag **3D-Bildschirmaufnahme** öffnet den separaten Beam-Editor für Produktdemos und Tutorials. Auf der Zeitleiste lassen sich Clips schneiden und mit 2D-Zoom, 3D-Kamerafahrten oder einer Lupe bearbeiten. Fokus per Mauszeiger oder manuell, Perspektivvorgaben, Untertitel und Ton lassen sich anpassen. Der Editor startet auch bei ausgeschaltetem STASS-Dienst.
+
+![3D-Bildschirmaufnahme und Schnitt](docs/readme/assets/studio-3d-recording.png)
+
+Die folgenden Aufnahmen zeigen einen laufenden STASS-Arbeitsplatz mit fiktiven Beispieldaten.
 
 **Motion-Vorlagen mit Cover-Vorschau**
 

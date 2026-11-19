@@ -47,7 +47,21 @@ Agents use Skills to choose a workflow and Personal MCP to act on the local work
 
 ## Screenshots
 
-Captured from a running STASS instance with fictional demo data.
+The two screenshots below are from the Windows launcher and Beam integration build. The default branch does not yet include that build or a downloadable Windows installer.
+
+### Desktop workspace
+
+The Windows launcher brings the personal server controls and a tour of the workbench into one window. Check whether the service is running, start or stop it, and open the workspace. Jump to the browser profiles, obtain a web pairing code, or launch 3D Screen Recording from the same window. The browser workspace brings together multimedia tables, tags, Motion templates, scripts and storyboards.
+
+![Desktop workspace](docs/readme/assets/studio-desktop-workspace.png)
+
+### 3D screen recording and editing
+
+Open **3D Screen Recording** from the launcher to capture a product walkthrough, course or software demo. In the separate Beam editor, use the timeline to cut clips and add 2D zoom, 3D camera moves or a magnifier. Set the focus to follow the cursor or pick it manually, choose a perspective preset, and refine the result with captions and audio. The recorder can open while the STASS service is stopped.
+
+![3D screen recording and editing](docs/readme/assets/studio-3d-recording.png)
+
+The remaining screenshots show a running STASS workspace with fictional demo data.
 
 **Motion template gallery with cover previews**
 
