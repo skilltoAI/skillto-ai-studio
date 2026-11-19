@@ -77,7 +77,7 @@
     }
     if (host.dataset.table !== state.table.id || view.schema !== signature) {
       host.dataset.table = state.table.id; view.schema = signature;
-      host.innerHTML = `<details class="schema-filter-panel"><summary>字段筛选 <span id="schemaActiveCount"></span></summary><div class="schema-fields">${fields.map((f,i) => fieldControl(f,i,view.filters[f.name])).join('')}</div><p id="schemaFilterError" role="status"></p></details><details class="schema-column-panel"><summary>显示字段</summary><div class="schema-column-actions"><button type="button" data-columns="all">全选</button><button type="button" data-columns="reset">恢复默认</button></div><div class="schema-columns">${fields.map(f=>`<label><input type="checkbox" data-column="${escapeHtml(f.name)}" ${view.visible.has(f.name)?'checked':''}>${escapeHtml(f.label||f.name)}</label>`).join('')}</div></details><button class="button schema-field-order" type="button" ${state.table.fields.length<2?'disabled':''}>字段排序</button>`;
+      host.innerHTML = `<details class="schema-filter-panel"><summary>字段筛选 <span id="schemaActiveCount"></span></summary><div class="schema-fields">${fields.map((f,i) => fieldControl(f,i,view.filters[f.name])).join('')}</div><p id="schemaFilterError" role="status"></p></details><details class="schema-column-panel"><summary>显示字段</summary><div class="schema-column-actions"><button type="button" data-columns="all">全选</button><button type="button" data-columns="reset">恢复默认</button></div><div class="schema-columns">${fields.map(f=>`<label><input type="checkbox" data-column="${escapeHtml(f.name)}" ${view.visible.has(f.name)?'checked':''}>${escapeHtml(f.label||f.name)}</label>`).join('')}</div></details><button class="button schema-field-order" type="button" ${state.table.fields.length<2?'disabled':''}>字段排序</button><div class="active-filters"></div>`;
       host.oninput = event => {
         const cell = event.target.closest('[data-field]');
         if (!cell) return;
@@ -95,6 +95,15 @@
       };
       host.onclick = event => {
         if (event.target.closest('.schema-field-order')) { openFieldOrder(); return; }
+        const clear = event.target.closest('[data-clear-field]');
+        if (clear) {
+          const view = viewFor(state.table);
+          delete view.filters[clear.dataset.clearField];
+          view.schema = '';
+          renderRows();
+          host.querySelector('.schema-filter-panel summary').focus();
+          return;
+        }
         const mode = event.target.dataset.columns;
         if (!mode) return;
         const current = viewFor(state.table);
@@ -107,7 +116,24 @@
     }
     for (const id of ['minVideos','dateFrom','dateTo','llmCategoryFilter']) document.getElementById(id)?.closest('label')?.setAttribute('hidden','');
     for (const id of ['ratioRange','collectRange']) document.getElementById(id)?.setAttribute('hidden','');
-    document.getElementById('schemaActiveCount').textContent = Object.values(view.filters).filter(r=>r.value || r.min || r.max).length || '';
+    const active = fields.filter(field => {
+      const rule = view.filters[field.name];
+      return rule && (rule.value || rule.min || rule.max);
+    });
+    document.getElementById('schemaActiveCount').textContent = active.length || '';
+    host.querySelector('.active-filters').replaceChildren(...active.map(field => {
+      const rule = view.filters[field.name];
+      const control = host.querySelector(`[data-field="${CSS.escape(field.name)}"] select`);
+      const value = control?.selectedOptions[0]?.textContent || rule.value ||
+        [rule.min && '≥ ' + rule.min, rule.max && '≤ ' + rule.max].filter(Boolean).join('，');
+      const label = (field.label || field.name) + '：' + value;
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.dataset.clearField = field.name;
+      chip.textContent = label + ' ×';
+      chip.setAttribute('aria-label', '清除筛选 ' + label);
+      return chip;
+    }));
     const inverted = fields.filter(f=>['number','date'].includes(f.type)).filter(f=>{
       const r=view.filters[f.name]; return r?.min && r?.max && (f.type==='number'?Number(r.min)>Number(r.max):r.min>r.max);
     });
@@ -288,10 +314,10 @@
     const table=$('#dataTable');
     table.classList.remove('llm-table','benchmark-table','video-table','edit-table','fusion-table');
     table.classList.add('schema-table');
-    $('#tableHead').innerHTML='<tr>'+fields.map(f=>`<th><button data-sort="${escapeHtml(f.name)}">${escapeHtml(f.label||f.name)} ↕</button></th>`).join('')+'<th>标签</th><th>评分</th><th>编辑</th></tr>';
+    $('#tableHead').innerHTML='<tr>'+fields.map(f=>`<th class="${f.type==='number'?'num':''}"><button data-sort="${escapeHtml(f.name)}">${escapeHtml(f.label||f.name)} ↕</button></th>`).join('')+'<th>标签</th><th>评分</th><th>编辑</th></tr>';
     const rows=filteredRows();
     $('#resultCount').textContent=`${rows.length} / ${state.table.rows.length} 条记录`;
-    $('#rows').innerHTML=rows.map(row=>`<tr data-id="${escapeHtml(row.id)}">`+fields.map(f=>`<td class="${f.type==='number'?'num':''}">${cellHtml(row,f)}</td>`).join('')+`<td><div class="tag-list">${(row.tagIds||[]).map(id=>state.table.tags.find(t=>t.id===id)).filter(Boolean).map(t=>`<span class="tag">${escapeHtml(t.name)}</span>`).join('')}</div><button class="tag-edit" data-action="assign">编辑标签</button></td><td><button class="score-button" data-action="review">${row.rating?.score==null?'未评分':row.rating.score+' / 5'}</button></td><td><button class="icon-button" data-action="edit" title="编辑记录">⋯</button></td></tr>`).join('')||`<tr><td colspan="${fields.length+3}" class="empty">没有符合条件的记录</td></tr>`;
+    $('#rows').innerHTML=rows.map(row=>`<tr data-id="${escapeHtml(row.id)}">`+fields.map(f=>`<td class="${f.type==='number'?'num':''}">${cellHtml(row,f)}</td>`).join('')+`<td><div class="tag-list">${(row.tagIds||[]).map(id=>state.table.tags.find(t=>t.id===id)).filter(Boolean).map(t=>`<span class="tag" style="--tag-color:${tagColor(t.color)}">${escapeHtml(t.name)}</span>`).join('')}</div><button class="tag-edit" data-action="assign">编辑标签</button></td><td><button class="score-button" data-action="review">${ratingBlocks(row.rating?.score)}</button></td><td><button class="icon-button" data-action="edit" title="编辑记录">⋯</button></td></tr>`).join('')||`<tr><td colspan="${fields.length+3}" class="empty">没有符合条件的记录</td></tr>`;
   };
   const previousSelect=selectTable;
   selectTable=async function(entry) {

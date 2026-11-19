@@ -1,11 +1,11 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>浏览器用户 · Skillto-AI-Studio</title>
 <style>
 body{font:16px system-ui;background:#f3f5f9;color:#182235;margin:0}main{max-width:1000px;margin:50px auto;padding:24px}header{display:flex;align-items:center;gap:20px;flex-wrap:wrap}h1{flex:1}button,input{font:inherit;padding:10px 16px;border:1px solid #ccd3df;border-radius:8px}button{cursor:pointer;background:white}button:hover{background:#e6edff}button:disabled{opacity:.5}form{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}article{background:white;padding:20px;margin:12px 0;border-radius:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.name{flex:1;min-width:160px;font-weight:600}.status{font-size:14px;color:#52627a}#message{white-space:pre-wrap;min-height:25px;color:#174ca1}.danger{color:#b42318}a{color:#174ca1}dialog{border:0;border-radius:14px;max-width:480px;padding:28px}dialog::backdrop{background:#0006}
-</style><main><header><h1>浏览器用户</h1><a href="/">返回工作台</a><button id="refresh">刷新</button></header>
+</style></head><body><main><header><h1>浏览器用户</h1><a href="/">返回工作台</a><button id="refresh">刷新</button></header>
 <p>每个用户名拥有独立 Chrome 环境与 Cookie。关闭后重新打开，继续使用保存的登录状态。</p>
 <form id="create"><input id="name" aria-label="新用户名" placeholder="输入新用户名" maxlength="100" required><button>创建用户</button></form>
 <div id="message" role="status" aria-live="polite"></div><section id="users" aria-label="浏览器用户列表"></section>
 <p class="status">环境只保存在本机。改名保留环境；删除会将环境移入本地回收目录。关闭服务时会保存并关闭所有受管浏览器。</p>
-<dialog id="editor"><form id="edit"><h2 id="edit-title"></h2><p id="edit-help"></p><input id="edit-name" aria-label="用户名" required maxlength="100"><button id="save">保存</button><button type="button" id="cancel">取消</button></form></dialog>
-</main><script src="/browser-users.js"></script></html>
+<dialog aria-labelledby="edit-title" id="editor"><form id="edit"><h2 id="edit-title"></h2><p id="edit-help"></p><input id="edit-name" aria-label="用户名" required maxlength="100"><button id="save">保存</button><button type="button" id="cancel">取消</button></form></dialog>
+</main><script src="/browser-users.js"></script></body></html>

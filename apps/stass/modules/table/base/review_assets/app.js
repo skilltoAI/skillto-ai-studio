@@ -38,8 +38,29 @@ async function api(path, payload) {
 
 function notify(message, error = false) {
   $("#notice").textContent = message;
-  $("#notice").style.color = error ? "#b8443a" : "#286b58";
+  $("#notice").style.color = error ? "var(--err)" : "var(--ok)";
+  $("#saveStatus").dataset.state = error ? "error" : "saved";
   $("#saveStatus").textContent = error ? "保存失败，请重试" : "已保存到本地文件";
+}
+
+function showCatalogState(kind, message, actionLabel, onAction) {
+  $(".main").dataset.tableState = kind;
+  const box = $("#catalogState");
+  box.hidden = false;
+  box.querySelector("p").textContent = message;
+  const action = box.querySelector("button");
+  action.textContent = actionLabel || "";
+  action.hidden = !onAction;
+  action.onclick = onAction || null;
+}
+
+async function openCatalog() {
+  showCatalogState("loading", "正在读取表格…");
+  try {
+    await loadCatalog(new URLSearchParams(location.search).get("table"));
+  } catch (error) {
+    showCatalogState("error", "读取表格失败：" + error.message, "重试", openCatalog);
+  }
 }
 
 async function loadCatalog(preferredId) {
@@ -48,7 +69,18 @@ async function loadCatalog(preferredId) {
   const tables = state.catalog.knowledgeBases.flatMap((base) => base.projects.flatMap((project) => project.tables.map((table) => ({base, project, table}))));
   const selected = tables.find((entry) => entry.table.id === (preferredId || state.selected?.table.id)) || tables.find((entry) => entry.table.name === "账号表现") || tables[0];
   if (selected) await selectTable(selected);
-  else { state.table = null; $("#rows").innerHTML = '<tr><td colspan="11" class="empty">暂无表。请在左侧新建知识库、项目和表。</td></tr>'; }
+  else {
+    state.table = null;
+    state.selected = null;
+    $("#tableTitle").textContent = "内容资料库";
+    $("#breadcrumb").textContent = "";
+    $("#tableSubtitle").textContent = "";
+    const base = state.catalog.knowledgeBases[0];
+    const project = base?.projects[0];
+    const level = project ? "table" : base ? "project" : "knowledge_base";
+    showCatalogState("empty", "资料库中还没有表格。", project ? "新建表" : base ? "新建项目" : "新建知识库",
+      () => openEntity(level, "create", null, {base, project}));
+  }
 }
 
 function treeLine(item, level, parents) {
@@ -132,19 +164,35 @@ async function selectTable(entry) {
   $("#dateFrom").closest("label").hidden = fusionTable || omniTable;
   $("#dateTo").closest("label").hidden = fusionTable || omniTable;
   $("#dateFrom").closest("label").querySelector("span").textContent = videoTable ? "发表时间自" : "视频发布自";
-  $("#breadcrumb").textContent = `${entry.base.name} / ${entry.project.name} / ${entry.table.name}`;
+  $("#breadcrumb").textContent = `${entry.base.name} / ${entry.project.name}`;
   $("#tableTitle").textContent = entry.table.name;
   $("#tableSubtitle").textContent = state.table.subtitle || "";
   renderTree();
   renderTagFilter();
   renderMetrics();
   renderRows();
+  $(".main").dataset.tableState = "ready";
+  $("#catalogState").hidden = true;
+  $("#saveStatus").dataset.state = "";
+  $("#saveStatus").textContent = "已连接本地文件";
   if (loaded.cached) {
     notify("磁盘读取失败，正在显示浏览器恢复缓存", true);
+    $("#saveStatus").dataset.state = "cached";
     $("#saveStatus").textContent = "仅浏览器恢复缓存";
   }
   $("#sidebar").classList.remove("open");
   $("#scrim").classList.remove("open");
+}
+
+function ratingBlocks(score) {
+  if (score == null) return "未评分";
+  const blocks = Array.from({length: 5}, (_, index) =>
+    `<i class="${index < score ? "filled" : ""}"></i>`).join("");
+  return `<span class="score-blocks" aria-hidden="true">${blocks}</span><span class="score-label">${escapeHtml(score)} / 5</span>`;
+}
+
+function tagColor(value) {
+  return /^#[0-9a-f]{6}$/i.test(value) ? value : "var(--muted)";
 }
 
 function renderMetrics() {
@@ -255,7 +303,7 @@ function renderRows() {
     const profile = safeUrl(fields.profileUrl);
     const assigned = (row.tagIds || []).map((id) => state.table.tags.find((tag) => tag.id === id)).filter(Boolean);
     const name = escapeHtml(rowName(row));
-    return `<tr data-id="${escapeHtml(row.id)}"><td><div class="account-identity">${avatar ? `<img class="avatar" src="${escapeHtml(avatar)}" alt="${name}头像" loading="lazy">` : `<span class="avatar avatar-fallback">${name.slice(0, 1)}</span>`}<div>${profile ? `<a class="account-name" href="${escapeHtml(profile)}" target="_blank" rel="noopener noreferrer" title="${name}">${name}</a>` : `<strong class="account-name" title="${name}">${name}</strong>`}<span class="account-meta">${formatDate(fields.lastCrawledAt)}</span></div></div></td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag" title="${escapeHtml(tag.name)}">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign" aria-label="维护${name}的多个标签">${assigned.length ? "编辑标签" : "＋ 添加标签"}</button></td><td class="num">${formatNumber(fields.followerCount)}</td><td class="num">${formatNumber(fields.videoCount30d)}</td><td class="num">${formatNumber(fields.averageLikes)}</td><td class="num">${formatNumber(fields.averageCollects)}</td><td class="num">${formatNumber(fields.averageShares)}</td><td class="num">${fields.averageLikeCollectRatio == null ? "—" : `${formatNumber(fields.averageLikeCollectRatio)}:1`}</td><td>${videoPreview(row)}</td><td><button class="score-button" data-action="review" title="评分和理由">${row.rating?.score == null ? "未评分" : `${row.rating.score} / 5`}</button></td><td><button class="icon-button" data-action="edit" title="编辑账号" aria-label="编辑${name}">⋯</button></td>${renderCandidateCells(row)}</tr>`;
+    return `<tr data-id="${escapeHtml(row.id)}"><td><div class="account-identity">${avatar ? `<img class="avatar" src="${escapeHtml(avatar)}" alt="${name}头像" loading="lazy">` : `<span class="avatar avatar-fallback">${name.slice(0, 1)}</span>`}<div>${profile ? `<a class="account-name" href="${escapeHtml(profile)}" target="_blank" rel="noopener noreferrer" title="${name}">${name}</a>` : `<strong class="account-name" title="${name}">${name}</strong>`}<span class="account-meta">${formatDate(fields.lastCrawledAt)}</span></div></div></td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag" style="--tag-color:${tagColor(tag.color)}" title="${escapeHtml(tag.name)}">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign" aria-label="维护${name}的多个标签">${assigned.length ? "编辑标签" : "＋ 添加标签"}</button></td><td class="num">${formatNumber(fields.followerCount)}</td><td class="num">${formatNumber(fields.videoCount30d)}</td><td class="num">${formatNumber(fields.averageLikes)}</td><td class="num">${formatNumber(fields.averageCollects)}</td><td class="num">${formatNumber(fields.averageShares)}</td><td class="num">${fields.averageLikeCollectRatio == null ? "—" : `${formatNumber(fields.averageLikeCollectRatio)}:1`}</td><td>${videoPreview(row)}</td><td><button class="score-button" data-action="review" title="评分和理由">${ratingBlocks(row.rating?.score)}</button></td><td><button class="icon-button" data-action="edit" title="编辑账号" aria-label="编辑${name}">⋯</button></td>${renderCandidateCells(row)}</tr>`;
   }).join("") : `<tr><td colspan="${11 + candidateDefinitions().length}" class="empty">没有符合条件的账号</td></tr>`;
   document.querySelectorAll("#rows tr[data-id]").forEach((line) => {
     const row = rows.find((item) => item.id === line.dataset.id);
@@ -315,7 +363,7 @@ function renderFusionRows(rows) {
   };
   $("#rows").innerHTML = rows.length ? rows.map((row) => {
     const fields = row.fields;
-    return `<tr data-id="${escapeHtml(row.id)}"><td class="edit-sequence">${formatNumber(fields.sequence)}</td><td><strong class="report-title">${escapeHtml(fields.techniqueTitle || "太极拳")}</strong><span class="report-account" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title || "")}</span></td><td class="prompt-cell">${thumbnail(fields.wardrobeImage, "人物服饰参考图")}<small>${escapeHtml(fields.wardrobeChoice || "")}</small><details class="prompt-details"><summary>服饰差异化</summary><p class="prompt-text">${escapeHtml(fields.wardrobeDirection || "")}</p></details></td><td class="prompt-cell">${thumbnail(fields.sceneImage, "场景空镜参考图")}<small>${escapeHtml(fields.sceneLocation || "")}</small><span class="report-account">${escapeHtml(fields.sceneChoice || "")}</span></td><td class="fusion-light"><strong>${escapeHtml(fields.timeWeather || "")}</strong><span>${escapeHtml(fields.sceneAccent || "")}</span><span>${escapeHtml(fields.lightingDirection || "")}</span><small>${escapeHtml(fields.poseDirection || "")}</small></td><td class="prompt-cell"><details class="prompt-details"><summary>查看双图提示词</summary><p class="prompt-text">${escapeHtml(fields.fusionPrompt || "")}</p></details><button class="button quiet prompt-copy" data-action="copy-prompt" data-field="fusionPrompt">复制提示词</button></td><td class="prompt-cell">${thumbnail(fields.fusionImage, "9:16人物场景融合图")}</td><td>${escapeHtml(fields.generationStatus || "待生成")}</td><td><button class="score-button" data-action="review">${row.rating?.score == null ? "未评分" : `${row.rating.score} / 5`}</button></td></tr>`;
+    return `<tr data-id="${escapeHtml(row.id)}"><td class="edit-sequence">${formatNumber(fields.sequence)}</td><td><strong class="report-title">${escapeHtml(fields.techniqueTitle || "太极拳")}</strong><span class="report-account" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title || "")}</span></td><td class="prompt-cell">${thumbnail(fields.wardrobeImage, "人物服饰参考图")}<small>${escapeHtml(fields.wardrobeChoice || "")}</small><details class="prompt-details"><summary>服饰差异化</summary><p class="prompt-text">${escapeHtml(fields.wardrobeDirection || "")}</p></details></td><td class="prompt-cell">${thumbnail(fields.sceneImage, "场景空镜参考图")}<small>${escapeHtml(fields.sceneLocation || "")}</small><span class="report-account">${escapeHtml(fields.sceneChoice || "")}</span></td><td class="fusion-light"><strong>${escapeHtml(fields.timeWeather || "")}</strong><span>${escapeHtml(fields.sceneAccent || "")}</span><span>${escapeHtml(fields.lightingDirection || "")}</span><small>${escapeHtml(fields.poseDirection || "")}</small></td><td class="prompt-cell"><details class="prompt-details"><summary>查看双图提示词</summary><p class="prompt-text">${escapeHtml(fields.fusionPrompt || "")}</p></details><button class="button quiet prompt-copy" data-action="copy-prompt" data-field="fusionPrompt">复制提示词</button></td><td class="prompt-cell">${thumbnail(fields.fusionImage, "9:16人物场景融合图")}</td><td>${escapeHtml(fields.generationStatus || "待生成")}</td><td><button class="score-button" data-action="review">${ratingBlocks(row.rating?.score)}</button></td></tr>`;
   }).join("") : '<tr><td colspan="9" class="empty">暂无已选的服饰与场景搭配</td></tr>';
 }
 
@@ -327,7 +375,7 @@ function renderVideoRows(rows) {
       const source = safeUrl(fields.videoUrl);
       const file = /^\/media\/\d{15,22}\.mp4$/.test(fields.videoFile || "") ? fields.videoFile : "";
       const assigned = (row.tagIds || []).map((id) => state.table.tags.find((tag) => tag.id === id)).filter(Boolean);
-      return `<tr data-id="${escapeHtml(row.id)}"><td class="edit-sequence">${formatNumber(fields.sequence)}</td><td>${cover ? `<img class="video-thumb" src="${escapeHtml(cover)}" alt="${escapeHtml(fields.title)}封面" loading="lazy">` : "—"}</td><td><strong class="report-title" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title)}</strong><span class="report-account">${escapeHtml(fields.accountName)}</span></td><td><strong>${escapeHtml(fields.techniqueTitle || "沿用原片")}</strong><span class="edit-range">原片 ${formatNumber(fields.sourceStartSec)}s 起 · ${formatNumber(fields.clipDurationSec)}s</span><span class="edit-range">成片 ${formatNumber(fields.timelineStartSec)}s · ${escapeHtml(fields.transitionAfter || "")}</span>${renderSceneDesign(fields)}</td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign">编辑标签</button></td><td><button class="score-button" data-action="review">${row.rating?.score == null ? "未评分" : `${row.rating.score} / 5`}</button></td><td class="num">${formatNumber(fields.likeCount)}</td><td class="edit-interactions">藏 ${formatNumber(fields.collectCount)}<br>转 ${formatNumber(fields.shareCount)}<br>评 ${formatNumber(fields.commentCount)}</td><td>${formatDate(fields.publishedAt)}</td><td>${file ? `<button class="button video-file-button" data-action="play-file">▶ 播放文件</button><a class="report-file-link" href="${file}" download="${escapeHtml(fields.awemeId)}.mp4">下载 MP4</a>` : "—"}</td><td>${source ? `<a class="report-file-link" href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">抖音原视频 ↗</a>` : "—"}</td>${renderCandidateCells(row)}</tr>`;
+      return `<tr data-id="${escapeHtml(row.id)}"><td class="edit-sequence">${formatNumber(fields.sequence)}</td><td>${cover ? `<img class="video-thumb" src="${escapeHtml(cover)}" alt="${escapeHtml(fields.title)}封面" loading="lazy">` : "—"}</td><td><strong class="report-title" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title)}</strong><span class="report-account">${escapeHtml(fields.accountName)}</span></td><td><strong>${escapeHtml(fields.techniqueTitle || "沿用原片")}</strong><span class="edit-range">原片 ${formatNumber(fields.sourceStartSec)}s 起 · ${formatNumber(fields.clipDurationSec)}s</span><span class="edit-range">成片 ${formatNumber(fields.timelineStartSec)}s · ${escapeHtml(fields.transitionAfter || "")}</span>${renderSceneDesign(fields)}</td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign">编辑标签</button></td><td><button class="score-button" data-action="review">${ratingBlocks(row.rating?.score)}</button></td><td class="num">${formatNumber(fields.likeCount)}</td><td class="edit-interactions">藏 ${formatNumber(fields.collectCount)}<br>转 ${formatNumber(fields.shareCount)}<br>评 ${formatNumber(fields.commentCount)}</td><td>${formatDate(fields.publishedAt)}</td><td>${file ? `<button class="button video-file-button" data-action="play-file">▶ 播放文件</button><a class="report-file-link" href="${file}" download="${escapeHtml(fields.awemeId)}.mp4">下载 MP4</a>` : "—"}</td><td>${source ? `<a class="report-file-link" href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">抖音原视频 ↗</a>` : "—"}</td>${renderCandidateCells(row)}</tr>`;
     }).join("") : `<tr><td colspan="${11 + candidateDefinitions().length}" class="empty">暂无剪辑片段</td></tr>`;
     return;
   }
@@ -338,7 +386,7 @@ function renderVideoRows(rows) {
     const file = /^\/media\/\d{15,22}\.mp4$/.test(fields.videoFile || "") ? fields.videoFile : "";
     const assigned = (row.tagIds || []).map((id) => state.table.tags.find((tag) => tag.id === id)).filter(Boolean);
     const needsReview = !assigned.length || assigned.some((tag) => tag.name === "未分类");
-    return `<tr data-id="${escapeHtml(row.id)}"><td>${cover ? `<img class="video-thumb" src="${escapeHtml(cover)}" alt="${escapeHtml(fields.title)}封面" loading="lazy">` : "—"}</td><td><strong class="report-title" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title)}</strong><span class="report-account">${escapeHtml(fields.accountName)}</span></td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign" aria-label="维护${escapeHtml(fields.title)}的视频标签">${assigned.length ? "编辑标签" : "＋ 添加标签"}</button>${needsReview ? `<span class="report-note" title="${escapeHtml(fields.classificationNote)}">待人工复核</span>` : ""}</td><td class="num">${formatNumber(fields.likeCount)}</td><td><button class="score-button" data-action="review" aria-label="给${escapeHtml(fields.title)}打分" title="${escapeHtml(row.rating?.note || "评分和理由")}">${row.rating?.score == null ? "未评分" : `${row.rating.score} / 5`}</button></td><td class="num">${formatNumber(fields.likeRatio)}×</td><td class="num">${formatNumber(fields.collectCount)}</td><td class="num">${formatNumber(fields.shareCount)}</td><td class="num">${formatNumber(fields.commentCount)}</td><td class="num">${formatNumber(fields.playCount)}</td><td>${formatDate(fields.publishedAt)}</td><td>${file ? `<button class="button video-file-button" data-action="play-file">▶ 播放文件</button><a class="report-file-link" href="${file}" download="${escapeHtml(fields.awemeId)}.mp4">下载 MP4</a>` : '<span class="muted">文件获取中/不可用</span>'}</td><td>${source ? `<a class="report-file-link" href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">抖音原视频 ↗</a>` : "—"}</td>${renderCandidateCells(row)}</tr>`;
+    return `<tr data-id="${escapeHtml(row.id)}"><td>${cover ? `<img class="video-thumb" src="${escapeHtml(cover)}" alt="${escapeHtml(fields.title)}封面" loading="lazy">` : "—"}</td><td><strong class="report-title" title="${escapeHtml(fields.title)}">${escapeHtml(fields.title)}</strong><span class="report-account">${escapeHtml(fields.accountName)}</span></td><td><div class="tag-list">${assigned.map((tag) => `<span class="tag">${escapeHtml(tag.name)}</span>`).join("")}</div><button class="tag-edit" data-action="assign" aria-label="维护${escapeHtml(fields.title)}的视频标签">${assigned.length ? "编辑标签" : "＋ 添加标签"}</button>${needsReview ? `<span class="report-note" title="${escapeHtml(fields.classificationNote)}">待人工复核</span>` : ""}</td><td class="num">${formatNumber(fields.likeCount)}</td><td><button class="score-button" data-action="review" aria-label="给${escapeHtml(fields.title)}打分" title="${escapeHtml(row.rating?.note || "评分和理由")}">${ratingBlocks(row.rating?.score)}</button></td><td class="num">${formatNumber(fields.likeRatio)}×</td><td class="num">${formatNumber(fields.collectCount)}</td><td class="num">${formatNumber(fields.shareCount)}</td><td class="num">${formatNumber(fields.commentCount)}</td><td class="num">${formatNumber(fields.playCount)}</td><td>${formatDate(fields.publishedAt)}</td><td>${file ? `<button class="button video-file-button" data-action="play-file">▶ 播放文件</button><a class="report-file-link" href="${file}" download="${escapeHtml(fields.awemeId)}.mp4">下载 MP4</a>` : '<span class="muted">文件获取中/不可用</span>'}</td><td>${source ? `<a class="report-file-link" href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">抖音原视频 ↗</a>` : "—"}</td>${renderCandidateCells(row)}</tr>`;
   }).join("") : `<tr><td colspan="${13 + candidateDefinitions().length}" class="empty">没有符合条件的视频</td></tr>`;
 }
 
@@ -428,7 +476,7 @@ function entityArgs() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadCatalog(new URLSearchParams(location.search).get("table")).catch((error) => notify(error.message, true));
+  openCatalog();
   $("#openSidebar").onclick = () => { $("#sidebar").classList.add("open"); $("#scrim").classList.add("open"); };
   $("#closeSidebar").onclick = $("#scrim").onclick = () => { $("#sidebar").classList.remove("open"); $("#scrim").classList.remove("open"); };
   document.querySelectorAll(".close-modal").forEach((button) => button.onclick = () => button.closest("dialog").close());

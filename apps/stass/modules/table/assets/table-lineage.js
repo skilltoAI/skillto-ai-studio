@@ -74,7 +74,7 @@
     } finally { button.disabled = false; }
   };
 
-  document.querySelector('.workspace-head').after(panel);
+  document.querySelector('.result-bar').before(panel);
   new MutationObserver(render).observe(document.querySelector('#tableTitle'), {childList:true, characterData:true, subtree:true});
   render();
 })();

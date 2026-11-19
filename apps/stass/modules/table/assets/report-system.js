@@ -70,7 +70,7 @@
         '<div class="report-embed" id="reportEmbed">加载图表中…</div>'
         : '<div class="report-empty"><h2>选择报表</h2><p>从左侧三级菜单打开报表，或创建一个新报表。</p></div>') +
       '</section></div>' +
-      '<dialog class="report-dialog"><form method="dialog"><h2>报表信息</h2>' +
+      '<dialog class="report-dialog" aria-labelledby="reportDialogTitle"><form method="dialog"><h2 id="reportDialogTitle">报表信息</h2>' +
       '<label>名称<input name="name" required maxlength="120"></label>' +
       '<label>知识库<select name="kb"></select></label>' +
       '<label>项目<select name="project"></select></label>' +
@@ -169,7 +169,17 @@
   async function mount(nextPanel) {
     panel = nextPanel;
     try { await refresh(); }
-    catch (error) { panel.textContent = '报表加载失败：' + error.message; }
+    catch (error) {
+      if (panel !== nextPanel) return;
+      const message = document.createElement('p');
+      message.className = 'report-notice error';
+      message.textContent = '报表加载失败：' + error.message;
+      const retry = document.createElement('button');
+      retry.className = 'button';
+      retry.textContent = '重试';
+      retry.onclick = () => mount(nextPanel);
+      panel.replaceChildren(message, retry);
+    }
   }
   window.addEventListener('workspace-section-change', event => {
     if (event.detail.section === 'reports') mount(event.detail.panel);

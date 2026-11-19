@@ -655,6 +655,15 @@
     panel.className = 'workspace-section rewrite-section';
     panel.innerHTML = '<div class="rewrite-layout"><button type="button" class="rewrite-sidebar-toggle" aria-controls="rewrite-sidebar" aria-expanded="'+(!selected)+'">稿件目录</button><aside id="rewrite-sidebar" class="rewrite-sidebar"><h1>稿件目录</h1><button data-add="kb">＋ 新建知识库</button><nav aria-label="知识库、项目和稿件">'+tree()+'</nav></aside><main class="rewrite-main"><p class="rewrite-notice" role="status"></p>'+detail()+'</main></div>';
     const sidebarToggle = panel.querySelector('.rewrite-sidebar-toggle');
+    const shade = document.createElement('button');
+    shade.type = 'button';
+    shade.className = 'rewrite-directory-shade';
+    shade.setAttribute('aria-label', '关闭稿件目录');
+    panel.querySelector('.rewrite-sidebar').after(shade);
+    shade.onclick = () => {
+      sidebarToggle.setAttribute('aria-expanded', 'false');
+      sidebarToggle.focus();
+    };
     sidebarToggle.onclick = () => sidebarToggle.setAttribute('aria-expanded', String(sidebarToggle.getAttribute('aria-expanded') !== 'true'));
     panel.querySelectorAll('[data-manuscript]').forEach(node => node.onclick = async () => {try {await flushVersion(); selected = data.manuscripts.find(x => x.id === node.dataset.manuscript); editing=false; setSelected(selected.id); render();} catch(error) {notice(error.message,true);}});
     panel.querySelectorAll('summary button').forEach(node => node.onclick = event => { event.preventDefault(); event.stopPropagation(); hierarchy(node.dataset); });

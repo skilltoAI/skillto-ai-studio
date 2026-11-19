@@ -45,6 +45,51 @@
   breakdownLink.className = 'workspace-link';
   links.insertBefore(breakdownLink, links.children[2]);
 
+  // Reports and breakdowns share a mobile directory. Their lists can be
+  // replaced by module renderers, so resolve the current list when opening.
+  const directory = document.createElement('button');
+  directory.className = 'directory-toggle';
+  directory.type = 'button';
+  directory.textContent = '☰';
+  directory.setAttribute('aria-label', '打开目录');
+  directory.setAttribute('aria-expanded', 'false');
+  nav.prepend(directory);
+  const shade = document.createElement('button');
+  shade.className = 'directory-shade';
+  shade.type = 'button';
+  shade.setAttribute('aria-label', '关闭目录');
+  document.body.append(shade);
+  function closeDirectory() {
+    if (!document.body.classList.contains('directory-open')) return;
+    document.body.classList.remove('directory-open');
+    directory.setAttribute('aria-expanded', 'false');
+    directory.focus();
+  }
+  directory.onclick = () => {
+    const side = document.querySelector('.report-sidebar, .workspace > aside');
+    if (!side) return;
+    side.id ||= 'workspace-directory';
+    directory.setAttribute('aria-controls', side.id);
+    directory.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('directory-open');
+    (side.querySelector('button, input, summary') || shade).focus();
+  };
+  shade.onclick = closeDirectory;
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+    closeDirectory();
+    const rewriteShade = document.querySelector('.rewrite-directory-shade');
+    if (rewriteShade?.getClientRects().length) rewriteShade.click();
+    if (document.querySelector('#sidebar.open')) {
+      document.querySelector('#closeSidebar').click();
+      document.querySelector('#openSidebar').focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (event.target.closest('.report-tree-items button, #records .record')) closeDirectory();
+  }, true);
+  matchMedia('(max-width: 760px)').addEventListener('change', closeDirectory);
+
   const panel = document.createElement('main');
   panel.className = 'workspace-section';
   panel.hidden = true;
@@ -78,6 +123,7 @@
   }
 
   function renderPanel(section) {
+    panel.className = 'workspace-section';
     panel.replaceChildren();
     const inner = document.createElement('div');
     inner.className = 'workspace-section-inner';
@@ -100,20 +146,23 @@
     } else if (section === 'docs') {
       title.textContent = '文档';
       description.textContent = '飞书知识库中的研究文档与账号名单。';
-      const card = document.createElement('div');
-      card.className = 'workspace-card';
-      const heading = document.createElement('h2');
-      heading.textContent = 'AI教学账号名单｜自然流与付费流';
-      const detail = document.createElement('p');
-      detail.textContent = '2026-11-07 整理 · 自然流 64 个 · 付费流 10 个';
-      const actions = document.createElement('div');
-      actions.className = 'workspace-card-actions';
-      actions.append(
-        externalLink('打开账号名单', documentUrl, true),
-        externalLink('打开飞书知识库', wikiUrl)
-      );
-      card.append(heading, detail, actions);
-      inner.append(card);
+      const list = document.createElement('div');
+      list.className = 'document-list';
+      for (const [name, detail, label, href] of [
+        ['AI教学账号名单｜自然流与付费流', '2026-11-07 整理 · 自然流 64 个 · 付费流 10 个', '打开账号名单', documentUrl],
+        ['飞书知识库', '研究文档目录', '打开飞书知识库', wikiUrl]
+      ]) {
+        const row = document.createElement('article');
+        const info = document.createElement('div');
+        const heading = document.createElement('h2');
+        heading.textContent = name;
+        const summary = document.createElement('p');
+        summary.textContent = detail;
+        info.append(heading, summary);
+        row.append(info, externalLink(label, href));
+        list.append(row);
+      }
+      inner.append(list);
     } else {
       title.textContent = section === 'schedule' ? '排稿' : '工具';
       description.textContent = section === 'schedule' ? '排稿功能尚未接入。' : '工具功能尚未接入。';
@@ -123,6 +172,8 @@
 
   function showSection(section) {
     const valid = sections.some(item => item.id === section) ? section : 'tables';
+    closeDirectory();
+    panel.dataset.view = valid;
     shell.hidden = valid !== 'tables';
     panel.hidden = valid === 'tables';
     for (const button of links.children) {
