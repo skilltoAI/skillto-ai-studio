@@ -49,6 +49,14 @@ Agents use Skills to choose a workflow and Personal MCP to act on the local work
 
 Captured from a running STASS instance with fictional demo data.
 
+**Motion template gallery with cover previews**
+
+![Motion template gallery with cover previews](docs/readme/assets/studio-motion-gallery.png)
+
+**Multimedia table with image thumbnails**
+
+![Multimedia table with image thumbnails](docs/readme/assets/studio-media-table.png)
+
 **Content planning table and review notes**
 
 ![Content planning table and review notes](docs/readme/assets/studio-tables.png)

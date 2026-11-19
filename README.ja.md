@@ -49,6 +49,14 @@ Skillto.ai の公式サービスと連携します。公式サイトで利用可
 
 稼働中の STASS を、架空のデモデータで撮影しました。
 
+**Motion テンプレート一覧とカバープレビュー**
+
+![Motion テンプレート一覧とカバープレビュー](docs/readme/assets/studio-motion-gallery.png)
+
+**画像サムネイル付きのマルチメディア表**
+
+![画像サムネイル付きのマルチメディア表](docs/readme/assets/studio-media-table.png)
+
 **企画管理表とレビュー用メモ**
 
 ![企画管理表とレビュー用メモ](docs/readme/assets/studio-tables.png)

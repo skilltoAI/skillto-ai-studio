@@ -49,6 +49,14 @@ Agenten wählen Workflows über Skills und arbeiten per Personal MCP im lokalen 
 
 Aufnahmen aus einer laufenden STASS-Instanz mit fiktiven Beispieldaten.
 
+**Motion-Vorlagen mit Cover-Vorschau**
+
+![Motion-Vorlagen mit Cover-Vorschau](docs/readme/assets/studio-motion-gallery.png)
+
+**Multimedia-Tabelle mit Bildvorschau**
+
+![Multimedia-Tabelle mit Bildvorschau](docs/readme/assets/studio-media-table.png)
+
 **Redaktionsplanung mit Prüfanmerkungen**
 
 ![Redaktionsplanung mit Prüfanmerkungen](docs/readme/assets/studio-tables.png)

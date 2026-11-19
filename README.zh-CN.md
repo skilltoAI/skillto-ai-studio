@@ -49,6 +49,14 @@ AI 原生体现在 Agent 可以通过 MCP 直接执行工作台操作，Skill �
 
 以下截图来自运行中的 STASS，使用隔离环境里的虚构示例。
 
+**Motion 模板库 · 封面预览与模板条目**
+
+![Motion 模板库 · 封面预览与模板条目](docs/readme/assets/studio-motion-gallery.png)
+
+**多媒体表格 · 图片缩略图与审阅备注**
+
+![多媒体表格 · 图片缩略图与审阅备注](docs/readme/assets/studio-media-table.png)
+
 **内容工作台 · 选题表与人工备注**
 
 ![内容工作台 · 选题表与人工备注](docs/readme/assets/studio-tables.png)
