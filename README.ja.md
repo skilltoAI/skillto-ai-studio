@@ -7,9 +7,10 @@
 
 <h1 align="center">Skillto.ai Studio</h1>
 
-<p align="center">コンテンツ制作と日常業務のための AI ワークスペース</p>
+<p align="center">エージェントのための AI ネイティブ・パーソナルワークスペース</p>
 
-<p align="center"><a href="#主な機能">機能</a> · <a href="#スクリーンショット">画面</a> · <a href="#クイックスタート">インストール</a> · <a href="skills/skillto-ai-studio/references/installation.md">ドキュメント</a><br>
+<p align="center"><a href="#概要">概要</a> · <a href="#主な機能">機能</a> · <a href="#スクリーンショット">画面</a> · <a href="#クイックスタート">インストール</a> · <a href="skills/skillto-ai-studio/references/installation.md">ドキュメント</a><br>
+  <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
@@ -17,6 +18,12 @@
 </p>
 
 <p align="center"><a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <kbd>日本語</kbd> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
+
+## 概要
+
+**Skillto.ai Studio は、AI ネイティブなパーソナルワークスペースです。** やりたいことを自然な言葉で伝えると、エージェントが Skill を選び、MCP を通じて作業を進めます。成果はナレッジベース、表、台本、絵コンテに残り、いつでも人が確認・編集できます。
+
+Skillto.ai の公式サービスと連携します。公式サイトで利用可能な **AI アセット、AI API、Skill** を取得し、サービスの接続と権限設定を済ませると、制作フローに組み込めます。企画調査から生成、編集、レビューまで、素材と成果物を一つのプロジェクトで管理できます。 [Skillto.ai 公式サイト](https://www.skillto.ai/)
 
 ## 対象ユーザー
 
@@ -26,10 +33,10 @@
 
 ## 主な機能
 
-- **スキル**。親スキルがタスクを 18 個の専門スキルに振り分けます。調査、メディア分析、絵コンテ、表紙、レポート、制作を扱います。
-- **エージェントとの連携**。対応クライアントに STASS MCP を設定すると、Codex や Claude Code から作業データを読み取り、更新できます。人は同じインスタンスをブラウザーで確認できます。
-- **AI を使った動画編集**。参考動画を分析し、区間を選び、メモを残せます。仮編集と字幕から HyperFrames や Remotion の編集を計画し、Motion でテンプレートを管理できます。
-- **画像・動画生成**。表紙のプロンプト、キャラクターの参考素材、ショット案を作成できます。必要なサービスと権限があれば、Creator MCP で素材を割り当て、ビジュアルワークフローを実行できます。
+- **Skill によるタスクの振り分け**。親 Skill が目的に応じて 18 個の専門 Skill を選び、調査、メディア分析、日常業務、絵コンテ、表紙、レポートを支援します。
+- **人とエージェントが共有するワークスペース**。対応するエージェントは STASS MCP で記録を読み取り、更新できます。人は同じ記録をブラウザーで確認・編集できます。
+- **AI を使った動画編集とモーション**。参考動画を分析して区間を選び、仮編集や字幕から HyperFrames または Remotion での編集を計画します。Motion ではテンプレートとプレビューを管理できます。
+- **AI 画像・動画生成**。表紙、キャラクター、ショット案をビジュアルワークフローにまとめます。Creator MCP で素材の割り当て、検証、承認済み生成ジョブの実行、結果の取得ができます。利用できる API、モデル、Skill は公式サイトの提供範囲とアカウント権限に応じます。
 
 [スキル一覧](README.md#技能清单) · [対応クライアントと依存関係](skills/skillto-ai-studio/references/compatibility.md)
 

@@ -7,9 +7,10 @@
 
 <h1 align="center">Skillto.ai Studio</h1>
 
-<p align="center">Ein persönlicher KI-Arbeitsplatz für Content-Produktion und den Arbeitsalltag</p>
+<p align="center">Der KI-native persönliche Arbeitsplatz für Agenten</p>
 
-<p align="center"><a href="#funktionen">Funktionen</a> · <a href="#screenshots">Screenshots</a> · <a href="#schnellstart">Schnellstart</a> · <a href="skills/skillto-ai-studio/references/installation.md">Dokumentation</a><br>
+<p align="center"><a href="#übersicht">Übersicht</a> · <a href="#funktionen">Funktionen</a> · <a href="#screenshots">Screenshots</a> · <a href="#schnellstart">Schnellstart</a> · <a href="skills/skillto-ai-studio/references/installation.md">Dokumentation</a><br>
+  <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
@@ -17,6 +18,12 @@
 </p>
 
 <p align="center"><a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <kbd>Deutsch</kbd></p>
+
+## Übersicht
+
+**Skillto.ai Studio ist ein KI-nativer persönlicher Arbeitsplatz.** Beschreibe dein Ziel in natürlicher Sprache. Der Agent wählt passende Skills aus, arbeitet per MCP mit deinen Einträgen und hinterlegt prüfbare Ergebnisse in Wissenssammlungen, Tabellen, Skripten und Storyboards. Du kannst die Ergebnisse jederzeit prüfen und bearbeiten.
+
+Studio verbindet deinen Arbeitsplatz mit dem offiziellen Angebot von Skillto.ai. Verfügbare **KI-Assets, KI-APIs und Skills** von der Website lassen sich nach Einrichtung und Autorisierung der Dienste in deine Workflows einbinden. Recherchematerial, Zwischenschritte und Ergebnisse bleiben von der Idee über die Generierung und den Schnitt bis zur Freigabe im selben Projekt. [Skillto.ai besuchen](https://www.skillto.ai/)
 
 ## Für wen ist das Projekt gedacht?
 
@@ -26,10 +33,10 @@
 
 ## Funktionen
 
-- **Skills.** Ein zentraler Skill leitet Aufgaben an 18 spezialisierte Skills weiter. Sie unterstützen Recherche, Medienanalyse, Storyboards, Cover, Berichte und Produktion.
-- **Zusammenarbeit mit Agenten.** Über STASS MCP können Agenten wie Codex oder Claude Code in einem unterstützten Client Einträge lesen und aktualisieren. Menschen prüfen dieselben Daten im Browser.
-- **KI-gestützter Schnitt.** Referenzclips analysieren, Ausschnitte auswählen und Notizen erfassen. Aus Rohschnitt und Untertiteln lässt sich der Schnitt von Talking-Head-Videos mit HyperFrames oder Remotion planen. Motion verwaltet Vorlagen.
-- **Bild- und Videogenerierung.** Cover-Prompts, Figurenreferenzen und Einstellungen vorbereiten. Mit Creator MCP lassen sich visuelle Workflows zusammenstellen, Medien zuordnen und autorisierte Aufträge bei verfügbaren Diensten ausführen.
+- **Skill-Orchestrierung.** Ein zentraler Skill leitet Aufgaben an 18 spezialisierte Skills für Recherche, Medienanalyse, Büroarbeit, Storyboards, Cover und Berichte weiter.
+- **Ein gemeinsamer Arbeitsplatz für Menschen und Agenten.** Unterstützte Agenten lesen und aktualisieren Einträge über STASS MCP. Menschen prüfen und bearbeiten dieselben Einträge im Browser.
+- **KI-gestützter Schnitt und Motion Design.** Analysiere Referenzclips, wähle Ausschnitte aus und plane den Schnitt anhand von Rohmaterial und Untertiteln mit HyperFrames oder Remotion. Motion verwaltet Vorlagen und Vorschauen.
+- **KI-Bild- und Videogenerierung.** Entwickle aus Cover-Ideen, Figurenreferenzen und Einstellungen visuelle Workflows. Creator MCP ordnet Medien zu, prüft Abläufe, führt autorisierte Generierungsaufträge aus und ruft Ergebnisse ab. Verfügbare APIs, Modelle und Skills richten sich nach dem Angebot der Website und den Kontoberechtigungen.
 
 [Skill-Verzeichnis](README.md#技能清单) · [Kompatibilität und Abhängigkeiten](skills/skillto-ai-studio/references/compatibility.md)
 

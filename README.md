@@ -7,9 +7,10 @@
 
 <h1 align="center">Skillto.ai Studio</h1>
 
-<p align="center">面向内容创作与日常办公的 AI 个人工作台</p>
+<p align="center">为 Agent 而建的 AI Native 个人工作台</p>
 
-<p align="center"><a href="#核心功能">功能</a> · <a href="#系统截图">系统截图</a> · <a href="#快速安装">快速安装</a> · <a href="skills/skillto-ai-studio/references/installation.md">文档</a><br>
+<p align="center"><a href="#项目介绍">项目介绍</a> · <a href="#核心功能">功能</a> · <a href="#系统截图">系统截图</a> · <a href="#快速安装">快速安装</a> · <a href="skills/skillto-ai-studio/references/installation.md">文档</a><br>
+  <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
@@ -17,6 +18,12 @@
 </p>
 
 <p align="center"><kbd>简体中文</kbd> &nbsp; <a href="README.en.md"><kbd>English</kbd></a> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
+
+## 项目介绍
+
+Skillto.ai Studio 是一款 **AI Native 个人工作台**。你用自然语言描述目标，Agent 通过 Skill 选择工作流，通过 MCP 操作工作台，在知识库、表格、稿件和分镜里留下可查阅的结果。你可以在同一个工作台接手编辑、审阅和确认下一步。
+
+工作台连接 Skillto.ai 官方生态。创作者可从官网获取可用的 **AI 资产、AI API 和 Skill**，并在完成服务接入和授权后，将它们用于本地工作流。从选题研究到分镜、生成、剪辑和审阅，素材、过程和成果可以沉淀到同一个项目。 [访问 Skillto.ai 官网](https://www.skillto.ai/)
 
 ## 适合谁
 
@@ -28,10 +35,10 @@
 
 ## 核心功能
 
-- **Skills 任务路由**。1 个父技能按任务选择 18 个子技能，覆盖内容采集、媒体分析、分镜、封面、报表和制作流程。 [完整技能清单](#技能清单)
-- **与 Agent 协作**。在支持的宿主中配置 STASS MCP，让 Codex、Claude Code 等 Agent 读取和更新工作台记录。人可以在网页上查看同一实例的数据并补充审稿意见。 [宿主兼容性与依赖](skills/skillto-ai-studio/references/compatibility.md)
-- **AI 剪辑与动效**。拉片、选段和笔记帮助分析参考素材。口播剪辑技能根据粗剪与字幕规划 HyperFrames 或 Remotion 编辑，Motion 模块管理模板与预览。 [口播剪辑技能](skills/skillto-ai-studio-talking-head-edit/SKILL.md)
-- **AI 生图与生视频**。封面、角色卡和分镜技能整理构图、提示词及参考素材；Creator MCP 可编排视觉工作流，绑定素材、校验并运行经授权的任务。实际生成取决于宿主提供的生成工具、服务配置和权限。 [视觉工作流技能](skills/skillto-ai-studio-workflow-mcp/SKILL.md)
+- **Skill 编排**。1 个父 Skill 按目标路由到 18 个专业 Skill，覆盖采集、分析、办公、内容策划和视觉生产。 [完整技能清单](#技能清单)
+- **Agent 与人共享工作台**。支持的 Agent 通过 STASS MCP 读取和更新工作记录，人可以在浏览器里审阅、编辑和补充人工意见。 [宿主兼容性与依赖](skills/skillto-ai-studio/references/compatibility.md)
+- **AI 剪辑与动效**。从参考素材拆解、镜头选段到口播粗剪，根据字幕规划 HyperFrames 或 Remotion 编辑，并用 Motion 管理模板与预览。 [口播剪辑 Skill](skills/skillto-ai-studio-talking-head-edit/SKILL.md)
+- **AI 生图与生视频**。把封面、角色卡和分镜转为可运行的视觉工作流，通过 Creator MCP 绑定素材、校验流程、调用已授权的生成服务并读取结果。具体 API、模型和 Skill 以官网可用范围及账户权限为准。 [视觉工作流 Skill](skills/skillto-ai-studio-workflow-mcp/SKILL.md)
 
 ## 系统截图
 

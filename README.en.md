@@ -7,9 +7,10 @@
 
 <h1 align="center">Skillto.ai Studio</h1>
 
-<p align="center">An AI personal workspace for content production and everyday work</p>
+<p align="center">The AI-native personal workspace built for agents</p>
 
-<p align="center"><a href="#features">Features</a> · <a href="#screenshots">Screenshots</a> · <a href="#quick-start">Quick start</a> · <a href="skills/skillto-ai-studio/references/installation.md">Documentation</a><br>
+<p align="center"><a href="#overview">Overview</a> · <a href="#features">Features</a> · <a href="#screenshots">Screenshots</a> · <a href="#quick-start">Quick start</a> · <a href="skills/skillto-ai-studio/references/installation.md">Documentation</a><br>
+  <a href="https://www.skillto.ai/">Skillto.ai</a> ·
   <a href="https://github.com/skilltoAI/skillto-ai-studio">GitHub</a> ·
   <a href="https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio">Codeup</a> ·
   <a href="skills/skillto-ai-studio/SKILL.md"><kbd>19 Skills</kbd></a> ·
@@ -17,6 +18,12 @@
 </p>
 
 <p align="center"><a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <kbd>English</kbd> &nbsp; <a href="README.ja.md"><kbd>日本語</kbd></a> &nbsp; <a href="README.de.md"><kbd>Deutsch</kbd></a></p>
+
+## Overview
+
+**Skillto.ai Studio is an AI-native personal workspace.** Describe what you want to achieve, and your agent selects the right Skills, works with your records through MCP, and leaves results you can review in knowledge bases, tables, scripts and storyboards. You can step in to edit the work, review it or decide what happens next.
+
+Studio connects to the official Skillto.ai ecosystem. Bring available **AI assets, AI APIs and Skills** from the website into your workflow once the relevant services are connected and authorised. Keep the materials, decisions and deliverables for research, generation, editing and review together in one project. [Visit Skillto.ai](https://www.skillto.ai/)
 
 ## Who it is for
 
@@ -26,10 +33,10 @@
 
 ## Features
 
-- **Skills.** One parent skill routes tasks to 18 specialised skills for research, media analysis, storyboards, covers, reporting and production.
-- **Agent collaboration.** Configure STASS MCP in a supported host so agents such as Codex or Claude Code can read and update workspace records. People can review the same instance in the browser.
-- **AI-assisted editing.** Analyse reference clips, select segments and add notes. Plan talking-head edits from rough cuts and subtitles with HyperFrames or Remotion, and organise templates in the Motion workspace.
-- **Image and video generation.** Prepare cover prompts, character references and shot plans. Use Creator MCP to assemble visual workflows, bind assets and run authorised jobs when the required services and tools are available.
+- **Skill orchestration.** One parent Skill routes tasks to 18 specialised Skills for research, media analysis, everyday work, storyboards, covers and reports.
+- **A shared workspace for agents and people.** Supported agents read and update workspace records through STASS MCP. People can review and edit the same records in the browser.
+- **AI-assisted editing and motion graphics.** Analyse reference clips, select segments and plan talking-head edits from rough cuts and subtitles with HyperFrames or Remotion. Organise templates and previews in Motion.
+- **AI image and video generation.** Turn cover concepts, character references and shot plans into visual workflows. Creator MCP can bind assets, validate workflows, run authorised generation jobs and retrieve results. Available APIs, models and Skills depend on the website's offerings and your account permissions.
 
 [Skill catalogue](README.md#技能清单) · [Host compatibility and dependencies](skills/skillto-ai-studio/references/compatibility.md)
 
