@@ -24,6 +24,12 @@
 
 Skillto.ai の公式サービスと連携します。公式サイトで利用可能な **AI アセット、AI API、Skill** を取得し、サービスの接続と権限設定を済ませると、制作フローに組み込めます。企画調査から生成、編集、レビューまで、素材と成果物を一つのプロジェクトで管理できます。 [Skillto.ai 公式サイト](https://www.skillto.ai/)
 
+## AI ビジュアルアセット
+
+紅白モデルライブラリでは、動作の参考動画と生成用プロンプトを同じカードで確認できます。公式トピックやローカルコレクションを閲覧し、動画をプレビューしてプロンプトをコピーできます。下の画像はワークスペースに表示した無料の公式トピックです。
+
+![紅白モデルライブラリのトピック、動作参考動画、コピーできるプロンプト](docs/readme/assets/studio-red-white-model-library.png)
+
 ## アーキテクチャ
 
 ![Skillto.ai Studio の構成。エージェントは Skill と Personal MCP を通じてローカルの Personal Server を操作し、Skillto.ai に連携します。](docs/readme/assets/studio-architecture.svg)

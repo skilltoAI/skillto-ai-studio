@@ -24,6 +24,12 @@ Skillto.ai Studio 是一款 **AI Native 个人工作台**。你用自然语言�
 
 工作台连接 Skillto.ai 官方生态。创作者可从官网获取可用的 **AI 资产、AI API 和 Skill**，并在完成服务接入和授权后，将它们用于本地工作流。从选题研究到分镜、生成、剪辑和审阅，素材、过程和成果可以沉淀到同一个项目。 [访问 Skillto.ai 官网](https://www.skillto.ai/)
 
+## AI 美术资产
+
+AI 红白模库把动作参考视频和配套提示词放在同一张卡片里。可以按官方专题或本机收藏浏览，预览动作并复制提示词，用于后续创作。下图展示工作台中的免费官方专题。
+
+![AI 红白模库界面，展示专题导航、动作参考视频与可复制的提示词](docs/readme/assets/studio-red-white-model-library.png)
+
 ## 系统架构
 
 ![Skillto.ai Studio 16:9 架构图。Agent 以 Skill 驱动任务，通过 Personal MCP 操作本机 Personal Server，并按授权接入 Skillto.ai 平台。](docs/readme/assets/studio-architecture.svg)

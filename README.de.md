@@ -24,6 +24,12 @@
 
 Studio verbindet deinen Arbeitsplatz mit dem offiziellen Angebot von Skillto.ai. Verfügbare **KI-Assets, KI-APIs und Skills** von der Website lassen sich nach Einrichtung und Autorisierung der Dienste in deine Workflows einbinden. Recherchematerial, Zwischenschritte und Ergebnisse bleiben von der Idee über die Generierung und den Schnitt bis zur Freigabe im selben Projekt. [Skillto.ai besuchen](https://www.skillto.ai/)
 
+## KI-Assets für visuelle Gestaltung
+
+Die Rot-Weiß-Modellbibliothek zeigt Bewegungsvorlagen und die zugehörigen Prompts auf derselben Karte. Durchsuche offizielle Themen oder lokale Sammlungen, spiele Referenzclips ab und kopiere Prompts für deine eigenen Projekte. Der Screenshot zeigt ein kostenloses offizielles Thema im Workspace.
+
+![Rot-Weiß-Modellbibliothek mit Themen, Bewegungsvorlagen und kopierbaren Prompts](docs/readme/assets/studio-red-white-model-library.png)
+
 ## Architektur
 
 ![Architektur von Skillto.ai Studio. Agenten arbeiten mit Skills und Personal MCP auf dem lokalen Personal Server und greifen separat auf Skillto.ai zu.](docs/readme/assets/studio-architecture.svg)

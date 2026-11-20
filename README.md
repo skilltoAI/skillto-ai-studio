@@ -24,6 +24,12 @@
 
 Studio connects to the official Skillto.ai ecosystem. Bring available **AI assets, AI APIs and Skills** from the website into your workflow once the relevant services are connected and authorised. Keep the materials, decisions and deliverables for research, generation, editing and review together in one project. [Visit Skillto.ai](https://www.skillto.ai/)
 
+## AI Art Assets
+
+The Red-and-White Model Library brings motion-reference clips and their generation prompts together. Browse official topics or local collections, preview a clip, and copy its prompt for your own workflow. The screenshot shows a free official topic in the Studio workbench.
+
+![Red-and-White Model Library with topic navigation, motion clips, and copyable prompts](docs/readme/assets/studio-red-white-model-library.png)
+
 ## Architecture
 
 ![Skillto.ai Studio architecture. Agents use Skills and Personal MCP to operate the local Personal Server and connect to the Skillto.ai platform separately.](docs/readme/assets/studio-architecture.svg)
