@@ -1,0 +1,728 @@
+[
+  {
+    "module": "table",
+    "path": "scripts/browser_mcp.py",
+    "baseline": "repository",
+    "sha256": "3f7dd532270f80a864ec31e3bd162a92a303d02f1ba8ae497af003987b10ec63"
+  },
+  {
+    "module": "table",
+    "path": "scripts/browser_profiles.py",
+    "baseline": "repository",
+    "sha256": "9bb5d0402ac29a974e972237edac779050f59930d7961285b24027c3b0ff2d5f"
+  },
+  {
+    "module": "table",
+    "path": "scripts/build_windows_launcher.ps1",
+    "baseline": "repository",
+    "sha256": "136cef12d0c4904bd4762f53c1e776a49073f69ec1ab6a0e92069ffa1ef95f22"
+  },
+  {
+    "module": "table",
+    "path": "scripts/launcher_service.py",
+    "baseline": "repository",
+    "sha256": "d43e54742b59aa328b7539dc5aba375a768a6e0443ca0dc9337b602a6bc8cb12"
+  },
+  {
+    "module": "table",
+    "path": "scripts/remote_client.py",
+    "baseline": "repository",
+    "sha256": "fede4d598e897e9bf07424e500853c9152129ea5a015befe430c37cf640d8212"
+  },
+  {
+    "module": "table",
+    "path": "scripts/report_system.py",
+    "baseline": "repository",
+    "sha256": "6cfcd91e4438288ebcd507e76081b583a17ed377b623a455b0cf812cea65bf48"
+  },
+  {
+    "module": "table",
+    "path": "scripts/rewrite_motion.py",
+    "baseline": "repository",
+    "sha256": "5e36127ff76eb85ab68a1146162171a63d0fb0c6f639583eb91359c04746a805"
+  },
+  {
+    "module": "table",
+    "path": "scripts/rewrite_system.py",
+    "baseline": "repository",
+    "sha256": "7fd1e3ecb0dd3764fb856ab4d74c03823bd9cba20087a298ffb020c743b52b80"
+  },
+  {
+    "module": "table",
+    "path": "scripts/rewrite_voice.py",
+    "baseline": "repository",
+    "sha256": "c2d7d4fb2e75216b2c4973dc3ca4b77d8f544c50309d31553877b634f1a3c0d7"
+  },
+  {
+    "module": "table",
+    "path": "scripts/rewrite_voice_worker.py",
+    "baseline": "repository",
+    "sha256": "860060ccf93445fa47b4fd950499dc4577099b526aa37a107d10cb5fbd38fc99"
+  },
+  {
+    "module": "table",
+    "path": "scripts/server.py",
+    "baseline": "installed-lineage",
+    "sha256": "7b533116ff2910d5a25c2fbf39c0d8700d94d023f1158e959a85ca1210e84f3e"
+  },
+  {
+    "module": "table",
+    "path": "scripts/test_server.py",
+    "baseline": "installed-lineage",
+    "sha256": "02f38f8c9f053ece70641c9183568f23cd9dd937ae6b4cb1892a058e1396ec2c"
+  },
+  {
+    "module": "table",
+    "path": "scripts/tests/test_idle_popups.py",
+    "baseline": "repository",
+    "sha256": "9e783a4632be3f71133844316550323bc7005d6761671f6859cb7755123dab11"
+  },
+  {
+    "module": "table",
+    "path": "scripts/tests/test_profiles.py",
+    "baseline": "repository",
+    "sha256": "f80b2de53fb77f52f60a3e7eb3004dff731257adfb941c2d524861a48e441f11"
+  },
+  {
+    "module": "table",
+    "path": "scripts/tests/test_rewrite_analysis.py",
+    "baseline": "repository",
+    "sha256": "82e2e38fd8fe8e587cb246052334c6e2e47b174d6865c126fa9d57c3360146b2"
+  },
+  {
+    "module": "table",
+    "path": "scripts/tests/test_rewrite_motion.py",
+    "baseline": "repository",
+    "sha256": "e0af6f7fb76ab8a553011564df7fe53786317d42ff0f7bb5688444c8850b6ed4"
+  },
+  {
+    "module": "table",
+    "path": "scripts/tests/test_rewrite_storyboard.py",
+    "baseline": "repository",
+    "sha256": "adc6c7dfb105e1a9e719deb8efb0c678c9556d863e60a55a7c0144bc66189f06"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/go.mod",
+    "baseline": "repository",
+    "sha256": "c89791d8f4608e156bfb1104ac5bf2885cf8f4b1b228a4749cba480c36a953a2"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/main.go",
+    "baseline": "repository",
+    "sha256": "65ce0cfefa5a99484c4e2724745450f47fbc7f4c2cb0b3edad009be8f12b395e"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/stop.go",
+    "baseline": "repository",
+    "sha256": "33a62bab3aff84676355adda36340047251e9649809c9cf3646b2798d8e4335d"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/window.go",
+    "baseline": "repository",
+    "sha256": "3a56009a5789814b13b89274b6932d5db5c467de173452f5f3adfd1e935ca3a2"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/winres/logo.png",
+    "baseline": "repository",
+    "sha256": "6cce4af56749a5cfd6e7dd819efdbbcbd5860f80c2626f76c022a45200cdad4f"
+  },
+  {
+    "module": "table",
+    "path": "scripts/windows/winres/winres.json",
+    "baseline": "repository",
+    "sha256": "b1016b13a7464e76c13185092eeb32a69fcb1a22f2508bbdf31e073f946e4eae"
+  },
+  {
+    "module": "table",
+    "path": "assets/browser-users.html",
+    "baseline": "repository",
+    "sha256": "6364773ddc243928d055c24db9904df49cb52ae93f14830f2a4e24b5040f7c45"
+  },
+  {
+    "module": "table",
+    "path": "assets/browser-users.js",
+    "baseline": "repository",
+    "sha256": "499b8b984294b5dec8be35c1794b2fb36112da231b723a03c5e0a598b8c38377"
+  },
+  {
+    "module": "table",
+    "path": "assets/report-system.css",
+    "baseline": "repository",
+    "sha256": "d372dbb1d4ba1b8fe2c5b51b4fe8f5068f0c5059303a6a5a0bf97b29616e35d0"
+  },
+  {
+    "module": "table",
+    "path": "assets/report-system.js",
+    "baseline": "repository",
+    "sha256": "c5ce50b9f2e351926bf01609cf517ff44f0ef9a2a80c0a9954fbdec55958180e"
+  },
+  {
+    "module": "table",
+    "path": "assets/rewrite-system.css",
+    "baseline": "repository",
+    "sha256": "6217d2054628d53afd15ab5c78e76a63ce5b35fcb45e94c6b8e2fb703876836b"
+  },
+  {
+    "module": "table",
+    "path": "assets/rewrite-system.js",
+    "baseline": "repository",
+    "sha256": "a08eec3821fcb4477771c8bd36005ada5a23a87b30149390d55eea8b3d3f49b0"
+  },
+  {
+    "module": "table",
+    "path": "assets/schema-controls.css",
+    "baseline": "repository",
+    "sha256": "864a85148598a104cb11b0108c62f1420d6b4c30e58c4e529359d0ae26d88c3f"
+  },
+  {
+    "module": "table",
+    "path": "assets/schema-controls.js",
+    "baseline": "repository",
+    "sha256": "703224b32fd10d422972bd694c7ccf16e8db1a574b29487b7187ca4bcec967e8"
+  },
+  {
+    "module": "table",
+    "path": "assets/schema-controls.js.20261116174632.bak",
+    "baseline": "repository",
+    "sha256": "75617dc13fd4a8b86fa60411abb3d9cc3f1601c5845a466d08fb85e3e37acd6b"
+  },
+  {
+    "module": "table",
+    "path": "assets/studio-shell.js",
+    "baseline": "repository",
+    "sha256": "a993d2ba13f1aa68ac5adad02bfcfa5ef7732f2b3862f0b5ef5120cf28551a86"
+  },
+  {
+    "module": "table",
+    "path": "assets/studio-theme.css",
+    "baseline": "repository",
+    "sha256": "c967c104cd6ec0e96d6236b3ef3a17fe3d09b3ca55d97361307588fa9689a2b1"
+  },
+  {
+    "module": "table",
+    "path": "assets/test-rewrite-comparison.cjs",
+    "baseline": "repository",
+    "sha256": "8769ad8ed1aada0d37327f1d6215f4783974c3e794c0a49c702852a06b720ee4"
+  },
+  {
+    "module": "table",
+    "path": "assets/test-schema-controls.cjs",
+    "baseline": "repository",
+    "sha256": "bafc7d9f193f0be56b9f6e67eacd5b39a4b2a989e6cc1cbf965864e446452c89"
+  },
+  {
+    "module": "table",
+    "path": "assets/workspace-nav.css",
+    "baseline": "repository",
+    "sha256": "f67868d465f8fe17020c8d4f3505d3b2bbf60dc6c2b20f124f83235048ae8749"
+  },
+  {
+    "module": "table",
+    "path": "assets/workspace-nav.js",
+    "baseline": "repository",
+    "sha256": "63165b9fd14f0d9484349b1fa2e307069efbfad55f4c61b41f5c02e7561bd333"
+  },
+  {
+    "module": "table",
+    "path": "assets/brand/studio-wordmark.png",
+    "baseline": "repository",
+    "sha256": "b2d86a6adfde54807b95de8ef6ecfdf6eb287323bdb40df8c42663f2a2b0cccf"
+  },
+  {
+    "module": "table",
+    "path": "reporting/backup.py",
+    "baseline": "repository",
+    "sha256": "5c25b71ecf272b4ef286ab824575b4b8622eabd19fef36431dbb1f99e1231afc"
+  },
+  {
+    "module": "table",
+    "path": "reporting/collect_accounts.py",
+    "baseline": "repository",
+    "sha256": "fc6d8d7414c16cb2e90c1a5d82aae01f7e8cbe05ce6d32a78ef42c178636dca1"
+  },
+  {
+    "module": "table",
+    "path": "reporting/compose.jar.yaml",
+    "baseline": "repository",
+    "sha256": "6bd32687cbb6bca61120d248ecb18bfac7ede66f617abc4e6db95799608ad249"
+  },
+  {
+    "module": "table",
+    "path": "reporting/compose.yaml",
+    "baseline": "repository",
+    "sha256": "7e33fb67188de1cd4da54a3b4f95bcb14d05b25fe7b33ecddd722f72a9544a4f"
+  },
+  {
+    "module": "table",
+    "path": "reporting/Dockerfile.jar",
+    "baseline": "repository",
+    "sha256": "900957fbcc505b31095fba841c6ba41f6daef56dc23d30b332bed39c59988b83"
+  },
+  {
+    "module": "table",
+    "path": "reporting/export_review.py",
+    "baseline": "repository",
+    "sha256": "af22d0bb8d5bcf6847699036b2fa19e62dc48eb7874e84743bab6f94955d4127"
+  },
+  {
+    "module": "table",
+    "path": "reporting/init.sql",
+    "baseline": "repository",
+    "sha256": "efa3d3b19dcaa4d9ca93e14c85b3a2d9e90b48043ed900477caa43b21da3f0fe"
+  },
+  {
+    "module": "table",
+    "path": "reporting/link_source.py",
+    "baseline": "repository",
+    "sha256": "672a3be9f38942f9fc30736ec916a4c8c348f74b38d0dbb978f5f9cf3e5ba3ee"
+  },
+  {
+    "module": "table",
+    "path": "reporting/publish_reports.py",
+    "baseline": "repository",
+    "sha256": "b6de25fa2c90fadfe90c4b98613ebc01396a4d3edc2fb335382a652a7a6cdbee"
+  },
+  {
+    "module": "table",
+    "path": "reporting/README.md",
+    "baseline": "repository",
+    "sha256": "ff5cd111c0e2e3c7046a1bd05cd29e55de29c206db5fcb2b1eecf98e147b910a"
+  },
+  {
+    "module": "table",
+    "path": "reporting/requirements.txt",
+    "baseline": "repository",
+    "sha256": "17653c832e234a4e92b345551c36bcc72bfc498914b7dc515474c5d4e01809f8"
+  },
+  {
+    "module": "table",
+    "path": "reporting/serve_local.py",
+    "baseline": "repository",
+    "sha256": "9981b0534146f4fa2d54d8d4395f061f2105157510ea8f9cf2bb80dbf070db8c"
+  },
+  {
+    "module": "table",
+    "path": "reporting/setup_local.py",
+    "baseline": "repository",
+    "sha256": "747ab19adf8460b76c4d715c9840d56abda3e31b384eb51c24895ffe58bd303c"
+  },
+  {
+    "module": "table",
+    "path": "reporting/sync_data.py",
+    "baseline": "repository",
+    "sha256": "45738e6e246c762ad263fa1fd6d9c6ea1c6a158002282f8ecdf307c4b6f90317"
+  },
+  {
+    "module": "table",
+    "path": "reporting/test_reporting.py",
+    "baseline": "repository",
+    "sha256": "542575c51170f721b992a1649bffa211771b73c9d21d4b82a429cf6c3dbed224"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_cli.py",
+    "baseline": "repository",
+    "sha256": "a0189e0ff0013cf8c76fbb4b5c8e0718751972701c78128fc108dd121ff57c61"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_http.py",
+    "baseline": "repository",
+    "sha256": "3be1097032c06a96427c474e0dbafd741b652d284768785022dc956c42850057"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_index.py",
+    "baseline": "repository",
+    "sha256": "dc6296ee89efc985fd9fcdd19cdd15d880a58cab111566eaa8976a1d30040f04"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_intake.py",
+    "baseline": "repository",
+    "sha256": "aad49eb50d90d147765cc5c182e251c8ade9f222a4c47a86268dc165e79078cf"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_media.py",
+    "baseline": "repository",
+    "sha256": "380d5129ad938cff86d99249cb96befc24934b12171c8da5ce247d307fafb053"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_network.py",
+    "baseline": "repository",
+    "sha256": "0344e4a3fd024942d431f9e262ed26ad56f619c5a2156b64a9353f609764cb2a"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_package.py",
+    "baseline": "repository",
+    "sha256": "bd7144e206e8d9b59f68105d7134cd1888c7b1a75188255dbb3727bacfb8741c"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_runtime.py",
+    "baseline": "repository",
+    "sha256": "ec36b7ca3de1c9a82e20eb46dbf4a5f6da3b0441bdb6def6ee217cd628c62576"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/motion_store.py",
+    "baseline": "repository",
+    "sha256": "b856a88210b89d850a18227bf38940086fc542ca9c139a748e455354ba932dc4"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/setup_index_model.py",
+    "baseline": "repository",
+    "sha256": "4308ec9dd26e72c5d15e6e6d9de9f82a575b84af9fe875c26e2b88bc5c2e8f85"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/setup_motion.py",
+    "baseline": "repository",
+    "sha256": "ffdfaee1a61b4db7221ac03b2a79aed4e324b1c097f78a50b7b036be6262cd01"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/test_motion.py",
+    "baseline": "repository",
+    "sha256": "09bddc4fd959b13483f0f7b187ee97dda4603396a381dd289e82ad88e174bac3"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/test_motion_http.py",
+    "baseline": "repository",
+    "sha256": "0cab68131a148d90dcd5aec31ecc4b3eec8824021f9743c6c84a6041029fb55a"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/test_motion_index.py",
+    "baseline": "repository",
+    "sha256": "61a5fbbcd747c1ca019fe737e1a117a3c8f35a1648d38b754999e8a0a7cc0e32"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/test_motion_media.py",
+    "baseline": "repository",
+    "sha256": "47f3c1ef7677589019936d21f0fbe815d97dfaacb0e0faf1dca886a4914552db"
+  },
+  {
+    "module": "motion",
+    "path": "scripts/test_motion_view.cjs",
+    "baseline": "repository",
+    "sha256": "f292f4460e755eda7affb6d94ae3e8e3c4385020b9f285fe89fe01e7686b8d5a"
+  },
+  {
+    "module": "motion",
+    "path": "assets/index-model-manifest.json",
+    "baseline": "repository",
+    "sha256": "78ada8597c2d22818ab484e530e6c965e61b98c84f566f4cb8d6fc49a0560072"
+  },
+  {
+    "module": "motion",
+    "path": "assets/index-taxonomy.json",
+    "baseline": "repository",
+    "sha256": "e6c1c67585d40c52c8a7dd6534e94c3fdb8d939f8cdfc955073c644a90e3292a"
+  },
+  {
+    "module": "motion",
+    "path": "assets/intake.schema.json",
+    "baseline": "repository",
+    "sha256": "f4f8076a73b57fa1e9a9490af088a55b09bebaa4afecd31698a7ac0687c04934"
+  },
+  {
+    "module": "motion",
+    "path": "assets/motion-system.css",
+    "baseline": "repository",
+    "sha256": "fc4e8018f0a76dd1cc4e6e1d8ac516293c93bcb8e281f55ddd09493bce9ac67f"
+  },
+  {
+    "module": "motion",
+    "path": "assets/motion-system.js",
+    "baseline": "repository",
+    "sha256": "5cf03b1718940c0cc73f1e64ca0098fa72d15832f30a2b6b9253308c6c555a99"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/browser_transfers.py",
+    "baseline": "repository",
+    "sha256": "5cad953b53e3a8f31123ada502b10a63214e60d14409e43c9daa140b44a74692"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/build_cat_extension.py",
+    "baseline": "repository",
+    "sha256": "a7be05e4974a045f31358ac250796e76daa866dec818c3739283924f23a0dc3f"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/clip_media.py",
+    "baseline": "repository",
+    "sha256": "ce93ff250c1bb258d68fbfe783a7dd4e965d750acc14a5bac57f9b7ba5a1a50f"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/dependencies.py",
+    "baseline": "repository",
+    "sha256": "28e186a0fabc9cd380a5b441c046d94c83a52772f92f040e1209f3710fc76319"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/download_worker.py",
+    "baseline": "repository",
+    "sha256": "2fd230911f8ad57429a8a5dca13371498de97638a4b35408b456a7db62b6824c"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/extension_setup.py",
+    "baseline": "repository",
+    "sha256": "db1393bff57e9270d1c71362252acbf5bd8e3f13635440d0247de8f12a159b2f"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/setup_workbench.py",
+    "baseline": "repository",
+    "sha256": "5fb278879dc43e1a67d67114ce5d712b42235ffedbf186ed56c18e12990755ab"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_cat_workbench.py",
+    "baseline": "repository",
+    "sha256": "0cbf423c52d3666f7a050e234c26b0545666a378ef0732c13cd9e270b62f887e"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_connection.cjs",
+    "baseline": "repository",
+    "sha256": "a5701fedb409e04823b3598c5566fabe6c62f5c418e4d7470766c556947b80ba"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_discovery.cjs",
+    "baseline": "repository",
+    "sha256": "281e26ed33081b7c72298b586e19a0d6a06d5c87e69e5c1f8d8b0e065114ea64"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_extension.py",
+    "baseline": "repository",
+    "sha256": "9030bdb5289825fe39acddc2ca07bc938e3e7c73dfa500be6ff9d9b6e7065c7a"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_page_media.cjs",
+    "baseline": "repository",
+    "sha256": "d9e9c1ca2b1da6c228a70e17c46005f01cdabd89d8dd1762e57ca8a71992d811"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/test_workbench.py",
+    "baseline": "repository",
+    "sha256": "0c7b97e1e938dc55acc9628b0c2c031e2854289f0f63bd1372991563370c4a30"
+  },
+  {
+    "module": "workbench",
+    "path": "scripts/workbench.py",
+    "baseline": "repository",
+    "sha256": "9c86dcf378420541bde6d1fc44019d63af51071bf1db970fbadf0c5099a52a9e"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension-install.html",
+    "baseline": "repository",
+    "sha256": "29fec7a260e3154a2b29326ecd1c3326c8d98ba0843e02d9c78c6d89d12ab3b9"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension-install.js",
+    "baseline": "repository",
+    "sha256": "40063f8358169e92058b819065d11839d5b51593a670c194f2260217d4c41a0f"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/workbench.css",
+    "baseline": "repository",
+    "sha256": "902ce06d05c056d3205009439704f8577fcc1e57facf6150f0f8c590d472d7c7"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/workbench.html",
+    "baseline": "repository",
+    "sha256": "84a89a2c9097fbba40e9cc1edf6705e5b887006c2b80e710c8d5d8a4d5c39796"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/workbench.js",
+    "baseline": "repository",
+    "sha256": "92cb6c3578bce38b3953efa1bfb5866af424da91dce6f246057d491dc2888ffa"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/credits.html",
+    "baseline": "repository",
+    "sha256": "4e35aa7b2ea3733f50ace62cc590a6b7e6e8cf55a92bc5ef6a9e97964b1e5e5b"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/install.html",
+    "baseline": "repository",
+    "sha256": "6ae2c64fdba507ebbdb91e64ea52930cc6238f724a15e93282b606e310ef9035"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/NOTICE.md",
+    "baseline": "repository",
+    "sha256": "3d2fc6e5dd12820bc8a2ff4879295a0b237689f1060fb51fe83d0af9a8a44cb9"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/popup.html",
+    "baseline": "repository",
+    "sha256": "eb4105837a07cd605e1ed543a99fe7be76f61eaf33b3b1c557a5262c67533a71"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/studio-editor.html",
+    "baseline": "repository",
+    "sha256": "d3acede57aed16cdfe380f7ef0ab4210d42b661a795046ad2cc2cf425c68bf7f"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/background.js",
+    "baseline": "repository",
+    "sha256": "dd137196e3fd41627ccc96d848e88030bea5ea28488b20d87e8685ca35e6b05e"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/browser-download.js",
+    "baseline": "repository",
+    "sha256": "b394bae7fced9db99e79d0c5f7cfe8620deb04ca0fd0003e11f7b98e74ec4637"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/connection.js",
+    "baseline": "repository",
+    "sha256": "b6327ba098a9fb105e356aed46a1e6bf880fcc1e8905440d27b3a4d9234a2299"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/discovery.js",
+    "baseline": "repository",
+    "sha256": "70d262333aa384a36eb1d20f8216e6ab276b4b48cf2e94b3ccc3c3fd80097012"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/manifest.json",
+    "baseline": "repository",
+    "sha256": "6643c7367fbb96382757a7272468305ef8aceaf8be6ff91e5ba22f0577ef2182"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/page-media.js",
+    "baseline": "repository",
+    "sha256": "b82e5b455eac8b2447ac8aa75983608105f215db889d6ab67d681845188e43da"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/popup.css",
+    "baseline": "repository",
+    "sha256": "125ce338ad6ca15ed8b8b40b418b964b72e7634f0530093bf883a83616fc3561"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/popup.html",
+    "baseline": "repository",
+    "sha256": "a0a71e5ba4903b5d8fadecb7b80650e8dc7447e806a753bc4a384250ba911f0c"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/popup.js",
+    "baseline": "repository",
+    "sha256": "6a05a2b1978ba26f8e6a4eaa91933222d1589febe3718038d4bb33acfa69e2c4"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/workspace-connect.js",
+    "baseline": "repository",
+    "sha256": "a2903cd3034279d49caacc7f7a8e0df7f83f80628ec309c49cf1d5774750dada"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/icons/128.png",
+    "baseline": "repository",
+    "sha256": "b971228744de60e5dc9095078b0360fe8525ae11e545f391df129abcd1d9c2f8"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/icons/16.png",
+    "baseline": "repository",
+    "sha256": "dfc8c7f2c00cd5fb874150afd76b364206648ce187ff2d3bf7882872e414f69c"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/icons/32.png",
+    "baseline": "repository",
+    "sha256": "0b7549dce5df3c20a181df570b40ec65ff4fd098069c04970b72d715196e0579"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/extension/icons/48.png",
+    "baseline": "repository",
+    "sha256": "b414d60385ea365d611bed8539bf32bd4302367d3ee5e9a8e52e793aed07c326"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/css/studio.css",
+    "baseline": "repository",
+    "sha256": "45045b6cc88cabc91398e5ecc8216531ad3f5fec208183613b604129cd52e304"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/js/studio-background.js",
+    "baseline": "repository",
+    "sha256": "b37ad35972be2221d1cb69abd4fa3cb78226e1d42cdccd0478a092997ad29e64"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/js/studio-editor.js",
+    "baseline": "repository",
+    "sha256": "1aca77df581c0299383fd2d70d775c8c805c4402cdd57edd988a5895e1515817"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/js/studio-popup.js",
+    "baseline": "repository",
+    "sha256": "bd862ce660f58e570a9ade093155b12976b60c056c8c08898fc8dffdb7a42c60"
+  },
+  {
+    "module": "workbench",
+    "path": "assets/cat-workbench/js/studio-welcome.js",
+    "baseline": "repository",
+    "sha256": "e5ac8c06d24878c80ed9fe50cab5c6b95d98412de5adad46404c3c1786c9371a"
+  },
+  {
+    "module": "reports",
+    "path": "scripts/report_cli.py",
+    "baseline": "repository",
+    "sha256": "c90b4e009966f51a2ab90573b1e1a723f850c9c8a701e32f8c856003d3dd01d2"
+  },
+  {
+    "module": "table",
+    "path": "assets/table-lineage.js",
+    "baseline": "installed",
+    "sha256": "44b5ea2ada22e59c3a4b36c284ebe4022c532b1fc43d48e0e0da42a5b00136db"
+  },
+  {
+    "module": "table",
+    "path": "assets/table-lineage.css",
+    "baseline": "installed",
+    "sha256": "b005b461fab1b0b9d69385371a9d6c78abf733f6a8a90c94a82700b72ef64f2d"
+  }
+]

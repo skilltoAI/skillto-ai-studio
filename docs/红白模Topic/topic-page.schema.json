@@ -1,0 +1,1099 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "红白模 Topic Page v1",
+  "description": "红白模页面契约。云端嵌入描述、匿名线上内容、付费解锁内容和本机页面分别使用不同的 kind。",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "cloud-embed"
+        },
+        "topic": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/topic"
+            },
+            {
+              "properties": {
+                "origin": {
+                  "const": "cloud"
+                }
+              }
+            }
+          ]
+        },
+        "embed": {
+          "$ref": "#/$defs/embed"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "topic",
+        "embed"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "cloud-public"
+        },
+        "topic": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/topic"
+            },
+            {
+              "properties": {
+                "origin": {
+                  "const": "cloud"
+                },
+                "access": {
+                  "const": "free"
+                }
+              }
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/streamAsset"
+          },
+          "maxItems": 500
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "topic",
+        "items",
+        "nextCursor"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "cloud-locked"
+        },
+        "topic": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/topic"
+            },
+            {
+              "properties": {
+                "origin": {
+                  "const": "cloud"
+                },
+                "access": {
+                  "const": "paid"
+                }
+              }
+            }
+          ]
+        },
+        "offer": {
+          "$ref": "#/$defs/offer"
+        },
+        "previewItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lockedCard"
+          },
+          "maxItems": 100
+        },
+        "nextCursor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "topic",
+        "offer"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "cloud-unlocked"
+        },
+        "topic": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/topic"
+            },
+            {
+              "properties": {
+                "origin": {
+                  "const": "cloud"
+                },
+                "access": {
+                  "const": "paid"
+                }
+              }
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/streamAsset"
+          },
+          "maxItems": 500
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "topic",
+        "items",
+        "nextCursor"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "local-catalog"
+        },
+        "topic": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/topic"
+            },
+            {
+              "properties": {
+                "origin": {
+                  "const": "local"
+                },
+                "access": {
+                  "const": "free"
+                }
+              }
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/asset"
+          },
+          "maxItems": 500
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "topic",
+        "items",
+        "nextCursor"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "topicId": {
+      "type": "string",
+      "pattern": "^(sto|loc)_[a-z0-9][a-z0-9_-]{1,79}$"
+    },
+    "asset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^rw_[a-z0-9][a-z0-9_-]{1,79}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48
+          },
+          "maxItems": 24,
+          "uniqueItems": true
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100000
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/cover"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "video": {
+          "$ref": "#/$defs/video"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "maxItems": 50,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "position",
+        "tags",
+        "prompt",
+        "cover",
+        "video",
+        "sources"
+      ],
+      "additionalProperties": false
+    },
+    "cover": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 2048
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "url",
+        "alt"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "documentUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://my\\.feishu\\.cn/(wiki|docx)/[A-Za-z0-9]+$",
+          "maxLength": 2048
+        },
+        "documentTitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "blockId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      },
+      "required": [
+        "documentUrl",
+        "documentTitle",
+        "blockId"
+      ],
+      "additionalProperties": false
+    },
+    "video": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "const": "feishu"
+            },
+            "filename": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "mime": {
+              "enum": [
+                "video/mp4",
+                "video/webm",
+                "video/quicktime",
+                null
+              ]
+            },
+            "durationMs": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "width": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "height": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "bytes": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "availability": {
+              "enum": [
+                "verified",
+                "unverified",
+                "unavailable"
+              ]
+            },
+            "checkedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "mode": {
+              "const": "source-page"
+            },
+            "sourcePageUrl": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://my\\.feishu\\.cn/(wiki|docx)/[A-Za-z0-9]+$",
+              "maxLength": 2048
+            },
+            "fileToken": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": [
+            "provider",
+            "mode",
+            "filename",
+            "sourcePageUrl",
+            "fileToken",
+            "availability",
+            "checkedAt"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "const": "feishu"
+            },
+            "filename": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "mime": {
+              "enum": [
+                "video/mp4",
+                "video/webm",
+                "video/quicktime",
+                null
+              ]
+            },
+            "durationMs": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "width": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "height": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "bytes": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "availability": {
+              "enum": [
+                "verified",
+                "unverified",
+                "unavailable"
+              ]
+            },
+            "checkedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "mode": {
+              "const": "direct"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://",
+              "maxLength": 2048
+            }
+          },
+          "required": [
+            "provider",
+            "mode",
+            "filename",
+            "url",
+            "availability",
+            "checkedAt"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/topicId"
+        },
+        "origin": {
+          "enum": [
+            "cloud",
+            "local"
+          ]
+        },
+        "access": {
+          "enum": [
+            "free",
+            "paid"
+          ]
+        },
+        "renderMode": {
+          "enum": [
+            "catalog",
+            "iframe"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://",
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "公开宣传封面或免费 Topic 封面。付费条目的静态截图由锁定内容接口返回。"
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "itemCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "requiresLogin": {
+          "const": false
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "access",
+        "renderMode",
+        "title",
+        "summary",
+        "cover",
+        "position",
+        "revision",
+        "itemCount"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "const": "local"
+              }
+            },
+            "required": [
+              "origin"
+            ]
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^loc_[a-z0-9][a-z0-9_-]{1,79}$"
+              },
+              "access": {
+                "const": "free"
+              },
+              "renderMode": {
+                "const": "catalog"
+              }
+            },
+            "not": {
+              "required": [
+                "requiresLogin"
+              ]
+            }
+          },
+          "else": {
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^sto_[a-z0-9][a-z0-9_-]{1,79}$"
+              },
+              "renderMode": {
+                "const": "iframe"
+              }
+            },
+            "required": [
+              "requiresLogin"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "access": {
+                "const": "paid"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemCount": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "itemCount": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "embed": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 2048
+        },
+        "externalUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 2048
+        },
+        "protocolVersion": {
+          "const": 1
+        }
+      },
+      "required": [
+        "url",
+        "externalUrl",
+        "protocolVersion"
+      ],
+      "additionalProperties": false
+    },
+    "offer": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "amountMinor": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000000
+        },
+        "listAmountMinor": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000000
+        }
+      },
+      "required": [
+        "label",
+        "currency",
+        "amountMinor"
+      ],
+      "additionalProperties": false
+    },
+    "lockedCard": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^rw_[a-z0-9_-]+$",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "promptPreview": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/cover"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "promptPreview",
+        "position",
+        "cover"
+      ],
+      "additionalProperties": false
+    },
+    "streamVideo": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "stream"
+        },
+        "playbackUrl": {
+          "type": "string",
+          "pattern": "^/api/v1/red-white/topics/sto_[a-z0-9_-]+/media/[a-f0-9-]{36}$",
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "mode",
+        "playbackUrl"
+      ],
+      "additionalProperties": false
+    },
+    "streamAsset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^rw_[a-z0-9][a-z0-9_-]{1,79}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48
+          },
+          "maxItems": 24,
+          "uniqueItems": true
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100000
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/cover"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "video": {
+          "$ref": "#/$defs/streamVideo"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "position",
+        "tags",
+        "prompt",
+        "cover",
+        "video"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": 1,
+      "kind": "cloud-embed",
+      "topic": {
+        "id": "sto_nov_demo",
+        "origin": "cloud",
+        "access": "free",
+        "renderMode": "iframe",
+        "title": "十一月红白模示例",
+        "summary": "目录示例",
+        "cover": null,
+        "position": 10,
+        "revision": 3,
+        "itemCount": 1,
+        "requiresLogin": false
+      },
+      "embed": {
+        "url": "https://www.skillto.ai/red-white/embed/topics/sto_nov_demo",
+        "externalUrl": "https://www.skillto.ai/red-white/topics/sto_nov_demo",
+        "protocolVersion": 1
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "cloud-embed",
+      "topic": {
+        "id": "sto_premium_demo",
+        "origin": "cloud",
+        "access": "paid",
+        "renderMode": "iframe",
+        "title": "付费动作专题示例",
+        "summary": "公开宣传摘要",
+        "cover": null,
+        "position": 20,
+        "revision": 2,
+        "itemCount": null,
+        "requiresLogin": false
+      },
+      "embed": {
+        "url": "https://www.skillto.ai/red-white/embed/topics/sto_premium_demo",
+        "externalUrl": "https://www.skillto.ai/red-white/topics/sto_premium_demo",
+        "protocolVersion": 1
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "cloud-public",
+      "topic": {
+        "id": "sto_nov_demo",
+        "origin": "cloud",
+        "access": "free",
+        "renderMode": "iframe",
+        "title": "十一月红白模示例",
+        "summary": "目录示例",
+        "cover": null,
+        "position": 10,
+        "revision": 3,
+        "itemCount": 1,
+        "requiresLogin": false
+      },
+      "items": [
+        {
+          "id": "rw_demo_clip",
+          "title": "短动作示例",
+          "description": "合成示例条目",
+          "position": 10,
+          "tags": [
+            "动作"
+          ],
+          "prompt": "{参考图} 入镜。固定镜头，人物完成两步移动后停下。",
+          "cover": {
+            "url": "https://media.skillto.ai/examples/red-white.webp",
+            "alt": "红白模示例封面",
+            "width": 1280,
+            "height": 720
+          },
+          "video": {
+            "mode": "stream",
+            "playbackUrl": "/api/v1/red-white/topics/sto_nov_demo/media/00000000-0000-4000-8000-000000000001"
+          }
+        }
+      ],
+      "nextCursor": null
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "cloud-locked",
+      "topic": {
+        "id": "sto_premium_demo",
+        "origin": "cloud",
+        "access": "paid",
+        "renderMode": "iframe",
+        "title": "付费动作专题示例",
+        "summary": "公开宣传摘要",
+        "cover": null,
+        "position": 20,
+        "revision": 2,
+        "itemCount": null,
+        "requiresLogin": false
+      },
+      "offer": {
+        "label": "单个专题",
+        "currency": "CNY",
+        "amountMinor": 900
+      },
+      "previewItems": [
+        {
+          "id": "rw_preview_demo",
+          "title": "动作预览",
+          "promptPreview": "这是公开的提示词片段。",
+          "position": 0,
+          "cover": null
+        }
+      ],
+      "nextCursor": null
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "cloud-unlocked",
+      "topic": {
+        "id": "sto_premium_demo",
+        "origin": "cloud",
+        "access": "paid",
+        "renderMode": "iframe",
+        "title": "付费动作专题示例",
+        "summary": "公开宣传摘要",
+        "cover": null,
+        "position": 20,
+        "revision": 2,
+        "itemCount": null,
+        "requiresLogin": false
+      },
+      "items": [
+        {
+          "id": "rw_demo_clip",
+          "title": "合成付费动作示例",
+          "description": "合成示例条目",
+          "position": 10,
+          "tags": [
+            "动作"
+          ],
+          "prompt": "付费提示词示例。",
+          "cover": null,
+          "video": {
+            "mode": "stream",
+            "playbackUrl": "/api/v1/red-white/topics/sto_premium_demo/media/00000000-0000-4000-8000-000000000001"
+          }
+        }
+      ],
+      "nextCursor": null
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "local-catalog",
+      "topic": {
+        "id": "loc_personal_demo",
+        "origin": "local",
+        "access": "free",
+        "renderMode": "catalog",
+        "title": "我的动作参考",
+        "summary": "本机创建",
+        "cover": null,
+        "position": 10,
+        "revision": 1,
+        "itemCount": 0
+      },
+      "items": [],
+      "nextCursor": null
+    }
+  ]
+}

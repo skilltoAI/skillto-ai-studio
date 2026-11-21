@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>安装新组件与技能</title><link rel="stylesheet" href="features.css"></head>
+<body><main><header><a id="back" href="/STASS/">返回工作台</a><h1>安装新组件与技能</h1>
+<label>查看安装状态 <select id="host"><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="workbody">WorkBody（待验证）</option></select></label>
+<button id="detect">重新检测</button></header>
+<h2>你日常需要处理哪些工作？</h2><p>可多选，之后可以在工作台中随时调整。</p>
+<section id="groups" aria-label="工作类别"></section>
+<details id="advanced"><summary>查看包含的组件与技能</summary><section id="items"></section></details>
+<section id="result" hidden><p id="message" role="status"></p><details id="preview"><summary>查看提示词</summary><textarea readonly aria-label="安装提示词"></textarea><button id="copy">重新复制</button></details></section>
+</main><footer><span id="count" aria-live="polite"></span><button id="save" disabled>保存界面设置</button></footer><script src="features.js"></script></body></html>

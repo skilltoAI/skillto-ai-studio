@@ -1,0 +1,27 @@
+{
+  "format": 1,
+  "packageVersion": "0.4.6",
+  "sha256": {
+    "技术规范.md": "dac71b925a248592012e29181a92e2b2aade4ca4c16cfb210f7254db7ca2f611",
+    "docs/规范/AI资产模块规范.md": "b2f705d0f6b989b823d45059317ab6582569121a6861b6339b73e0d4966771a9",
+    "docs/规范/MCP与API规范.md": "cb099578dc4d25e42a9bcf77d6a07698775def28b95e6e59e3dec57ebbeea51f",
+    "docs/规范/Motion模块规范.md": "2ba04603181e26009b11fa07d86ebae52fa1320839a86dd80917a9fc3c1ec85c",
+    "docs/规范/URL与连接规范.md": "438e4e552a85393802158b3a315591767c441555c4d851c2a07444d7c7517127",
+    "docs/规范/启动器与部署规范.md": "e734e08a66cf5e962c66cc64b15a6569516983f2908a08ed4054e5249f2bf0ad",
+    "docs/规范/工具模块规范.md": "e54c6624e3ebc6bbd99dafc8508804ad07250ac90514c3eb5042b385cdfd19f8",
+    "docs/规范/报表模块规范.md": "744033f1ea13c215e1da40227aebd07929cfb157665461c4fe2c7f4d314950ac",
+    "docs/规范/拉片模块规范.md": "e734f342a9b906dcd758b8ff256ca789e3e4c6368a20c7a3332e3cae11460d9f",
+    "docs/规范/排稿模块规范.md": "59edeb81298d39c8094bda6fb6182784dc925ee5a19208bbbdaa55fa3d99f548",
+    "docs/规范/数据与资源规范.md": "b51200f844b82bff8b77ee7458ccf10b48a49264964c3bd6036ac917e57fbe68",
+    "docs/规范/文档模块规范.md": "1318b597f74b1167049d433470b76d3a8964c77fdff2ba01b6a334862b0bbb57",
+    "docs/规范/架构规范.md": "5c6cdbf29e20789bcfcc7db2437f8ce1e00a3a39b0f613332806a40b6b37f9ba",
+    "docs/规范/洗稿模块规范.md": "fb5d67df83550b71afb20b057256ce42121a567a885c7d9496d77000243c44f2",
+    "docs/规范/测试与验收规范.md": "a84e312798057ce3a5d7211da847f07c67c3f428e705d1d0fa29561188992ad2",
+    "docs/规范/浏览器模块规范.md": "10e7c584485b280101bf9510182538c510c1a7f554ce893006204153500beaab",
+    "docs/规范/版本与协作规范.md": "b2a1e5a25fc1bd8147b5263c3a3e0bfc68811f3f403fdb9d1289e0de66668d00",
+    "docs/规范/版本与数据一致性规范.md": "e0752fe7dba233f95c89d7c68ad8b068bbbdbab90b85cceeb03eada7c2ff053b",
+    "docs/规范/界面与交互规范.md": "967018c21fccbd3cb026f02c791ba9a6961a27c24779f1971110cb9499549677",
+    "docs/规范/表格模块规范.md": "243730bb5807715970b40900caa28f3331cf3163a2c92f11047f421e3ab787b7",
+    "docs/规范/迁移与兼容规范.md": "edc34060e369ca68c254486f2234ee96a9a6f54680f0167ceef3f0cbe7def66c"
+  }
+}

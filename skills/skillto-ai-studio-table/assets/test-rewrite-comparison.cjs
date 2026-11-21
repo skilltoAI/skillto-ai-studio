@@ -1,0 +1,11 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const text=fs.readFileSync(__dirname+'/rewrite-system.js','utf8');
+const code=text.slice(text.indexOf('  function remapComparisonAnnotations('),text.indexOf('  async function saveComparisonLeft('));
+const context=vm.createContext({structuredClone});vm.runInContext(code,context);
+const annotation={tags:['case'],remotionPrompt:'保留标注'};
+const remap=(a,b,tags)=>JSON.parse(JSON.stringify(context.remapComparisonAnnotations(a,b,tags)));
+assert.deepEqual(remap('a\nb','新增\na\nb',[annotation,{tags:[],remotionPrompt:''}])[1],annotation);
+assert.deepEqual(remap('新增\na\nb','a\nb',[{},annotation,{}])[0],annotation);
+assert.deepEqual(remap('a\nb','修改\nb',[annotation,{}])[0],annotation);
+assert.equal(remap('a','a\n\n',[annotation]).length,3);
+console.log('PASS: multiline insertion/deletion/edit preserves existing line annotations and blank-line counts.');

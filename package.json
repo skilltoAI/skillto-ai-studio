@@ -1,0 +1,42 @@
+{
+  "name": "skillto-ai-studio-private",
+  "version": "0.4.6",
+  "private": true,
+  "description": "Private STASS Windows program manager",
+  "bin": {
+    "stass": "bin/stass.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "bin/",
+    "apps/stass/",
+    "scripts/",
+    "skills/",
+    "README.md",
+    "技术规范.md",
+    "docs/规范/",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo",
+    "!**/*.syso",
+    "!**/*.exe",
+    "!**/*.local.json",
+    "!**/.env*",
+    "!**/*.pem",
+    "!**/*.key",
+    "!**/*.db",
+    "!**/*.sqlite*",
+    "!**/*.log",
+    "!**/node_modules/**",
+    "!**/runtime/**",
+    "!**/work/**",
+    "!**/research/**",
+    "!**/.venv/**",
+    "!**/browser-profiles/**"
+  ],
+  "scripts": {
+    "test": "node --test tests/stass-cli.test.cjs"
+  }
+}

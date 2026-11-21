@@ -1,0 +1,8 @@
+# Reproducible local image built from Metabase's official 0.64.3.6 JAR.
+FROM mirror.gcr.io/eclipse-temurin:21-jre-alpine@sha256:ac05c3c42b7c2f1a52c9bd52f01041fa1958231b15ebeae7420429cbc5baf474
+WORKDIR /app
+COPY metabase.jar /app/metabase.jar
+LABEL org.opencontainers.image.version="0.64.3.6" \
+      org.opencontainers.image.source="https://github.com/metabase/metabase"
+EXPOSE 3000
+ENTRYPOINT ["java", "--add-opens=java.base/java.nio=ALL-UNNAMED", "-jar", "/app/metabase.jar"]

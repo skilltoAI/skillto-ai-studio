@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "红白模 Topic List v1",
+  "description": "skillto.ai 返回 cloud 快照。STASS 返回含云端和本机 Topic 的 merged 快照。",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "view": {
+      "enum": [
+        "cloud",
+        "merged"
+      ]
+    },
+    "snapshotId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cloudValidUntil": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/topic"
+      },
+      "maxItems": 5000
+    },
+    "defaultTopicId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^sto_[a-z0-9][a-z0-9_-]{1,79}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "view",
+    "snapshotId",
+    "generatedAt",
+    "cloudValidUntil",
+    "topics",
+    "defaultTopicId"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "view": {
+            "const": "cloud"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "cloudValidUntil": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "topics": {
+            "items": {
+              "properties": {
+                "origin": {
+                  "const": "cloud"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "topicId": {
+      "type": "string",
+      "pattern": "^(sto|loc)_[a-z0-9][a-z0-9_-]{1,79}$"
+    },
+    "topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/topicId"
+        },
+        "origin": {
+          "enum": [
+            "cloud",
+            "local"
+          ]
+        },
+        "access": {
+          "enum": [
+            "free",
+            "paid"
+          ]
+        },
+        "renderMode": {
+          "enum": [
+            "catalog",
+            "iframe"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://",
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "公开宣传封面或免费 Topic 封面。付费条目的静态截图由锁定内容接口返回。"
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "itemCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "requiresLogin": {
+          "const": false
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "access",
+        "renderMode",
+        "title",
+        "summary",
+        "cover",
+        "position",
+        "revision",
+        "itemCount"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "const": "local"
+              }
+            },
+            "required": [
+              "origin"
+            ]
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^loc_[a-z0-9][a-z0-9_-]{1,79}$"
+              },
+              "access": {
+                "const": "free"
+              },
+              "renderMode": {
+                "const": "catalog"
+              }
+            },
+            "not": {
+              "required": [
+                "requiresLogin"
+              ]
+            }
+          },
+          "else": {
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^sto_[a-z0-9][a-z0-9_-]{1,79}$"
+              },
+              "renderMode": {
+                "const": "iframe"
+              }
+            },
+            "required": [
+              "requiresLogin"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "access": {
+                "const": "paid"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemCount": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "itemCount": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": 1,
+      "view": "cloud",
+      "snapshotId": "cloud-demo-0007",
+      "generatedAt": "2026-11-20T08:00:00Z",
+      "cloudValidUntil": "2026-11-20T08:05:00Z",
+      "topics": [
+        {
+          "id": "sto_nov_demo",
+          "origin": "cloud",
+          "access": "free",
+          "renderMode": "iframe",
+          "title": "十一月红白模示例",
+          "summary": "目录示例",
+          "cover": null,
+          "position": 10,
+          "revision": 3,
+          "itemCount": 1,
+          "requiresLogin": false
+        },
+        {
+          "id": "sto_premium_demo",
+          "origin": "cloud",
+          "access": "paid",
+          "renderMode": "iframe",
+          "title": "付费动作专题示例",
+          "summary": "公开宣传摘要",
+          "cover": null,
+          "position": 20,
+          "revision": 2,
+          "itemCount": null,
+          "requiresLogin": false
+        }
+      ],
+      "defaultTopicId": "sto_nov_demo"
+    },
+    {
+      "schemaVersion": 1,
+      "view": "merged",
+      "snapshotId": "merged-demo-0019",
+      "generatedAt": "2026-11-20T08:00:03Z",
+      "cloudValidUntil": "2026-11-20T08:05:00Z",
+      "topics": [
+        {
+          "id": "sto_nov_demo",
+          "origin": "cloud",
+          "access": "free",
+          "renderMode": "iframe",
+          "title": "十一月红白模示例",
+          "summary": "目录示例",
+          "cover": null,
+          "position": 10,
+          "revision": 3,
+          "itemCount": 1,
+          "requiresLogin": false
+        },
+        {
+          "id": "sto_premium_demo",
+          "origin": "cloud",
+          "access": "paid",
+          "renderMode": "iframe",
+          "title": "付费动作专题示例",
+          "summary": "公开宣传摘要",
+          "cover": null,
+          "position": 20,
+          "revision": 2,
+          "itemCount": null,
+          "requiresLogin": false
+        },
+        {
+          "id": "loc_personal_demo",
+          "origin": "local",
+          "access": "free",
+          "renderMode": "catalog",
+          "title": "我的动作参考",
+          "summary": "本机创建",
+          "cover": null,
+          "position": 10,
+          "revision": 1,
+          "itemCount": 0
+        }
+      ],
+      "defaultTopicId": "sto_nov_demo"
+    }
+  ]
+}

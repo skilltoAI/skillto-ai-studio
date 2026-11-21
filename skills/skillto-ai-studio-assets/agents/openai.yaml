@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skillto-AI-Studio · AI资产"
+  short_description: "管理AI资产分类与红白模资料，展示提示词和可播放视频，支持复制提示词与下载视频"
+  default_prompt: "使用 $skillto-ai-studio-assets 验证公开来源并录入AI资产，保留原始提示词，验收视频播放、提示词复制与视频下载。"

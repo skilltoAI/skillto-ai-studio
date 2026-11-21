@@ -1,0 +1,136 @@
+# 维护与 Git 规范
+
+## 修改范围
+
+`skills/` 是分发源；已安装的 `~/.agents/skills`、旧 `~/.codex/skills`、
+`~/.claude/skills` 或客户端插件缓存是运行副本。
+新增技能使用 `skills/<name>/SKILL.md`，目录名与 YAML `name` 一致，保留简洁、
+可区分的 `description`。脚本、参考文档、资源跟随各自技能；按需读取参考文档。
+新增/移除子技能时，同时更新父技能路由、README 清单和兼容性说明。
+安装器自动发现技能，不维护第二份硬编码名单。
+
+保留子技能真实的业务边界和用户授权范围。部署地址、品牌和历史数据集若只属于
+维护者环境，应明确标识；不能把安装成功写成功能已经可用。不要给其他客户端
+虚构工具，也不要为了通用安装修改现有账号或覆盖 MCP 配置。
+
+## 分支与提交
+
+- 分支默认 `codex/<topic>`；团队人工分支可用 `feat/<topic>`、`fix/<topic>`、`docs/<topic>`。
+- 提交格式建议 `type(scope): summary`，例如 `fix(install): include all discovered skills`。
+  类型使用 `feat`、`fix`、`docs`、`refactor`、`test`、`chore`。
+- 一次提交围绕一个可说明的变更；不要混入其他任务已有修改。按具体路径暂存，
+  查看 `git diff --cached` 后再提交，不直接 `git add .` 收集工作目录。
+- 不在共享分支 force push，不擅自 reset/clean 用户工作区。上传和发布须有明确请求。
+- 未获用户明确上传指令时仅本地准备；获得指令后只推送其指定仓库和范围。
+
+## 可以提交什么
+
+提交技能说明、可复用代码、必要品牌参考和经过脱敏的例子。任务产物放在根目录的
+`work/`、`research/`、`data/`、`runtime/`，这些目录不进入 Git。
+Cookie、API Key、浏览器档案、`.env`、数据库、本机配置、构建 EXE 和缓存不提交。
+可分发代码需要的静态数据应放入具体技能的 `assets/`，不要放在被忽略的 `data/`。
+`.gitignore` 不会移除已跟踪文件；提交前仍需审查暂存清单。不要在检查输出中打印密钥。
+
+文本使用 UTF-8 与 LF，由 `.gitattributes` 统一。Shell 入口保留可执行位；
+不要只为换行符批量重写无关文件。
+
+## 验证
+
+在仓库根目录运行（安装与仓库检查只依赖 Python 3.10+ 标准库）：
+
+```sh
+python scripts/validate_repo.py
+python -m unittest discover -s tests -v
+git diff --check
+```
+
+技能结构修改后，如果装有 Codex skill-creator，再用其 `scripts/quick_validate.py`
+逐个检查技能（该验证器需要 PyYAML；Windows 用 `python -X utf8` 避免系统编码干扰）；
+它不能替代真实能力验证。修改业务代码时运行
+对应技能已有测试，不对本次未改动的联网采集、远程服务或收费生成做真实调用。
+
+Claude Code 本机可用时，检查两份清单：
+
+```sh
+claude plugin validate .claude-plugin/plugin.json
+claude plugin validate .
+```
+
+本地查看插件：`claude --plugin-dir .`，在会话中检查技能列表并调用
+`/skillto-ai-studio:skillto-ai-studio`。这是人工交互验收，不需要为验证自动运行外部工作流。
+
+## 发布到 Codeup
+
+### 独立认证与拉新
+
+拉取与推送必须使用 [AGENTS.md](AGENTS.md) 列出的两组 `CODEUP_FETCH_*` / `CODEUP_PUSH_*`
+本机环境变量。同一仓库的两组凭据也不能共用或自动回退。密码通过隐藏输入设置到本机
+用户环境，不能写进 PowerShell 命令历史、Git URL、源码或日志。私钥文件留在受保护本机目录。
+
+```sh
+python scripts/codeup_git.py probe --scope fetch
+python scripts/codeup_git.py probe --scope push
+python scripts/codeup_git.py fetch
+python scripts/codeup_git.py clone --destination <新的目录>
+```
+
+`probe --scope push` 只读取远端，不执行推送。`fetch` 更新 `codeup/*` 远端跟踪引用，
+保留其他远端，不自动合并。`clone` 只使用拉取凭据；克隆后所有 Codeup 网络操作仍经本脚本，
+不能依赖普通 `git push` 自动选对凭据。
+
+每次开发开始检查最近成功同步时间；无记录或超过48小时必须拉新，长任务也最多间隔48小时。
+在干净任务分支 merge Codeup 的默认分支（任务明确指定其他基线时使用该基线）；
+工作区有其他未提交内容时使用隔离工作树。以已核验的最新远端提交新建任务工作树也视为采用新基线。
+仅 fetch、认证失败、合并冲突都不算成功同步。只有完成集成后才在 Git 本地状态记录
+成功时间与远端提交；不将状态文件提交，不自动 stash/reset 或覆盖用户改动。
+
+每个完成的逻辑变更在根 `CHANGELOG.md` 的 `Unreleased` 中记录日期、编号、范围、摘要、
+验证结果、规范更新及兼容性影响，通过检查后按具体路径本地提交。
+只有用户明确授权推送后才能执行：
+
+```sh
+python scripts/codeup_git.py push --branch codex/<任务>
+```
+
+该入口只推送指定任务分支。经用户明确授权合并主分支并发布后，确保本地发布提交包含 Codeup main，验证产物，创建指向 HEAD 的带说明标签，再用 `python scripts/codeup_git.py release --tag vX.Y.Z` 原子推送 main 和该标签。此命令不允许强推；分支保护报错时走 Codeup 审查。推送后回读 main 及标签所指提交。下列发布规则继续适用。
+
+1. 确定代码许可和品牌素材的再分发范围；当前仓库未声明开源许可证，不推定 MIT 等许可。
+2. 审查变更、暂存清单和敏感信息；确认所需新技能/参考资源均已纳入提交。
+3. 运行上述检查，并从干净提交导出/克隆到临时目录验证安装。
+4. 插件版本使用 SemVer，同一次功能发布更新 `.claude-plugin/plugin.json`，
+   完成可追踪提交后再打对应 `vX.Y.Z` 标签；正式发布前不要宣称已有 release。
+5. 用户明确要求上传后，再推送约定分支/标签。当前分发地址为
+   `https://codeup.aliyun.com/6856a1da33ca8867a4350914/skillto-ai-studio.git`；
+   若仓库更名，同时更新 README、安装指引和插件元数据。私有仓库的用户各自配置认证，
+   不随安装包分发维护者凭据。上传后回读远端提交，确认与本地一致。
+6. 工作区有其他任务未提交内容时，保留原工作区与索引。可在隔离目录整理本次需要分发的
+   源码快照，明确记录源提交和纳入范围，再验证、提交与推送；不把整个工作目录打包上传。
+
+## 发布到 GitHub
+
+目标为 [skilltoAI/skillto-ai-studio](https://github.com/skilltoAI/skillto-ai-studio)，使用独立远端 `github`。已有 `origin` 和 `codeup` 继续用于各自仓库。维护者在同一 Windows 用户下使用 Git for Windows 和 Git Credential Manager（GCM），通过 Windows 凭据管理器复用 GitHub HTTPS OAuth 登录。新环境按浏览器提示登录有仓库写权限的账号。提交作者配置与 GitHub 登录分别核查。
+
+```powershell
+git config --show-origin --show-scope --get-all credential.helper
+git credential-manager github list
+git remote -v
+# 仅在尚无 github 远端时添加
+git remote add github https://github.com/skilltoAI/skillto-ai-studio.git
+git remote get-url --push --all github
+git ls-remote --symref github HEAD
+```
+
+认证缺失或失效时可执行 `git credential-manager github login --browser`，通过浏览器完成授权。[GitHub 凭据缓存说明](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git?platform=windows)
+
+确认目标仓库、分支和公开范围，按本文件执行检查与本地提交。首次公开推送须审查待推送提交可达的历史，既有 Git 忽略规则不影响已跟踪的历史内容。获得推送授权后执行（将 `<任务分支>` 替换为实际分支）：
+
+```powershell
+git push github HEAD:refs/heads/<任务分支>
+git ls-remote --exit-code github refs/heads/<任务分支>
+git rev-parse HEAD
+```
+
+回读的远端 SHA 必须与本地提交一致。分支规则拒绝时按仓库要求提交 PR。GitHub 推送不替代 Codeup 的拉新、发布和认证流程。
+
+`.github/workflows/validate.yml` 是 GitHub 的跨系统 CI，Codeup 不会自动执行它。
+Codeup 流水线可运行同样的三条基础检查；本地测试无需任何服务凭据。

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKillto.ai 个人工作台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="desk">
+
+  <section class="win" id="win" data-state="starting" aria-label="SKillto.ai 个人工作台">
+    <header class="top">
+      <img class="wordmark" src="assets/studio-wordmark.png" alt="Skillto.ai 个人工作台">
+      <span class="top-sep"></span>
+      <span class="top-meta mono">STUDIO</span>
+      <nav class="top-links" aria-label="工具">
+        <button class="link" id="users">
+          <svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.5"/><path d="M1.5 13.5c.6-2.3 2.3-3.5 4.5-3.5s3.9 1.2 4.5 3.5"/><path d="M10.5 3.6a2.4 2.4 0 0 1 0 4.8M12 10.3c1.3.5 2.1 1.6 2.5 3.2"/></svg>浏览器用户
+        </button>
+        <button class="link" id="pairBtn">
+          <svg viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4" height="4" rx="1"/><rect x="9.5" y="2.5" width="4" height="4" rx="1"/><rect x="2.5" y="9.5" width="4" height="4" rx="1"/><path d="M9.5 9.5h1.5v1.5M13.5 9.5v4h-4"/></svg>网页配对码
+        </button>
+      </nav>
+      <div class="wc">
+        <button id="minimize" aria-label="最小化"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button>
+        <button id="closeWindow" class="wc-close" aria-label="关闭并停止服务"><svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+      </div>
+    </header>
+
+    <section class="hero" aria-roledescription="轮播" aria-label="功能模块">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="copy">
+        <div class="kicker mono"><span id="slideNo">01</span><i></i>功能模块</div>
+        <h1 id="slideTitle">多媒体表格</h1>
+        <p id="slideDesc">知识库、项目、表三级管理素材。图片与视频直接入表，评分和标签供 AI 检索。</p>
+        <div class="tabs" role="tablist" id="tabs"></div>
+      </div>
+      <div class="stage">
+        <figure class="frame" id="frame">
+          <div class="frame-bar"><i></i><i></i><i></i><span class="mono" id="frameUrl"></span></div>
+          <img id="slideImg" src="assets/studio-media-table.png" alt="多媒体表格界面截图">
+        </figure>
+      </div>
+      <button class="rec-pill" id="rec3d" type="button">
+        <span class="cube" aria-hidden="true"><i class="f1"></i><i class="f2"></i><i class="f3"></i><b></b></span>
+        3D 录屏
+      </button>
+    </section>
+
+    <section class="dock" aria-label="服务控制">
+      <div class="state">
+        <span class="core" aria-hidden="true"><span class="ring"></span><i class="orb"></i></span>
+        <div class="state-text">
+          <div class="status" id="status" role="status">正在启动服务…</div>
+          <div class="detail mono" id="detail"></div>
+        </div>
+        <button class="ghost-icon" id="copy" aria-label="复制地址" title="复制地址"><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8" height="8" rx="2"/><path d="M3 10V4a1 1 0 0 1 1-1h6"/></svg></button>
+      </div>
+      <div class="controls">
+        <button class="btn" id="power"><svg viewBox="0 0 16 16"><path d="M8 2v6"/><path d="M4.6 4.4a5 5 0 1 0 6.8 0"/></svg><span id="powerText">关闭服务</span></button>
+        <button class="btn" id="features">安装新组件与技能</button>
+        <button class="btn primary" id="open">打开工作台<svg class="arrow-r" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+      </div>
+    </section>
+    <footer class="foot">首次使用请获取网页配对码 · 最小化后服务继续运行 · 关闭窗口将安全停止服务</footer>
+
+    <dialog id="featureDlg" aria-label="安装新组件与技能"><iframe title="安装新组件与技能"></iframe></dialog>
+    <dialog class="scrim" id="pairDlg" aria-labelledby="pairTitle">
+      <div class="dialog">
+        <div class="kicker mono">PAIRING<i></i><span id="pairTime"></span></div>
+        <h3 id="pairTitle">网页配对码</h3>
+        <p>在其他设备的浏览器中打开工作台并输入。配对码仅显示一次。</p>
+        <div class="code mono"></div>
+        <div class="expire"><span></span></div>
+        <div class="dlg-actions"><button class="btn" data-close>关闭</button><button class="btn primary" id="copyPair">复制配对码</button></div>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </section>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

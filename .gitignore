@@ -1,0 +1,50 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+*.key
+*cookie*.txt
+data/
+runtime/
+.test-tmp/
+.install-test/
+.venv/
+/skills/skillto-ai-studio-table/SkillToTable.exe
+/skills/skillto-ai-studio-table/launcher.local.json
+/skills/skillto-ai-studio-table/scripts/windows/*.syso
+
+# Local task artifacts; reusable examples belong in a skill's references/assets.
+/work/
+/research/
+/draft_*_folder/
+.env.*
+!.env.example
+*.pem
+*.sqlite
+*.sqlite3
+*.db
+*.log
+*cookie*.json
+node_modules/
+.pytest_cache/
+.ruff_cache/
+.claude/settings.local.json
+.claude/skills/
+/.release/
+
+# Machine caches, editor backups and per-machine configuration.
+/.cache/
+/.playwright-cli/
+/.remotion/
+/%SystemDrive%/
+/.agents/skills/
+*.bak
+*.tmp
+*.local.json
+*.env
+
+# STASS regression artifacts
+/apps/stass/work/
+
+# Generated Windows icon resources
+/apps/stass/**/rsrc_windows_*.syso

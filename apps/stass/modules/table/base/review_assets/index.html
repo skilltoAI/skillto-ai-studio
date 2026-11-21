@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>抖音账号表</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/adjustments.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><div class="brand-mark">表</div><div><strong>内容资料库</strong><small>抖音账号</small></div><button class="icon-button mobile-close" id="closeSidebar" aria-label="关闭导航">×</button></div>
+      <div class="nav-heading table-tree-heading">
+        <span>知识库</span>
+        <div class="table-tree-actions">
+          <button class="icon-button" id="tableTreeToggle" type="button" title="筛选表格目录" aria-label="筛选表格目录" aria-expanded="false" aria-controls="tableTreePanel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 5h16l-6 7v5l-4 2v-7z"/>
+            </svg>
+          </button>
+          <button class="icon-button" id="addBase" title="新建知识库" aria-label="新建知识库">＋</button>
+        </div>
+        <div class="table-tree-controls" id="tableTreePanel" hidden role="group" aria-label="筛选表格目录">
+          <input id="tableTreeSearch" type="search" placeholder="搜索表格" aria-label="搜索表格" aria-controls="tree">
+          <div class="table-tree-options">
+            <select id="tableTreeAge" aria-label="最近修改范围" aria-controls="tree">
+              <option value="">修改不限</option>
+              <option value="1">近 1 小时</option>
+              <option value="8">近 8 小时</option>
+              <option value="24">近 1 天</option>
+              <option value="72">近 3 天</option>
+              <option value="168">近 7 天</option>
+              <option value="720">近 30 天</option>
+            </select>
+            <select id="tableTreeOrder" aria-label="目录排序" aria-controls="tree">
+              <option value="directory">目录顺序</option>
+              <option value="newest">最近修改 ↓</option>
+              <option value="oldest">最早修改 ↑</option>
+            </select>
+          </div>
+          <div class="table-tree-summary" hidden>
+            <span id="tableTreeCount" role="status"></span>
+            <button class="button" id="tableTreeReset" type="button">清除</button>
+          </div>
+        </div>
+      </div>
+      <nav id="tree" aria-label="知识库、项目和表"></nav>
+      <div class="sidebar-foot"><span class="status-dot"></span>本地工作区</div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+    <main class="main" data-table-state="loading">
+      <header class="topbar"><button class="icon-button mobile-menu" id="openSidebar" aria-label="打开导航">☰</button><div id="breadcrumb" class="breadcrumb"></div><div class="top-actions"><span id="saveStatus" class="save-status"></span><button class="button quiet" id="syncButton" title="从本地追踪库同步">↻ <span>同步</span></button></div></header>
+      <section class="workspace-head"><div><h1 id="tableTitle">表格</h1><p id="tableSubtitle"></p></div><div class="head-actions"><button class="button quiet" id="exportButton">导出 JSON</button><button class="button quiet" id="importButton">导入 JSON</button><input type="file" id="importFile" accept=".json,application/json" hidden><button class="button primary" id="addRowButton">＋ 添加账号</button></div></section>
+      <section id="catalogState" role="status"><p>正在读取表格…</p><button type="button" class="button" hidden></button></section>
+      <section class="metrics" id="metrics" aria-label="表格概览"></section>
+      <section class="filters" aria-label="筛选"><label class="search-wrap"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="搜索账号或视频" aria-label="搜索账号或视频"></label><label><span>标签</span><select id="tagFilter"><option value="">全部标签</option></select></label><label><span>近30天视频 ≥</span><input id="minVideos" type="number" min="0" placeholder="不限"></label><label><span>视频发布自</span><input id="dateFrom" type="date"></label><label><span>至</span><input id="dateTo" type="date"></label><button class="button quiet" id="clearFilters">清除</button><button class="button quiet" id="manageTags">管理标签</button></section>
+      <div class="result-bar">
+        <span id="resultCount" role="status">0 条记录</span><span id="notice" role="status"></span>
+        <div class="table-column-nav" id="tableColumnNav" role="group" aria-label="浏览表格列" hidden>
+          <button class="button" type="button" id="tableColumnsLeft" aria-controls="dataTable" aria-label="向左浏览列">←</button>
+          <button class="button" type="button" id="tableColumnsRight" aria-controls="dataTable" aria-label="向右浏览列">→</button>
+        </div>
+        <nav class="table-pagination" aria-label="表格分页">
+          <label for="tablePageSize">每页</label>
+          <select id="tablePageSize" aria-controls="dataTable">
+            <option value="20">20 行</option>
+            <option value="50" selected>50 行</option>
+            <option value="100">100 行</option>
+          </select>
+          <button class="button" type="button" id="tablePageBack" aria-controls="dataTable">上一页</button>
+          <span id="tablePageStatus" role="status"></span>
+          <button class="button" type="button" id="tablePageNext" aria-controls="dataTable">下一页</button>
+        </nav>
+      </div>
+      <div class="table-scroll"><table class="data-table" id="dataTable"><thead id="tableHead"><tr><th class="account-col">账号</th><th>标签</th><th><button data-sort="followerCount">粉丝数 ↕</button></th><th><button data-sort="videoCount30d">近30天视频 ↕</button></th><th><button data-sort="averageLikes">平均点赞 ↕</button></th><th><button data-sort="averageCollects">平均收藏 ↕</button></th><th><button data-sort="averageShares">平均分享 ↕</button></th><th><button data-sort="averageLikeCollectRatio">平均赞藏比 ↕</button></th><th class="videos-col">最近10条视频</th><th>评分</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    </main>
+  </div>
+
+  <dialog id="videosDialog" class="modal wide" aria-labelledby="videosTitle"><div class="modal-head"><div><small>最近视频</small><h2 id="videosTitle"></h2></div><button class="icon-button close-modal" aria-label="关闭">×</button></div><div id="videosList" class="videos-list"></div></dialog>
+  <dialog id="imageDialog" class="modal image-modal" aria-labelledby="imageTitle"><div class="modal-head"><h2 id="imageTitle">图片预览</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><img id="largeImage" alt=""></dialog>
+  <dialog id="videoFileDialog" class="modal wide" aria-labelledby="videoFileTitle"><div class="modal-head"><h2 id="videoFileTitle">视频文件</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><video id="videoFilePlayer" controls preload="none"></video></dialog>
+  <dialog id="tagsDialog" class="modal" aria-labelledby="tagsTitle"><div class="modal-head"><h2 id="tagsTitle">标签管理</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><div id="tagsList"></div><form id="addTagForm" class="inline-form"><input name="name" placeholder="新标签名称" required><input name="color" type="color" value="#2d7d69" aria-label="标签颜色"><button class="button primary" type="submit">添加</button></form></dialog>
+  <dialog id="assignDialog" class="modal" aria-labelledby="assignTitle"><div class="modal-head"><h2 id="assignTitle">账号标签</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><p class="assign-hint">可为一个账号勾选多个标签，取消勾选即可移除。</p><div id="assignList"></div><form id="quickAddTagForm" class="inline-form"><input name="name" placeholder="新建标签并选中" aria-label="新标签名称" required><button class="button" type="submit">新建</button></form><div class="modal-actions"><span id="assignmentCount" aria-live="polite">已选 0 个</span><button class="button primary" id="saveAssignment">保存标签</button></div></dialog>
+  <dialog id="reviewDialog" class="modal" aria-labelledby="reviewTitle"><div class="modal-head"><h2 id="reviewTitle">账号评分</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><label class="field-label">评分<select id="scoreInput"><option value="">未评分</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><label class="field-label">评分理由<textarea id="scoreNote" rows="4"></textarea></label><div class="modal-actions"><button class="button primary" id="saveReview">保存评分</button></div></dialog>
+  <dialog id="rowDialog" class="modal" aria-labelledby="rowDialogTitle"><div class="modal-head"><h2 id="rowDialogTitle">添加账号</h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><form id="rowForm"><label class="field-label">账号名<input name="accountName" required></label><label class="field-label">账号主页<input name="profileUrl" type="url" placeholder="https://www.douyin.com/user/..."></label><label class="field-label">头像地址<input name="avatarUrl" type="url"></label><label class="field-label">粉丝数<input name="followerCount" type="number" min="0"></label><div class="modal-actions"><button class="button danger" type="button" id="deleteRow">删除账号</button><button class="button primary" type="submit">保存</button></div></form></dialog>
+  <dialog id="entityDialog" class="modal" aria-labelledby="entityTitle"><div class="modal-head"><h2 id="entityTitle"></h2><button class="icon-button close-modal" aria-label="关闭">×</button></div><form id="entityForm"><label class="field-label">名称<input name="name" required></label><label class="field-label">说明<input name="description"></label><div class="modal-actions"><button class="button danger" type="button" id="deleteEntity">删除</button><button class="button primary" type="submit">保存</button></div></form></dialog>
+</body>
+</html>

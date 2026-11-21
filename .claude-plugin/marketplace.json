@@ -1,0 +1,12 @@
+{
+  "name": "skillto-ai-studio-marketplace",
+  "description": "Skillto-AI-Studio skills for content research, media and visual workflows.",
+  "owner": { "name": "skilltoAI" },
+  "plugins": [
+    {
+      "name": "skillto-ai-studio",
+      "source": "./",
+      "description": "Skillto-AI-Studio Agent Skills for content and visual workflows."
+    }
+  ]
+}

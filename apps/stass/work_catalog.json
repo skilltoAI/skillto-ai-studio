@@ -1,0 +1,412 @@
+{
+  "version": "2026.11.20.1",
+  "groups": [
+    {
+      "id": "assets",
+      "name": "AI资产库",
+      "summary": "整理角色、场景、参考素材与视觉风格",
+      "description": "适合需要长期积累角色、场景、参考画面和模板的创作者。你可以把同一角色的参考图、出场片段、来源和使用说明整理在一起，也可以按项目查找视觉风格与动效模板。下次做相似内容时，直接从已有素材继续，能看清哪些画面来自原片，哪些是后续生成的版本。需要制作新角色卡或空场图时，再连接相应的图像工具。",
+      "example": "给我三种适合这组角色素材的视觉风格。",
+      "views": [
+        "assetLibrary",
+        "tables",
+        "motions",
+        "characters"
+      ]
+    },
+    {
+      "id": "social",
+      "name": "做自媒体账号",
+      "summary": "分析账号、研究选题、整理素材与稿件",
+      "description": "适合日常需要找选题、看账号、拆视频和写稿的人。你可以整理指定账号的近期作品，把互动数据和观察记录放进表格，再把有参考价值的片段、开头和表达方式归入稿件。做完一期内容后，还能回看选题依据、原稿和修改版本。开始采集时再连接所用平台的授权会话，只做策划时，也可以直接从已有资料开始。",
+      "example": "根据我提供的参考稿，整理选题和开场。",
+      "views": [
+        "tables",
+        "reports",
+        "breakdowns",
+        "rewrites"
+      ]
+    },
+    {
+      "id": "edit",
+      "name": "AI视频剪辑",
+      "summary": "视频拉片、口播剪辑、字幕和动效包装",
+      "description": "适合手中已经有视频、口播粗剪或字幕，想继续完成拉片和包装的用户。你可以按时间码记录参考镜头，挑选可用片段，查看适合当前节奏的动效模板，再把粗剪与已有字幕交给剪辑流程。拉片笔记、模板检索和实际渲染可以分开使用。需要导出视频时，工作台会显示该项目所需的渲染工具及其配置状态。",
+      "example": "根据我的粗剪和 SRT 先规划字幕与动效分镜。",
+      "views": [
+        "breakdowns",
+        "motions",
+        "beam"
+      ]
+    },
+    {
+      "id": "generate",
+      "name": "AI生成",
+      "summary": "制作角色卡、编排图像与视频生成工作流",
+      "description": "适合把角色参考、场景素材和创意要求组织成图像或视频工作流。你可以先写角色定妆提示词，再把输入图片、模型节点和输出结果连接起来。进阶制作可选角色迁移或深度灰流程，并根据项目补装对应技能。草稿阶段可以先确定素材与节点关系，实际生成前，再核对账号可用模型、输入要求、运行权限和报价。",
+      "example": "根据这张角色照片写一份定妆卡提示词。",
+      "views": [
+        "assetLibrary",
+        "characters",
+        "creator"
+      ]
+    },
+    {
+      "id": "teach",
+      "name": "教学内容制作",
+      "summary": "把知识点变成讲解稿、分镜与课程内容",
+      "description": "适合把课程要点、操作步骤和案例整理成容易跟随的讲解内容。你可以先从一段知识点生成讲解稿，再逐段标出观众要看到的画面、需要展示的例子和应当出现的字幕。录制前可用分镜检查哪些步骤还缺演示素材，录制后也能把稿件与镜头逐一核对。已有口播粗剪和字幕时，可以随时加装剪辑功能继续完成成片。",
+      "example": "把这段素材整理成一条 60 秒知识讲解稿，并列出分镜。",
+      "views": [
+        "rewrites",
+        "storyboard",
+        "tables"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "assets",
+      "name": "AI资产专题库",
+      "defaults": [
+        "assets"
+      ],
+      "optional": [
+        "generate",
+        "edit"
+      ],
+      "summary": "浏览与维护已有红白模和剪映素材专题",
+      "description": "适合从已有专题中查找动作视频、提示词和素材来源。你可以在工作台按专题查看红白模参考，核对每张卡片关联的原始文档，再把合适的提示词用于后续创作。录入公开资料时留存可验证的访问证据，下载或播放由来源权益决定。浏览器支持直接打开专题，客户端维护目录需要发现工作台的资产管理工具。",
+      "needs": "需可访问的工作台；维护资产记录需配对相应 MCP 能力。",
+      "requires": []
+    },
+    {
+      "id": "ip-store",
+      "name": "角色与场景素材入库",
+      "defaults": [
+        "assets"
+      ],
+      "optional": [
+        "social",
+        "generate"
+      ],
+      "summary": "采集、核对并归档角色与场景参考",
+      "description": "从获授权的视频建立可复用素材库。使用原片时间码定位不同角色和场景，将原始截图、补全视角与生成的空场图分别归档，并把角色卡关联到来源。后续选角或搭建同一场景时，可以从两张库表回查依据，也能在接入表格后展示素材。需 scrapling、FFmpeg/ffprobe；生成图片需宿主 image_gen。",
+      "needs": "需 scrapling、FFmpeg/ffprobe；生成图片需宿主 image_gen。",
+      "requires": []
+    },
+    {
+      "id": "table",
+      "name": "多媒体表格",
+      "defaults": [
+        "assets",
+        "social"
+      ],
+      "optional": [
+        "edit",
+        "teach",
+        "generate"
+      ],
+      "summary": "用结构化字段组织图文和视频",
+      "description": "适合整理选题、课程资料和参考素材。先定义表格的字段和分类，再录入文字、图片或视频，按标签和人工评分筛选记录。协作时可以用稳定的记录标识回查同一条内容，核对来源和修改历史。部署工作台后可在浏览器中检查修改结果。工作台读写需配对表格 MCP，远端访问另配授权。",
+      "needs": "工作台读写需配对表格 MCP，远端访问另配授权。",
+      "requires": []
+    },
+    {
+      "id": "style-library",
+      "name": "美术风格库",
+      "defaults": [
+        "assets",
+        "edit",
+        "generate"
+      ],
+      "optional": [
+        "social",
+        "teach"
+      ],
+      "summary": "查找适合当前项目的视觉风格与动效方法",
+      "description": "给出创作方向、参考画面或要表达的氛围，从随附风格资料中选择候选方案。每个选择可以拆成配色、构图、元素层次和运动方式，便于交接给剪辑师或生成工作流。同一套参考可以用于规划系列视频的统一画面，或解释现有视觉方案需要怎样的素材。查询支持离线使用，落实到渲染工程时按选用的技术路线配置。",
+      "needs": "查询支持离线使用，落实到渲染工程时按选用的技术路线配置。",
+      "requires": []
+    },
+    {
+      "id": "motion",
+      "name": "Motion 动效模板库",
+      "defaults": [
+        "assets",
+        "edit"
+      ],
+      "optional": [
+        "social",
+        "generate",
+        "teach"
+      ],
+      "summary": "管理模板、预览并制作受支持的动效",
+      "description": "适合已有动画模板或希望从模板中选择表现手法的创作者。按标签、画幅和来源定位模板，查看示例、给模板评分，再以所选模板建立独立制作实例。使用自己的媒体和参数渲染前，先检查引擎与包版本；未知格式仅作检查和登记。制作需受支持适配器、Python、Node.js、Chrome、FFmpeg/ffprobe。",
+      "needs": "制作需受支持适配器、Python、Node.js、Chrome、FFmpeg/ffprobe。",
+      "requires": []
+    },
+    {
+      "id": "douyin-xhs-crawler",
+      "name": "抖音与小红书采集",
+      "defaults": [
+        "social"
+      ],
+      "optional": [
+        "assets",
+        "generate"
+      ],
+      "summary": "按授权账号核实作品和近期指标",
+      "description": "输入目标账号或已核实的视频链接，指定允许使用的会话，在授权范围内整理作者、发布时间和近期作品指标。研究结果保留作品身份和来源，方便后续选题与抽样复查。内置账号采集入口覆盖抖音，小红书需要已配置的适用项目。需 Playwright、受支持浏览器和对应平台授权会话。",
+      "needs": "需 Playwright、受支持浏览器和对应平台授权会话。",
+      "requires": []
+    },
+    {
+      "id": "tiktok-crawler",
+      "name": "TikTok 账号与关键词研究",
+      "defaults": [
+        "social"
+      ],
+      "optional": [
+        "assets",
+        "generate"
+      ],
+      "summary": "查询账号、收集关键词并比较作品快照",
+      "description": "适合研究特定账号、选题词或跨语言内容趋势。用指定的授权会话采集账号和关键词结果，保存作品身份及当时的互动数据。历史快照可用于比较表现，筛选值得继续观看的原片，再交给表格展示。已有快照也可以独立分析。采集需 Playwright、Chromium 或已安装的 Chrome/Edge 及 TikTok 会话。",
+      "needs": "采集需 Playwright、Chromium 或已安装的 Chrome/Edge 及 TikTok 会话。",
+      "requires": []
+    },
+    {
+      "id": "reports",
+      "name": "报表与数据图表",
+      "defaults": [
+        "social"
+      ],
+      "optional": [
+        "assets"
+      ],
+      "summary": "把项目数据整理成可回查的图表",
+      "description": "将已有表格或已配置的数据源组织成图表与仪表盘，在工作台查看不同项目的指标、来源和刷新情况。适合定期比较账号表现、检查资料库覆盖范围，或向同事说明指标口径。需要实际可访问的查询库和报表服务才能查看真实结果。需工作台报表接口、Metabase、PostgreSQL 及数据源权限。",
+      "needs": "需工作台报表接口、Metabase、PostgreSQL 及数据源权限。",
+      "requires": [
+        "table"
+      ]
+    },
+    {
+      "id": "rewrite",
+      "name": "稿件研究与版本管理",
+      "defaults": [
+        "social",
+        "teach"
+      ],
+      "optional": [
+        "edit",
+        "generate"
+      ],
+      "summary": "保留来源、原稿、分镜和改写版本",
+      "description": "适合把参考材料变成有据可查的新稿。输入已有文案或获授权的内容，保留原始版本，逐次修改表达、分析开头，并按版本检查分镜和人工意见。研究口播时可以结合音轨转写与画面证据，课程资料也能从已有文字开始。版本入库需工作台；转写、OCR、小与配音按实际任务配置。",
+      "needs": "版本入库需工作台；转写、OCR、小与配音按实际任务配置。",
+      "requires": []
+    },
+    {
+      "id": "workbench",
+      "name": "视频拉片与选段",
+      "defaults": [
+        "social",
+        "edit"
+      ],
+      "optional": [
+        "assets",
+        "generate",
+        "teach"
+      ],
+      "summary": "发现获授权的视频并保存镜头笔记",
+      "description": "适合逐镜研究原片、积累剪辑参考和选择课程示范片段。用浏览器扩展发现目标媒体，预览后选择整片或时间范围，也可以把选中的素材同步到工作台。拉片记录支持播放、备注与时间码，便于回到原始画面核对结论。浏览器采集需 Cat Catch 品牌扩展；选段及同步需工作台和 FFmpeg。",
+      "needs": "浏览器采集需 Cat Catch 品牌扩展；选段及同步需工作台和 FFmpeg。",
+      "requires": []
+    },
+    {
+      "id": "qwen38-media-analysis",
+      "name": "图像与镜头分析",
+      "defaults": [],
+      "optional": [
+        "assets",
+        "social",
+        "edit",
+        "generate",
+        "teach"
+      ],
+      "summary": "抽帧、识别画面文字并分析镜头",
+      "description": "输入已有图片或获准访问的视频，用带时间码的原帧做画面分析，整理镜头、可见物体和需要进一步核对的文字。抽帧和模型理解可以分开进行，服务暂不可用时仍可检查已提取的帧。分析结果应与来源关联，方便回到原画面复核。抽帧需 FFmpeg 或 OpenCV，模型理解需可达的 Qwen3.8 服务。",
+      "needs": "抽帧需 FFmpeg 或 OpenCV，模型理解需可达的 Qwen3.8 服务。",
+      "requires": []
+    },
+    {
+      "id": "talking-head-edit",
+      "name": "口播剪辑与字幕包装",
+      "defaults": [
+        "edit"
+      ],
+      "optional": [
+        "social",
+        "teach"
+      ],
+      "summary": "以已有粗剪和 SRT 制作可编辑成片",
+      "description": "适合已经完成口播粗剪并有匹配时间码字幕的用户。以原片和 SRT 为时间基准设计镜头、字幕与视觉包装，先核对分镜，再确认代表性关键帧和短预览，最后渲染视频并保留可编辑工程。缺少合适补充镜头时保留原口播画面。需 HyperFrames、Remotion 及工程环境；复杂动效需 video-talkcraft。",
+      "needs": "需 HyperFrames、Remotion 及工程环境；复杂动效需 video-talkcraft。",
+      "requires": []
+    },
+    {
+      "id": "explainer-storyboard",
+      "name": "知识讲解分镜",
+      "defaults": [
+        "teach"
+      ],
+      "optional": [
+        "social",
+        "edit",
+        "generate"
+      ],
+      "summary": "将知识点拆成讲解节拍和画面证据",
+      "description": "适合教师、教程作者以及需要解释复杂概念的人。提供知识点、原稿或演示素材，先列出每一步要让观众理解的内容，再确定画面需要展示的证据与时间顺序。最终得到讲解节拍、分镜和审片要点，可以继续交给录制或剪辑环节。纯文字规划可直接使用；参考视频抽帧或生成关键帧时另配工具。",
+      "needs": "纯文字规划可直接使用；参考视频抽帧或生成关键帧时另配工具。",
+      "requires": []
+    },
+    {
+      "id": "xiaoyu-cover",
+      "name": "小与品牌封面",
+      "defaults": [],
+      "optional": [
+        "social",
+        "generate",
+        "teach"
+      ],
+      "summary": "生成符合小与品牌要求的两种画幅封面",
+      "description": "适合制作小与品牌课程及教程封面。输入主题或已授权的视频，结合品牌参考图和选中的关键帧，确定主角、手中道具、标题及镜头角度，再分别构图生成竖版和横版。视频有口播时，可根据带时间码的转写进一步核对主题。需要指定的 imagegen 与宿主 image_gen，视频采集和转写按需配置。",
+      "needs": "需要指定的 imagegen 与宿主 image_gen，视频采集和转写按需配置。",
+      "requires": []
+    },
+    {
+      "id": "workflow-mcp",
+      "name": "Creator 生成工作流",
+      "defaults": [
+        "generate"
+      ],
+      "optional": [
+        "social",
+        "teach"
+      ],
+      "summary": "在 SkillTo.ai 编排并核对工作流",
+      "description": "使用本人可访问的草稿、素材和模型目录，把输入图像、提示词与生成节点连接到一起。先读回节点选项并检查连线，再按任务需要上传素材或发起运行。用于角色、场景和视频制作时，可以让后续步骤引用已核实的节点结果。需配对 Creator MCP、受保护的 API Key 和相应权限；收费运行单独授权。",
+      "needs": "需配对 Creator MCP、受保护的 API Key 和相应权限；收费运行单独授权。",
+      "requires": []
+    },
+    {
+      "id": "character-card",
+      "name": "定妆与多视图角色卡",
+      "defaults": [
+        "assets",
+        "generate"
+      ],
+      "optional": [],
+      "summary": "编写可直接引用输入图的角色卡提示词",
+      "description": "适合需要为角色建立一致形象的创作者。提供新角色参考照和必要的原片证据，说明身份、服饰、道具及应保留的原始视觉风格。产出的文字可以作为定妆或多视图生成节点的提示词，便于检查各张引用图分别承担什么作用。编写文字可离线完成；回写生成节点需 Creator MCP，实际出图需模型权限。",
+      "needs": "编写文字可离线完成；回写生成节点需 Creator MCP，实际出图需模型权限。",
+      "requires": []
+    },
+    {
+      "id": "depth-gray-replica",
+      "name": "原片逐秒拆解",
+      "defaults": [],
+      "optional": [
+        "assets",
+        "edit",
+        "generate"
+      ],
+      "summary": "从原片提取硬切与逐秒动作证据",
+      "description": "适合在角色替换或重新设计镜头前先读懂原片。核实获授权的媒体后，用带时间码的原帧记录角色位置、动作、表情与运镜，区分真正的硬切与镜头内运动。交付原片分析及替换提示文档，后续可按证据决定需要准备的角色或场景。需对应采集入口、FFmpeg/ffprobe 和 Pillow；播放器采集另需 Playwright。",
+      "needs": "需对应采集入口、FFmpeg/ffprobe 和 Pillow；播放器采集另需 Playwright。",
+      "requires": []
+    },
+    {
+      "id": "depth-gray-workflow",
+      "name": "深度灰替换工作流",
+      "defaults": [],
+      "optional": [
+        "generate"
+      ],
+      "summary": "制作深度素材并编排可编辑替换草稿",
+      "description": "输入获授权的短片，将其转换为真实的深度视频并分离原音轨，用原帧分析判断角色和镜头关系。把核实的深度片、音轨、场景素材和文字整理进可编辑草稿。运行前检查画幅、模型支持的输入数量和预算，并保留素材来源。需 make-expression-depth-video 真实深度后端、FFmpeg 和 Creator MCP。",
+      "needs": "需 make-expression-depth-video 真实深度后端、FFmpeg 和 Creator MCP。",
+      "requires": [
+        "workflow-mcp"
+      ]
+    },
+    {
+      "id": "h3-workflow",
+      "name": "H3 原片角色迁移",
+      "defaults": [],
+      "optional": [
+        "generate"
+      ],
+      "summary": "规划角色映射并创建 H3 工作流",
+      "description": "输入已授权的 TikTok 或抖音视频，从原片确认待替换角色以及应保留的动作、道具和服饰。为每名新角色设计定妆节点，把原视频和对应角色卡连接到 H3 模型并校验草稿。保留完整原片时间线，运行前核对可用模型和授权。需对应来源采集、H3 与角色卡模型、Creator MCP。",
+      "needs": "需对应来源采集、H3 与角色卡模型、Creator MCP。",
+      "requires": [
+        "character-card",
+        "workflow-mcp",
+        "depth-gray-replica"
+      ]
+    },
+    {
+      "id": "cat-extension",
+      "kind": "component",
+      "name": "拉片浏览器扩展",
+      "defaults": [],
+      "optional": [
+        "edit",
+        "social",
+        "assets"
+      ],
+      "summary": "在 Chrome 中发现媒体并同步工作台",
+      "description": "适合从普通浏览器中选取获授权的视频片段。根据随包安装指引准备经过审核的 Cat Catch 上游版本，组合工作台提供的界面并加载到 Chrome。扩展可以预览媒体、选择时间段并与本机工作台配对。是否已在当前 Chrome 配置中启用，需要在扩展管理页人工核对。",
+      "needs": "需 Chrome、固定上游源码和本机工作台。",
+      "requires": [
+        "workbench"
+      ]
+    },
+    {
+      "id": "studio",
+      "kind": "component",
+      "name": "STASS 独立工作台",
+      "defaults": [],
+      "optional": [
+        "assets",
+        "social",
+        "edit",
+        "generate",
+        "teach"
+      ],
+      "summary": "在本机启动共享工作台与浏览器界面",
+      "description": "在本机用同一工作台查看表格、稿件、报表和视频笔记。程序随对应版本的 Windows 发行包安装，客户端另行配置 MCP 连接。准备包清单和可靠的校验摘要后，可按发行说明安装或核对已有实例。保留用户的数据目录、现有启动器及版本记录，有升级需求时按照版本切换流程办理。",
+      "needs": "需相匹配的 Windows 程序包、校验摘要与运行环境。",
+      "requires": []
+    },
+    {
+      "id": "beam",
+      "kind": "component",
+      "name": "3D 录屏",
+      "defaults": [],
+      "optional": [
+        "edit",
+        "teach"
+      ],
+      "summary": "通过工作台启动器打开随包录屏组件",
+      "description": "适用于录制软件演示、教学步骤和产品使用过程。从启动器打开本机的录屏组件，在时间线上组织演示画面与视角。只在所选工作台发行包提供该组件时显示录屏快捷入口；缺失时根据发行清单补充含录屏组件的完整程序包。打开之前会由启动器核验文件与发行清单，项目素材保存在用户选择的位置。",
+      "needs": "需提供 Beam 的 Windows 工作台发行包，实际启动时验证完整性。",
+      "requires": [
+        "studio"
+      ]
+    }
+  ]
+}
