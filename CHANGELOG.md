@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### 2026-11-22 · STASS-CLAUDE-SETUP-01 · Claude 安装验收指引
+
+- 区分共享 STASS 的程序、MCP 配对及技能覆盖验收，明确 8080 与旧版 8880 所属部署；补充公开主干与本地开发历史分离时的更新方式。
+- 在本机核验 STASS 0.4.40 健康与 Claude 配对配置的 13 个 MCP 工具。更新父技能安装、兼容性和表格设置参考。
+
 ### 2026-11-22 · STASS-GITHUB-MAIN-01 · GitHub 主干发布规则
 
 - GitHub 仅使用默认分支 main，本地保留 anycom 开发分支。同步更新 AGENTS.md、贡献指南与协作规范。Codeup 凭据与发布流程沿用原规则。

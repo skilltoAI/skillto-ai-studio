@@ -16,6 +16,14 @@ Do not add a second copy of the same suite through another installation method.
 Read the [installation guide](installation.md), [rename migration](rename-migration.md), and [18 per-child setup recipes](child-setup.md)
 before deploying. The latter separates independent capabilities from maintainer-only deployments.
 
+## Shared STASS and legacy table mode
+
+For the installed Windows STASS workbench, check
+`http://127.0.0.1:8080/STASS/health` (using the configured port if customized)
+and verify the running version. Connect Claude Code to that instance with its
+own paired MCP profile. The separate standalone table script and legacy 8880
+web service apply only to explicitly selected legacy deployments.
+
 ## Capability requirements
 
 | Child | Additional requirements and limits |
@@ -25,10 +33,10 @@ before deploying. The latter separates independent capabilities from maintainer-
 | `skillto-ai-studio-douyin-xhs-crawler` | Python, Playwright, installed supported browser, explicitly selected authorized session. Cookie paths can be provided with `--cookies` or `DOUYIN_COOKIE_FILE`; follow its cookie setup reference. |
 | `skillto-ai-studio-tiktok-crawler` | Python, its `scripts/requirements.txt`, supported browser and separately configured authorized TikTok session. Analysis modules can run independently of collection. |
 | `skillto-ai-studio-workbench` | Current product overlays a branded two-destination preview/range editor on the user-verified Cat Catch engine (GPL attribution retained). Requires explicitly selected upstream source, Chrome, and local FFmpeg for ordinary MP4/WebM clip exports. Browser-only clips use a separate export store; workbench sync transfers media bytes to the shared service, writes processed breakdown records, then opens/reuses the workspace tab. Automatic pairing, no user-entered port/token. Earlier experimental client retained separately. |
-| `skillto-ai-studio-table` | Stdio MCP core uses Python standard library. Register `python <skill-root>/scripts/server.py` in the client's MCP configuration and set `SKILLTO_TABLE_ROOT` outside the installation. Remote mode additionally needs the configured endpoint and protected key file. Full HTTP Studio is not self-contained: it requires external `douyin_tracker.review_web`, research-page resources and adaptation of legacy paths. The Windows launcher needs that service; its EXE and local config are not distributed. |
+| `skillto-ai-studio-table` | Installed STASS uses its paired MCP and shared data root. The legacy standalone stdio core needs Python and an explicitly selected data root. Its optional HTTP deployment requires external `douyin_tracker.review_web` and research resources. |
 | `skillto-ai-studio-assets` | Running STASS with the discovered AI asset MCP capability; current tool is `ai_assets_action`. Public Feishu playback needs Playwright plus Chromium or Chrome, a fresh anonymous context and network access to Feishu. Videos are streamed without service-side caching; public permissions may change. No user profile, paid generation or template execution is authorized by intake. |
 | `skillto-ai-studio-motion` | Running Studio HTTP service for library and queued tasks. Package inspection uses Python standard library. The pinned public Kinetic Tech adapter needs Python 3.11+, declared scientific/audio packages, Node.js 22+, Chrome, full FFmpeg and ffprobe. Personal envelopes and unknown renderers remain inspection-only. No credential migration or source-run-count fabrication. |
-| `skillto-ai-studio-reports` | Table HTTP service on loopback port 8880, separately provisioned Metabase and PostgreSQL; follow the table child's `reporting/README.md`. Installing skills does not start those services or import the maintainer's datasets. |
+| `skillto-ai-studio-reports` | Installed STASS exposes the report module and uses separately configured Metabase and PostgreSQL. Port 8880 and the table child’s reporting README apply to the legacy deployment. |
 | `skillto-ai-studio-rewrite` | Running table HTTP service for manuscript CRUD. Speech sources need ASR/OCR. The voice button requires the external `xiaoyu-voice` deployment; its documented Windows paths are maintainer-specific. |
 | `skillto-ai-studio-qwen38-media-analysis` | Bundled client targets the maintainer's LAN endpoint `192.168.3.188:8080`. Credentials use `QWEN38_API_KEY`. Endpoint/model are embedded deployment constants, not CLI overrides. External machines must adapt the deployment explicitly. Frame extraction uses FFmpeg/ffprobe or OpenCV fallback. |
 | `skillto-ai-studio-workflow-mcp` | Connect `@skilltoai/creator-mcp` via the child's documented remote endpoint or stdio bridge; use a protected API key with the needed scopes. Discover tools in the active host. |

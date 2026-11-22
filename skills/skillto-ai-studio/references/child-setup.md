@@ -74,7 +74,18 @@ python <skill-root>/scripts/configure_cookie.py --path <同一文件> --check
 
 ## skillto-ai-studio-table
 
-用途：本地或认证远端多媒体表格。**stdio MCP 核心只需要 Python 标准库，可独立部署**。
+用途：本地或认证远端多媒体表格。已安装 Windows STASS 时，使用其共享实例
+和宿主专属配对配置。默认健康地址为 `http://127.0.0.1:8080/STASS/health`。
+
+用已选定发行版本的 `runtime/python.exe` 运行 `program/client.py list --profile <宿主配对配置>`，
+核对已发现的 MCP 工具。Claude Code 使用自己的配对配置；如果尚未注册，
+在确认配置范围后，用该版本的 Python 运行 `program/mcp_bridge.py --profile <Claude 配对配置>`
+作为 stdio MCP，再新开会话验收。保留既有连接，按实际目标选择工具。
+配对文件和两个脚本的路径均来自本机安装，凭据留在本机。
+
+### 旧版独立表格部署
+
+以下步骤仅适用于明确选择的旧版独立表格部署。stdio MCP 核心使用 Python 标准库。
 先选仓库外数据目录，例如用户主目录的 `skillto-table-data`。客户端分别注册，以下路径是占位：
 
 ```sh
@@ -92,7 +103,7 @@ MCP 配置；已有同名连接先比较，不覆盖。父技能和子技能的�
 见 [MCP 合同](../../skillto-ai-studio-table/references/mcp.md) 与
 [远端设置](../../skillto-ai-studio-table/references/amd-pad.md)。
 
-**Studio 网页与 Windows EXE 是另一层依赖，目前不是自包含分发包。**
+**旧版独立表格网页和启动器需要额外部署。**
 `reporting/serve_local.py` 依赖仓库外的 `douyin_tracker.review_web`，并引用维护者
 `runtime/pet_refresh_20261028/research-adapter.js`、`table-lineage.*` 等资源。
 表格存储与兄弟模块从当前加载的技能目录解析；仅复制技能仍不足以在全新机器启动完整 Studio。
@@ -107,8 +118,7 @@ EXE 和 `launcher.local.json` 均不随仓库分发；macOS/Linux 使用部署�
 
 ## skillto-ai-studio-reports
 
-用途：Metabase 报表/图表 CRUD。先安装并部署 `skillto-ai-studio-table` 的完整 HTTP 服务，
-另需 Docker/Compose、Metabase 与 PostgreSQL。按
+用途：Metabase 报表/图表 CRUD。已安装 STASS 时，先确认其报表模块和配置的 Metabase、PostgreSQL 可用。旧版独立部署使用表格 HTTP 服务，另需 Docker/Compose、Metabase 与 PostgreSQL。按
 [报表部署手册](../../skillto-ai-studio-table/reporting/README.md) 在专用环境安装
 `reporting/requirements.txt`。维护者的冻结数据集、镜像/JAR 和凭据不在分发包中。
 

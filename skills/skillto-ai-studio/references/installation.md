@@ -26,6 +26,8 @@ python scripts/install.py --list
 
 如团队规定固定版本，先 `git checkout <已审核的提交SHA或实际存在的标签>`，
 再安装。插件清单的版本号不等于已经创建了同名 Git 标签。
+旧开发分支可能与公开 `main` 没有共同祖先。更新技能可直接从已审查的公开提交建立独立
+checkout，保留原分支和未提交改动；只有需要移植本地开发改动时，才单独审查和移植目标提交。
 
 ## 2. 选择一个安装位置
 
@@ -138,9 +140,10 @@ claude --plugin-dir .
 整套应发现 20 个技能；按需安装只验收所选集合。通过父技能选一个离线能力（如风格检索）
 确认相对参考文件可读，再按 [子技能验收项](child-setup.md) 验收业务依赖。
 
-MCP 配置要显式指定本机 Python 与加载后的脚本路径。以表格为例，先设置独立数据目录，
-然后按 [表格安装步骤](child-setup.md#skillto-ai-studio-table) 注册 stdio MCP。
-不要把仓库、插件缓存或技能目录用作长期数据目录。
+已安装本机 STASS 时，先打开 `http://127.0.0.1:8080/STASS/health` 或实际配置的端口，
+核对服务身份和版本。使用该实例为当前宿主发放的配对配置连接 MCP，然后在新会话发现
+表格和资产工具。Windows STASS 的配对客户端和旧独立表格脚本见
+[表格安装步骤](child-setup.md#skillto-ai-studio-table)。技能文件、程序版本和 MCP 连接分别核验。
 
 ## 7. 升级、回滚、卸载
 
@@ -175,7 +178,7 @@ claude plugin update skillto-ai-studio@skillto-ai-studio-marketplace
 | Python 找不到 | 用 `python3` 或 `py -3` 检查版本；桌面客户端配置 Python 的绝对路径 |
 | Claude 工具名不同或不存在 | 发现当前连接的实际能力；安装技能不会创造 MCP 或 `image_gen` |
 | 新机器不能访问 `192.168.3.188` | 这是维护者 LAN 部署；按兼容性说明获得网络/服务，不能伪称已连接 |
-| Studio 网页无法启动 | 检查外部 `douyin_tracker.review_web` 及研究页资源；本仓库的 stdio 表格 MCP 可独立运行，完整网页并非自包含安装包 |
+| Studio 网页无法启动 | 已安装 STASS 先检查 `/STASS/health` 和共享管理器状态。只有在单独部署旧版网页时，才检查 `douyin_tracker.review_web` 及研究页资源。 |
 | 无法从 GitHub 克隆 | 核对仓库地址、网络和代理设置，先用上面的 `git ls-remote` 检查 |
 
 2026-11-17 核对的官方说明：
