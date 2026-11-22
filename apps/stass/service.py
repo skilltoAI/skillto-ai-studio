@@ -71,7 +71,7 @@ def breakdown(args):
 
 add_dict_tool('rewrite_action', 'Read or edit manuscripts, analyses and storyboard versions.', rewrites.dispatch)
 add_dict_tool('motion_action', 'Operate Motion catalog, tags, indexes and authorized production tasks.', motions.dispatch)
-add_dict_tool('ai_assets_action', 'Browse or ingest AI asset metadata and verified source-page links; never download videos.', lambda args: ai_asset_library.dispatch(args, tables))
+add_dict_tool('ai_assets_action', 'Manage AI assets: catalog, create_topic, begin_upload, upload_chunk, finish_upload, abort_upload, set_cover (itemId, timeMs); ingest optionally imports verified Feishu references.', lambda args: ai_asset_library.dispatch(args, tables))
 add_dict_tool('report_action', 'Operate report registry and Metabase content.', reports.dispatch)
 add_dict_tool('breakdown_action', 'List, inspect or edit breakdowns; download requires explicit authorization.', breakdown)
 

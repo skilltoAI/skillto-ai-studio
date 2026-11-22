@@ -1,4 +1,4 @@
 interface:
   display_name: "Skillto-AI-Studio · AI资产"
-  short_description: "管理AI资产分类与红白模资料，展示提示词和可播放视频，支持复制提示词与下载视频"
-  default_prompt: "使用 $skillto-ai-studio-assets 验证公开来源并录入AI资产，保留原始提示词，验收视频播放、提示词复制与视频下载。"
+  short_description: "通过 STASS MCP 创建本机红白模 Topic、上传 MP4 或录入公开飞书参考。"
+  default_prompt: "使用 $skillto-ai-studio-assets 根据我的材料创建本机 Topic 并通过 MCP 上传授权 MP4，或导入我提供的公开飞书参考。保留提示词，验收播放和下载。"

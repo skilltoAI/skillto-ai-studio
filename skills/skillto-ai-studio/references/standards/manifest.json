@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "sha256": {
     "技术规范.md": "dac71b925a248592012e29181a92e2b2aade4ca4c16cfb210f7254db7ca2f611",
-    "docs/规范/AI资产模块规范.md": "b2f705d0f6b989b823d45059317ab6582569121a6861b6339b73e0d4966771a9",
+    "docs/规范/AI资产模块规范.md": "eafa6a2a4eb25e14e2448d3420df5210de26b850dbf038e3748e381e67a3d4d0",
     "docs/规范/MCP与API规范.md": "cb099578dc4d25e42a9bcf77d6a07698775def28b95e6e59e3dec57ebbeea51f",
     "docs/规范/Motion模块规范.md": "2ba04603181e26009b11fa07d86ebae52fa1320839a86dd80917a9fc3c1ec85c",
     "docs/规范/URL与连接规范.md": "438e4e552a85393802158b3a315591767c441555c4d851c2a07444d7c7517127",

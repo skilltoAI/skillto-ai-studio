@@ -22,6 +22,25 @@ class AssetTests(unittest.TestCase):
             'items':[{'library':'red-white','sourceBlockId':'Block1','title':'Test <action>','prompt':'Line 1\nLine 2',
                       'filename':'example.mp4','fileToken':'PublicFile1','mediaDigest':'a'*64,'playback':'source-page'}]}
 
+    def test_bad_local_upload_never_enters_catalog(self):
+        def action(name, **args):
+            return assets.dispatch({'action': name, **args}, self.store)
+
+        topic = action('create_topic', title='本机专题')['topic']
+        upload = {'topicId': topic['id'], 'itemKey': 'clip-1', 'title': '本机片段',
+                  'filename': 'clip.mp4', 'size': 12, 'sha256': 'a' * 64}
+        with self.assertRaises(ValueError):
+            action('begin_upload', **{**upload, 'filename': '../clip.mp4'})
+        key = action('begin_upload', **upload)['uploadId']
+        with self.assertRaises(ValueError):
+            action('upload_chunk', uploadId=key, offset=1, base64='AAAA')
+        action('upload_chunk', uploadId=key, offset=0, base64='AAAAAGZ0eXBpc29t')
+        with self.assertRaisesRegex(ValueError, 'SHA-256'):
+            action('finish_upload', uploadId=key)
+        self.assertEqual(action('catalog')['items'], [])
+        self.assertTrue(action('abort_upload', uploadId=key)['aborted'])
+        self.assertEqual(list((self.store.ROOT / 'ai-asset-media').iterdir()), [])
+
     def tearDown(self):
         self.temp.cleanup()
 

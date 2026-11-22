@@ -1,7 +1,8 @@
-"""Metadata-only AI asset libraries; source videos stay on their original host."""
+"""AI asset libraries with remote imports and instance-owned local videos."""
 import hashlib
 import re
 from urllib.parse import urlsplit
+import ai_asset_local
 
 LIBRARIES = [
     {'id': 'motion', 'name': 'Motion 模版'},
@@ -28,6 +29,8 @@ def text(value, limit, name):
 
 
 def dispatch(args, store):
+    if args.get('action') == 'set_cover':
+        return ai_asset_local.set_cover(args, store)
     path = store.ROOT / 'ai-assets.json'
     with store.locked():
         data = store.read_json(path) if path.exists() else {'sources': [], 'items': [], 'history': []}
@@ -50,7 +53,12 @@ def dispatch(args, store):
                 else:
                     item['references'] = [reference]
                     grouped[key] = item
-            return {'libraries': LIBRARIES, 'sources': data['sources'], 'items': list(grouped.values())}
+            local_items = [dict(item, hasCover=ai_asset_local.cover_path(store, item['id']).is_file())
+                           for item in data.get('localItems', [])]
+            return {'libraries': LIBRARIES, 'sources': data['sources'],
+                    'topics': data.get('localTopics', []), 'items': list(grouped.values()) + local_items}
+        if args.get('action') in ai_asset_local.OPERATIONS:
+            return ai_asset_local.dispatch(args, store, path, data)
         if args.get('action') != 'ingest':
             raise ValueError('未知AI资产操作')
         source = args.get('source')
@@ -119,3 +127,10 @@ def get_asset(ident, store):
     if not item or item['playback'] != 'source-page':
         raise ValueError('视频尚未通过匿名访问验证，请打开来源查看')
     return item
+
+
+def get_local_asset(ident, store):
+    path = store.ROOT / 'ai-assets.json'
+    if not path.exists():
+        return None
+    return next((item for item in store.read_json(path).get('localItems', []) if item['id'] == ident), None)

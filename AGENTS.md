@@ -24,6 +24,14 @@ an explicit user request; local preparation is allowed.
 Do not synchronize all installed skills automatically. If a task includes updating
 an installed copy, compare it with the repository and copy only the intended files.
 
+## 个人工作站的本机运维授权
+
+这是用户个人维护的程序和网站。项目更新后，执行者已获授权直接在本机安装、升级、
+复装、停止、启动和重启 STASS 个人工作站服务及其启动器，无需再次确认。
+操作前核对目标实例并等待该实例的在途任务结束。使用项目安装器或共享管理器正常停启，
+保留业务数据和配置，并在完成后验证服务健康、运行版本和受影响功能。
+Git 推送、对外发布及远程网站部署仍须明确授权。
+
 ## Codeup：拉取与推送凭据必须分离
 
 以下名称是所有开发客户端必须使用的本机环境变量契约；只在文档中记录名称，

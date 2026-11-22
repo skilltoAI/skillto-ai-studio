@@ -9,6 +9,15 @@
   const challengeIdPattern = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
   let panel, catalog, dialog, mediaObserver, epoch=0;
   const mediaUrl = (item,download=false) => '/api/ai-assets/media/'+item.id+(download?'?download=1':'');
+  function videoCard(item) {
+    if (!playable(item)) return '<p>视频访问待验证</p>';
+    const src = esc(mediaUrl(item));
+    const poster = item.hasCover ? ' poster="' + src + '?cover=1"' : '';
+    return '<video class="asset-video" src="' + src + '"' + poster
+      + ' controls playsinline preload="none" aria-label="' + esc(item.title) + '视频"></video>';
+  }
+  const playable = item => ['local-file', 'source-page'].includes(item.playback);
+  const accessLabel = item => ({'local-file':'本机视频', 'source-page':'飞书视频 · 免登录播放'})[item.playback] || '访问待验证';
   const copyIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4"/></svg>';
   const downloadIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>';
   function releaseMedia(root) {root?.querySelectorAll('video').forEach(video=>{video.pause();video.removeAttribute('src');video.load();});}
@@ -29,7 +38,7 @@
     dialog=document.createElement('dialog');
     dialog.className='asset-details';
     dialog.setAttribute('aria-labelledby','assetDetailTitle');
-    dialog.innerHTML=`<header><h2 id="assetDetailTitle">${esc(item.title)}</h2><button type="button" data-close aria-label="关闭资产详情">×</button></header><p>${esc(item.description)}</p><div class="asset-detail-actions">${item.references.map(ref=>`<a href="${esc(ref.url)}" target="_blank" rel="noopener noreferrer">${esc(ref.title)} ↗</a>`).join('')}<button type="button" data-copy aria-label="复制提示词" title="复制提示词">${copyIcon}</button></div><p class="asset-access">${item.playback==='source-page'?'已验证免登录播放；视频由飞书提供，不在本地保存。':'视频访问状态尚未确认。'}</p><h3>提示词</h3><pre>${esc(item.prompt||'来源尚未提供提示词')}</pre><p role="status"></p>`;
+    dialog.innerHTML=`<header><h2 id="assetDetailTitle">${esc(item.title)}</h2><button type="button" data-close aria-label="关闭资产详情">×</button></header><p>${esc(item.description)}</p><div class="asset-detail-actions">${item.references.map(ref=>`<a href="${esc(ref.url)}" target="_blank" rel="noopener noreferrer">${esc(ref.title)} ↗</a>`).join('')}<button type="button" data-copy aria-label="复制提示词" title="复制提示词">${copyIcon}</button></div><p class="asset-access">${accessLabel(item)}</p><h3>提示词</h3><pre>${esc(item.prompt||'来源尚未提供提示词')}</pre><p role="status"></p>`;
     dialog.querySelector('[data-close]').onclick=()=>dialog.close();
     dialog.querySelector('[data-copy]').onclick=async()=>{
       try {await navigator.clipboard.writeText(item.prompt);dialog.querySelector('[role=status]').textContent='提示词已复制';}
@@ -48,22 +57,23 @@
     if (groupBySource) {
       for (const item of entries) {
         const ids = new Set(item.references.map(ref => sourceUrls.get(ref.url.split('#')[0])));
-        ids.add(item.sourceId);
+        ids.add(item.topicId || item.sourceId);
         ids.delete(undefined);
         memberships.set(item.id, ids);
         for (const sourceId of ids) counts.set(sourceId, (counts.get(sourceId) || 0) + 1);
       }
     }
     const sources = catalog.sources.filter(source => counts.has(source.id));
+    const topics = [...(catalog.topics || []).filter(topic => topic.library === id), ...sources];
     const requestedTopic = new URL(location.href).searchParams.get(topicParam);
     const sourceId = requestedTopic?.startsWith(localTopicPrefix) ? requestedTopic.slice(localTopicPrefix.length) : requestedTopic;
-    let topic = counts.has(sourceId) ? sourceId : '';
-    content.innerHTML=`<section class="asset-library"><header class="asset-heading"><div><h1>${esc(libraries.find(([key])=>key===id)[1])}</h1><p>${id==='red-white'?'动作参考与提示词 · 视频保留于飞书':'剪映AI模版收藏'}</p></div><input type="search" aria-label="搜索AI资产" placeholder="搜索名称、动作或提示词"></header><div class="asset-count" role="status"></div><div class="asset-grid"></div>${id==='red-white'&&sources.length?`<details class="asset-sources"><summary>资料来源与访问状态</summary>${sources.map(source=>`<div><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a><span>${source.access==='anonymous'?'免登录可读':source.access==='login-required'?'需要公开分享权限':'尚未验证'}</span><p>${esc(source.note)}</p></div>`).join('')}</details>`:''}</section>`;
+    let topic = topics.some(entry => entry.id === sourceId) ? sourceId : '';
+    content.innerHTML=`<section class="asset-library"><header class="asset-heading"><div><h1>${esc(libraries.find(([key])=>key===id)[1])}</h1><p>${id==='red-white'?'本机视频、公开动作参考与提示词':'剪映AI模版收藏'}</p></div><input type="search" aria-label="搜索AI资产" placeholder="搜索名称、动作或提示词"></header><div class="asset-count" role="status"></div><div class="asset-grid"></div>${id==='red-white'&&sources.length?`<details class="asset-sources"><summary>资料来源与访问状态</summary>${sources.map(source=>`<div><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a><span>${source.access==='anonymous'?'免登录可读':source.access==='login-required'?'需要公开分享权限':'尚未验证'}</span><p>${esc(source.note)}</p></div>`).join('')}</details>`:''}</section>`;
     if (groupBySource) {
       const main = content.firstElementChild;
       const layout = document.createElement('div');
       layout.className = 'asset-topic-layout';
-      layout.innerHTML = `<nav class="asset-topic-nav" aria-label="红白模 Topic"><h2>Topic</h2>${[{id:"", title:"全部本机红白模"}, ...sources].map(source => `<button type="button" data-topic="${esc(source.id)}"${source.id === topic ? ' aria-current="true"' : ''}><span>${esc(source.title)}</span><span class="asset-topic-count">${source.id ? counts.get(source.id) : entries.length}</span></button>`).join("")}</nav>`;
+      layout.innerHTML = `<nav class="asset-topic-nav" aria-label="红白模 Topic"><h2>Topic</h2>${[{id:"", title:"全部本机红白模"}, ...topics].map(source => `<button type="button" data-topic="${esc(source.id)}"${source.id === topic ? ' aria-current="true"' : ''}><span>${esc(source.title)}</span><span class="asset-topic-count">${source.id ? (counts.get(source.id) || 0) : entries.length}</span></button>`).join("")}</nav>`;
       const nav = layout.firstElementChild;
       content.replaceChildren(layout);
       layout.append(main);
@@ -92,7 +102,7 @@
       content.querySelector('.asset-count').textContent=`${list.length} 组资产`;
       mediaObserver?.disconnect();
       releaseMedia(grid);
-      grid.innerHTML=list.length?list.map(item=>`<article class="asset-card" data-asset="${esc(item.id)}"><div class="asset-card-title"><h2>${esc(item.title)}</h2><div class="asset-card-icons"><button type="button" data-copy="${esc(item.id)}" aria-label="复制${esc(item.title)}提示词" title="复制提示词">${copyIcon}</button>${item.playback==='source-page'?`<a class="asset-download" href="${mediaUrl(item,true)}" download="${esc(item.filename)}" aria-label="下载${esc(item.title)}视频" title="下载视频">${downloadIcon}</a>`:''}</div></div>${item.playback==='source-page'?`<video class="asset-video" src="${mediaUrl(item)}" controls playsinline preload="none" aria-label="${esc(item.title)}视频"></video>`:'<p>视频访问待验证</p>'}<p class="asset-media-error" hidden>视频暂不可用，请重试或打开飞书来源。</p><p class="asset-description">${esc(item.description)}</p><div class="asset-prompt-label">提示词<button type="button" data-detail="${esc(item.id)}">展开</button></div><pre class="asset-prompt" tabindex="0" aria-label="${esc(item.title)}提示词">${esc(item.prompt||'来源尚未提供提示词')}</pre><footer><span class="asset-access">${item.playback==='source-page'?'飞书视频 · 免登录播放':'访问待验证'}</span><a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">来源 ↗</a></footer><span class="asset-card-status" role="status"></span></article>`).join(''):`<div class="asset-empty"><h2>${q?'没有匹配的资产':'暂时为空'}</h2><p>${q?'试试其他名称或动作关键词。':id==='jianying'?'这里将收纳剪映AI模版。':'公开来源验证后，资产会显示在这里。'}</p></div>`;
+      grid.innerHTML=list.length?list.map(item=>`<article class="asset-card" data-asset="${esc(item.id)}"><div class="asset-card-title"><h2>${esc(item.title)}</h2><div class="asset-card-icons"><button type="button" data-copy="${esc(item.id)}" aria-label="复制${esc(item.title)}提示词" title="复制提示词">${copyIcon}</button>${playable(item)?`<a class="asset-download" href="${mediaUrl(item,true)}" download="${esc(item.filename)}" aria-label="下载${esc(item.title)}视频" title="下载视频">${downloadIcon}</a>`:''}</div></div>${videoCard(item)}<p class="asset-media-error" hidden>视频暂不可用，请检查文件或打开来源。</p><p class="asset-description">${esc(item.description)}</p><div class="asset-prompt-label">提示词<button type="button" data-detail="${esc(item.id)}">展开</button></div><pre class="asset-prompt" tabindex="0" aria-label="${esc(item.title)}提示词">${esc(item.prompt||'来源尚未提供提示词')}</pre><footer><span class="asset-access">${accessLabel(item)}</span>${item.sourceUrl ? `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">来源 ↗</a>` : ''}</footer><span class="asset-card-status" role="status"></span></article>`).join(''):`<div class="asset-empty"><h2>${q?'没有匹配的资产':'暂时为空'}</h2><p>${q?'试试其他名称或动作关键词。':id==='jianying'?'这里将收纳剪映AI模版。':'本机上传或公开来源导入完成后，资产会显示在这里。'}</p></div>`;
       grid.querySelectorAll('video').forEach(video=>{
         video.onerror=()=>{video.closest('article').querySelector('.asset-media-error').hidden=false;};
         video.onplay=()=>grid.querySelectorAll('video').forEach(other=>{if(other!==video)other.pause();});
@@ -100,7 +110,7 @@
       mediaObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
         if(entry.isIntersecting){entry.target.preload='metadata';entry.target.load();mediaObserver.unobserve(entry.target);}
       }),{rootMargin:'100px'});
-      grid.querySelectorAll('video').forEach(video=>mediaObserver.observe(video));
+      grid.querySelectorAll('video:not([poster])').forEach(video=>mediaObserver.observe(video));
     }
     search.oninput=draw;
     grid.onclick=async event=>{

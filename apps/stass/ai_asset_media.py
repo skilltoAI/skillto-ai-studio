@@ -7,9 +7,10 @@ import urllib.request
 import urllib.error
 
 from starlette.concurrency import run_in_threadpool
-from starlette.responses import JSONResponse, StreamingResponse
+from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
 import ai_asset_library
+import ai_asset_local
 
 STREAM_HOST = 'internal-api-drive-stream.feishu.cn'
 CACHE = {}
@@ -110,8 +111,23 @@ def stream_chunks(response):
 
 def endpoint(store):
     async def media(request):
+        ident = request.path_params['ident']
+        local = await run_in_threadpool(ai_asset_library.get_local_asset, ident, store)
+        if request.query_params.get('cover') == '1':
+            path = ai_asset_local.cover_path(store, ident) if local else None
+            if path is None or not path.is_file():
+                return JSONResponse({'error': '本机视频封面不存在。'}, status_code=404)
+            return FileResponse(path, media_type='image/jpeg',
+                                headers={'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff'})
+        if local:
+            path = ai_asset_local.video_path(store, ident)
+            if not path.is_file():
+                return JSONResponse({'error': '本机视频文件缺失。'}, status_code=404)
+            return FileResponse(path, media_type='video/mp4',
+                                filename=local['filename'] if request.query_params.get('download') == '1' else None,
+                                headers={'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff'})
         try:
-            item = await run_in_threadpool(ai_asset_library.get_asset, request.path_params['ident'], store)
+            item = await run_in_threadpool(ai_asset_library.get_asset, ident, store)
             upstream = await run_in_threadpool(open_media, item, request.headers.get('range'))
         except Exception:
             # Never include upstream request headers or anonymous cookies in responses/logs.
