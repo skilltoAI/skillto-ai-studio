@@ -32,6 +32,12 @@ an installed copy, compare it with the repository and copy only the intended fil
 保留业务数据和配置，并在完成后验证服务健康、运行版本和受影响功能。
 Git 推送、对外发布及远程网站部署仍须明确授权。
 
+## GitHub 主干发布
+
+- GitHub 远端 `github` 只保留默认主干 `main`。获得明确推送授权后，只更新 `refs/heads/main` 并回读 SHA。
+- 本地保留 `anycom` 作为开发分支，可在本地工作树验证后将已审查的代码推进到 GitHub `main`。
+- GitHub 发布不影响 `origin` 和 `codeup` 的分支与凭据。清理远端非主干分支前先确认 `main` 已存在且为默认分支，并保留旧分支的本地引用。
+
 ## Codeup：拉取与推送凭据必须分离
 
 以下名称是所有开发客户端必须使用的本机环境变量契约；只在文档中记录名称，

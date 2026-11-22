@@ -122,15 +122,15 @@ git ls-remote --symref github HEAD
 
 认证缺失或失效时可执行 `git credential-manager github login --browser`，通过浏览器完成授权。[GitHub 凭据缓存说明](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git?platform=windows)
 
-确认目标仓库、分支和公开范围，按本文件执行检查与本地提交。首次公开推送须审查待推送提交可达的历史，既有 Git 忽略规则不影响已跟踪的历史内容。获得推送授权后执行（将 `<任务分支>` 替换为实际分支）：
+确认目标仓库、分支和公开范围，按本文件执行检查与本地提交。首次公开推送须审查待推送提交可达的历史，既有 Git 忽略规则不影响已跟踪的历史内容。本地保留 `anycom` 开发分支。GitHub 只保留默认 `main`，获得授权并审查当前提交后执行：
 
 ```powershell
-git push github HEAD:refs/heads/<任务分支>
-git ls-remote --exit-code github refs/heads/<任务分支>
+git push github HEAD:refs/heads/main
+git ls-remote --exit-code github refs/heads/main
 git rev-parse HEAD
 ```
 
-回读的远端 SHA 必须与本地提交一致。分支规则拒绝时按仓库要求提交 PR。GitHub 推送不替代 Codeup 的拉新、发布和认证流程。
+回读的远端 SHA 必须与本地提交一致。如果 GitHub 规则拒绝更新，向维护者报告限制。GitHub 推送不替代 Codeup 的拉新、发布和认证流程。
 
 `.github/workflows/validate.yml` 是 GitHub 的跨系统 CI，Codeup 不会自动执行它。
 Codeup 流水线可运行同样的三条基础检查；本地测试无需任何服务凭据。
